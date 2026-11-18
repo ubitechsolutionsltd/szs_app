@@ -1,0 +1,69 @@
+// Export pages
+export '/pages/home/home_page/home_page_widget.dart' show HomePageWidget;
+export '/pages/intro/splash_page/splash_page_widget.dart' show SplashPageWidget;
+export '/pages/intro/onboarding_page/onboarding_page_widget.dart'
+    show OnboardingPageWidget;
+export '/pages/authentication/login_page/login_page_widget.dart'
+    show LoginPageWidget;
+export '/pages/authentication/signup_page/signup_page_widget.dart'
+    show SignupPageWidget;
+export '/pages/authentication/forgot_pass_page/forgot_pass_page_widget.dart'
+    show ForgotPassPageWidget;
+export '/pages/authentication/verify_code_page/verify_code_page_widget.dart'
+    show VerifyCodePageWidget;
+export '/pages/authentication/reset_pass_page/reset_pass_page_widget.dart'
+    show ResetPassPageWidget;
+export '/pages/authentication/choose_artist_like_page/choose_artist_like_page_widget.dart'
+    show ChooseArtistLikePageWidget;
+export '/pages/home/notification_page/notification_page_widget.dart'
+    show NotificationPageWidget;
+export '/pages/home/home_search_page/home_search_page_widget.dart'
+    show HomeSearchPageWidget;
+export '/pages/home/song_details_page/song_details_page_widget.dart'
+    show SongDetailsPageWidget;
+export '/pages/home/similar_artist_page/similar_artist_page_widget.dart'
+    show SimilarArtistPageWidget;
+export '/pages/home/play_list_page/play_list_page_widget.dart'
+    show PlayListPageWidget;
+export '/pages/home/all_categories_page/all_categories_page_widget.dart'
+    show AllCategoriesPageWidget;
+export '/pages/home/sub_cat_list_page/sub_cat_list_page_widget.dart'
+    show SubCatListPageWidget;
+export '/pages/home/quick_picks_page/quick_picks_page_widget.dart'
+    show QuickPicksPageWidget;
+export '/pages/home/view_album_page/view_album_page_widget.dart'
+    show ViewAlbumPageWidget;
+export '/pages/home/playlistof_the_day_page/playlistof_the_day_page_widget.dart'
+    show PlaylistofTheDayPageWidget;
+export '/pages/home/best_of_artist_page/best_of_artist_page_widget.dart'
+    show BestOfArtistPageWidget;
+export '/pages/explore/explore_page/explore_page_widget.dart'
+    show ExplorePageWidget;
+export '/pages/library/library_page/library_page_widget.dart'
+    show LibraryPageWidget;
+export '/pages/library/add_song_page/add_song_page_widget.dart'
+    show AddSongPageWidget;
+export '/pages/settings/setting_page/setting_page_widget.dart'
+    show SettingPageWidget;
+export '/pages/settings/my_profile_page/my_profile_page_widget.dart'
+    show MyProfilePageWidget;
+export '/pages/settings/edit_profile_page/edit_profile_page_widget.dart'
+    show EditProfilePageWidget;
+export '/pages/settings/security_page/security_page_widget.dart'
+    show SecurityPageWidget;
+export '/pages/settings/change_pass_page/change_pass_page_widget.dart'
+    show ChangePassPageWidget;
+export '/pages/settings/about_us_page/about_us_page_widget.dart'
+    show AboutUsPageWidget;
+export '/pages/settings/help_page/help_page_widget.dart' show HelpPageWidget;
+export '/pages/settings/feedback_page/feedback_page_widget.dart'
+    show FeedbackPageWidget;
+export '/pages/home/featured_artists_page/featured_artists_page_widget.dart'
+    show FeaturedArtistsPageWidget;
+export '/pages/components/demo_page/demo_page_widget.dart' show DemoPageWidget;
+export '/pages/home/story_details_page/story_details_page_widget.dart'
+    show StoryDetailsPageWidget;
+export '/pages/home/story_details_page_copy/story_details_page_copy_widget.dart'
+    show StoryDetailsPageCopyWidget;
+export '/payment_confirmation/payment_confirmation_widget.dart'
+    show PaymentConfirmationWidget;

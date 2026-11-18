@@ -1,0 +1,205 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/index.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'social_auth_component_model.dart';
+export 'social_auth_component_model.dart';
+
+class SocialAuthComponentWidget extends StatefulWidget {
+  const SocialAuthComponentWidget({super.key});
+
+  @override
+  State<SocialAuthComponentWidget> createState() =>
+      _SocialAuthComponentWidgetState();
+}
+
+class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
+  late SocialAuthComponentModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => SocialAuthComponentModel());
+  }
+
+  @override
+  void dispose() {
+    _model.maybeDispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FFButtonWidget(
+              onPressed: () async {
+                var _shouldSetState = false;
+                GoRouter.of(context).prepareAuthEvent();
+                final user = await authManager.signInWithGoogle(context);
+                if (user == null) {
+                  return;
+                }
+                _model.googleAuthResp = await GeneralGroup.loginCall.call(
+                  type: '2',
+                  email: currentUserEmail,
+                  password: currentUserEmail,
+                  deviceType: '1',
+                  deviceToken: currentJwtToken,
+                  fullName: currentUserDisplayName,
+                  mobileNumber: currentPhoneNumber,
+                  image: currentUserPhoto,
+                );
+
+                _shouldSetState = true;
+                if ((_model.googleAuthResp?.succeeded ?? true)) {
+                  if (GeneralGroup.loginCall.statusCode(
+                        (_model.googleAuthResp?.jsonBody ?? ''),
+                      ) ==
+                      200) {
+                    FFAppState().isLogin = true;
+                    FFAppState().fullname = GeneralGroup.loginCall.fullname(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().username = GeneralGroup.loginCall.username(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().password = GeneralGroup.loginCall.email(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().phonenumber =
+                        GeneralGroup.loginCall.mobilenumber(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().bio = GeneralGroup.loginCall.bio(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().email = currentUserEmail;
+                    FFAppState().devicetoken = currentJwtToken;
+                    FFAppState().userid = GeneralGroup.loginCall
+                        .id(
+                          (_model.googleAuthResp?.jsonBody ?? ''),
+                        )!
+                        .toString();
+                    FFAppState().userphoto = GeneralGroup.loginCall.image(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().joinedat = GeneralGroup.loginCall.createdat(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().walletcoin = GeneralGroup.loginCall.walletcoin(
+                      (_model.googleAuthResp?.jsonBody ?? ''),
+                    )!;
+                    FFAppState().update(() {});
+
+                    context.pushNamedAuth(
+                        HomePageWidget.routeName, context.mounted);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Successfully Logged In.',
+                          style: TextStyle(
+                            fontFamily: 'SF Pro Display',
+                            color: FlutterFlowTheme.of(context).tertiary,
+                          ),
+                        ),
+                        duration: Duration(milliseconds: 4000),
+                        backgroundColor: FlutterFlowTheme.of(context).primary,
+                      ),
+                    );
+                    if (_shouldSetState) safeSetState(() {});
+                    return;
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          GeneralGroup.loginCall.message(
+                            (_model.googleAuthResp?.jsonBody ?? ''),
+                          )!,
+                          style: TextStyle(
+                            fontFamily: 'SF Pro Display',
+                            color: FlutterFlowTheme.of(context).alternate,
+                          ),
+                        ),
+                        duration: Duration(milliseconds: 4000),
+                        backgroundColor: FlutterFlowTheme.of(context).error,
+                      ),
+                    );
+                    if (_shouldSetState) safeSetState(() {});
+                    return;
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Oops ! Technical Error. Try Again.',
+                        style: TextStyle(
+                          fontFamily: 'SF Pro Display',
+                          color: FlutterFlowTheme.of(context).tertiary,
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 4000),
+                      backgroundColor: FlutterFlowTheme.of(context).error,
+                    ),
+                  );
+                  if (_shouldSetState) safeSetState(() {});
+                  return;
+                }
+
+                if (_shouldSetState) safeSetState(() {});
+              },
+              text: FFLocalizations.of(context).getText(
+                'omyauk4s' /* Google */,
+              ),
+              icon: FaIcon(
+                FaIconData(const IconData(/* gofore */ 0xf3a7,
+                    fontFamily: 'FontAwesomeBrands',
+                    fontPackage: 'font_awesome_flutter')),
+                size: 18.0,
+              ),
+              options: FFButtonOptions(
+                width: double.infinity,
+                height: 50.0,
+                padding: EdgeInsets.all(8.0),
+                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                iconColor: FlutterFlowTheme.of(context).error,
+                color: FlutterFlowTheme.of(context).primaryBackground,
+                textStyle: FlutterFlowTheme.of(context).titleLarge.override(
+                      fontFamily: 'SF Pro Display',
+                      color: FlutterFlowTheme.of(context).tertiary,
+                      fontSize: 18.0,
+                      letterSpacing: 0.0,
+                    ),
+                elevation: 0.0,
+                borderSide: BorderSide(
+                  color: FlutterFlowTheme.of(context).primary,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ].divide(SizedBox(height: 12.0)),
+        ),
+      ),
+    );
+  }
+}

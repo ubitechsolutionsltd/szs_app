@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "1067128048333",
+    "project_id": "simuliziza-sauti-i264or",
+    "storage_bucket": "simuliziza-sauti-i264or.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067128048333:android:1e8cbe2273a5c5f3637784",
+        "android_client_info": {
+          "package_name": "com.simulizi.ruhundwa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067128048333-tm7ucufsc4s6786q4g679qc3reavlafv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simulizi.ruhundwa",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "1067128048333-la4fffsf1tc24cvernt7p3f18d2tqk9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0GgNKOsX5PZxTaakcKsO3J-uSr2r0dkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067128048333-la4fffsf1tc24cvernt7p3f18d2tqk9s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1067128048333-53t0f3kto2lubpmlut7mv4jbb356prcn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.simulizi.ruhundwa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067128048333:android:0cce95c785ef0553637784",
+        "android_client_info": {
+          "package_name": "partnership.ubitech.ruhundwa.simulizizasauti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067128048333-0f1dtvs78ghp11spvplpob9o1vd5122j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "partnership.ubitech.ruhundwa.simulizizasauti",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "1067128048333-la4fffsf1tc24cvernt7p3f18d2tqk9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0GgNKOsX5PZxTaakcKsO3J-uSr2r0dkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067128048333-la4fffsf1tc24cvernt7p3f18d2tqk9s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1067128048333-53t0f3kto2lubpmlut7mv4jbb356prcn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.simulizi.ruhundwa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
