@@ -115,16 +115,8 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
     final palette = AppPalette.of(context);
     final theme = FlutterFlowTheme.of(context);
 
-    Widget fallback = Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [palette.accent, Color.lerp(palette.accent, Colors.black, 0.45)!],
-        ),
-      ),
-      child: Center(child: Icon(Icons.headphones_rounded, color: Colors.white, size: 96.0)),
-    );
+    // When the slide's picture cannot load, show the brand logo instead of an empty card.
+    Widget fallback = Center(child: AppLogo(size: 220.0, radius: 44.0));
 
     return Padding(
       padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),

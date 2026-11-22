@@ -131,8 +131,8 @@ class LightModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  // Brand blue taken from the Simulizi za Sauti logo.
-  late Color primary = const Color(0xFF0070C0);
+  // Brand blue taken from the Simulizi za Sauti logo (#0071BD).
+  late Color primary = const Color(0xFF0071BD);
   // Cards and inputs.
   late Color secondary = const Color(0xCCFFFFFF);
   // Main text colour.
