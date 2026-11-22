@@ -1,3 +1,5 @@
+import '/custom_code/ui/app_widgets.dart';
+import '/custom_code/ui/app_palette.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/custom_loading_indicator_widget.dart';
@@ -10,6 +12,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/custom_functions.dart' as functions;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -105,6 +108,198 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     super.dispose();
   }
 
+  Widget _chip(BuildContext context, IconData icon, String label, {Color? iconColor}) {
+    final palette = AppPalette.of(context);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(color: palette.outline, width: 0.5),
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, size: 15.0, color: iconColor ?? palette.muted),
+        SizedBox(width: 5.0),
+        Text(label,
+            style: FlutterFlowTheme.of(context).bodySmall.override(
+                  fontFamily: 'SF Pro Display',
+                  color: palette.text,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.0,
+                )),
+      ]),
+    );
+  }
+
+  /// Cover, title, author, badges, description and the main play button.
+  Widget _buildHero(BuildContext context) {
+    final palette = AppPalette.of(context);
+    final theme = FlutterFlowTheme.of(context);
+    final story = widget.story;
+    final rating = story?.avgRating ?? '';
+    final episodes = widget.episodes?.toList() ?? [];
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(18.0),
+                child: CachedNetworkImage(
+                  imageUrl: story?.portraitImg ?? '',
+                  width: 120.0,
+                  height: 160.0,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => Container(width: 120.0, height: 160.0, color: palette.surfaceHigh),
+                  errorWidget: (_, __, ___) => Container(
+                    width: 120.0,
+                    height: 160.0,
+                    color: palette.surfaceHigh,
+                    child: Icon(Icons.headphones_rounded, color: palette.muted, size: 40.0),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      story?.title ?? '',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.bodyMedium.override(
+                        fontFamily: 'SF Pro Display',
+                        color: palette.text,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.3,
+                        lineHeight: 1.15,
+                      ),
+                    ),
+                    SizedBox(height: 6.0),
+                    Text(
+                      story?.artistName ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.bodyMedium.override(
+                        fontFamily: 'SF Pro Display',
+                        color: palette.muted,
+                        fontSize: 15.0,
+                        letterSpacing: 0.0,
+                      ),
+                    ),
+                    SizedBox(height: 12.0),
+                    Wrap(spacing: 8.0, runSpacing: 8.0, children: [
+                      if ((story?.categoryName ?? '').isNotEmpty)
+                        _chip(context, Icons.category_rounded, story!.categoryName),
+                      if (rating.isNotEmpty && rating != '0')
+                        _chip(context, Icons.star_rounded, rating, iconColor: palette.warning),
+                      if ((story?.totalEpisode ?? 0) > 0)
+                        _chip(context, Icons.headphones_rounded, '${story!.totalEpisode}'),
+                    ]),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if ((story?.description ?? '').isNotEmpty) ...[
+            SizedBox(height: 16.0),
+            ExpandableText(text: story!.description),
+          ],
+          SizedBox(height: 16.0),
+          SizedBox(
+            width: double.infinity,
+            height: 54.0,
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: palette.accent,
+                foregroundColor: palette.onAccent,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.0)),
+              ),
+              icon: Icon(Icons.play_arrow_rounded, size: 28.0),
+              label: Text('Cheza simulizi',
+                  style: theme.titleSmall.override(
+                    fontFamily: 'SF Pro Display',
+                    color: palette.onAccent,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.0,
+                  )),
+              onPressed: episodes.isEmpty
+                  ? null
+                  : () {
+                      final playable = episodes.firstWhere(
+                        (e) =>
+                            functions.jsonValueToInteger(getJsonField(e, r'''$["is_buy"]''')) == 1 ||
+                            functions.jsonValueToInteger(getJsonField(e, r'''$["is_audio_coin"]''')) <= 0,
+                        orElse: () => null,
+                      );
+                      if (playable == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Sehemu zote zimefungwa. Chagua sehemu ili kuifungua.'),
+                        ));
+                        return;
+                      }
+                      FFAppState().nowPlaying = playable;
+                      FFAppState().playercommand = 'play';
+                      FFAppState().playerisplaying = true;
+                      FFAppState().update(() {});
+                    },
+            ),
+          ),
+          SizedBox(height: 14.0),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    final episodes = widget.episodes?.toList() ?? [];
+
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(child: _buildHero(context)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 12.0),
+            child: custom_widgets.AudioPlayerWidget(
+              width: double.infinity,
+              command: FFAppState().playercommand,
+              episode: FFAppState().nowPlaying,
+              episodes: widget.episodes,
+            ),
+          ),
+        ),
+        if (episodes.isEmpty)
+          SliverToBoxAdapter(child: NoResultFoundCompWidget())
+        else
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, episodesIndex) => wrapWithModel(
+                model: _model.episodeListItemModels.getModel(
+                  episodesIndex.toString(),
+                  episodesIndex,
+                ),
+                updateCallback: () => safeSetState(() {}),
+                child: EpisodeListItemWidget(
+                  key: Key('Keyfbo_${episodesIndex.toString()}'),
+                  episode: episodes[episodesIndex],
+                ),
+              ),
+              childCount: episodes.length,
+            ),
+          ),
+        SliverToBoxAdapter(child: SizedBox(height: 32.0)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -121,11 +316,10 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
           top: true,
           child: Stack(
             children: [
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
                       width: double.infinity,
                       height: 79.0,
                       decoration: BoxDecoration(
@@ -321,210 +515,8 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
                         ),
                       ),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 98.02,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 16.0, 16.0, 16.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      FFAppState().nowPlaying =
-                                          functions.getAdjacentEpisode(
-                                              FFAppState().nowPlaying,
-                                              widget.episodes!,
-                                              'prev')!;
-                                      FFAppState().update(() {});
-                                      FFAppState().playerisplaying = true;
-                                      FFAppState().update(() {});
-                                    },
-                                    child: Icon(
-                                      Icons.skip_previous_outlined,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 40.0,
-                                    ),
-                                  ),
-                                  if (!valueOrDefault<bool>(
-                                    FFAppState().playerisplaying,
-                                    true,
-                                  ))
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        FFAppState().playercommand = 'play';
-                                        FFAppState().update(() {});
-                                        FFAppState().playerisplaying = true;
-                                        FFAppState().update(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.play_circle_outline,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        size: 80.0,
-                                      ),
-                                    )
-                                        .animateOnPageLoad(animationsMap[
-                                            'iconOnPageLoadAnimation']!)
-                                        .animateOnActionTrigger(
-                                          animationsMap[
-                                              'iconOnActionTriggerAnimation']!,
-                                        ),
-                                  if (FFAppState().playerisplaying)
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        FFAppState().playercommand = 'pause';
-                                        FFAppState().update(() {});
-                                        FFAppState().playerisplaying = false;
-                                        FFAppState().update(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.pause_circle_outline,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        size: 80.0,
-                                      ),
-                                    ),
-                                  InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      FFAppState().nowPlaying =
-                                          functions.getAdjacentEpisode(
-                                              FFAppState().nowPlaying,
-                                              widget.episodes!,
-                                              'next')!;
-                                      FFAppState().update(() {});
-                                      FFAppState().playerisplaying = true;
-                                      FFAppState().update(() {});
-                                    },
-                                    child: Icon(
-                                      Icons.skip_next_outlined,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 40.0,
-                                    ),
-                                  ),
-                                ].divide(SizedBox(width: 24.0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 10.0),
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width * 0.95,
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.15,
-                                child: custom_widgets.AudioPlayerWidget(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.95,
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.15,
-                                  command: FFAppState().playercommand,
-                                  episode: FFAppState().nowPlaying,
-                                  episodes: widget.episodes,
-                                  onFinished: (episode) async {
-                                    FFAppState().nowPlaying =
-                                        functions.getAdjacentEpisode(episode,
-                                            widget.episodes!, 'next')!;
-                                    FFAppState().update(() {});
-                                    FFAppState().playerisplaying = true;
-                                    FFAppState().update(() {});
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: MediaQuery.sizeOf(context).height * 1.0,
-                                child: Builder(
-                                  builder: (context) {
-                                    final episodes = widget.episodes!.toList();
-                                    if (episodes.isEmpty) {
-                                      return NoResultFoundCompWidget();
-                                    }
-
-                                    return ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: episodes.length,
-                                      itemBuilder: (context, episodesIndex) {
-                                        final episodesItem =
-                                            episodes[episodesIndex];
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  15.0, 0.0, 15.0, 0.0),
-                                          child: wrapWithModel(
-                                            model: _model.episodeListItemModels
-                                                .getModel(
-                                              episodesIndex.toString(),
-                                              episodesIndex,
-                                            ),
-                                            updateCallback: () =>
-                                                safeSetState(() {}),
-                                            child: EpisodeListItemWidget(
-                                              key: Key(
-                                                'Keyfbo_${episodesIndex.toString()}',
-                                              ),
-                                              episode: episodesItem,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  Expanded(child: _buildBody(context)),
+                ],
               ),
               if (FFAppState().isLoading)
                 wrapWithModel(

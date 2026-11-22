@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
@@ -27,6 +28,7 @@ class FullPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final service = PlayerService.instance;
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
 
     return SizedBox(
       width: width,
@@ -48,12 +50,12 @@ class FullPlayer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(PlayerStrings.nowPlaying.toUpperCase(),
-                    style: theme.labelSmall.copyWith(color: theme.secondaryText, letterSpacing: 1.4)),
+                    style: theme.labelSmall.copyWith(color: pal.muted, letterSpacing: 1.4)),
                 const SizedBox(height: 16),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    boxShadow: [BoxShadow(color: theme.shadowColor, blurRadius: 24, offset: const Offset(0, 12))],
+                    boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 24, offset: const Offset(0, 12))],
                   ),
                   child: PlayerArtwork(url: item.artUrl, size: artSize, radius: 24),
                 ),
@@ -62,27 +64,27 @@ class FullPlayer extends StatelessWidget {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.headlineSmall.copyWith(color: theme.primaryText, fontWeight: FontWeight.w700)),
+                    style: theme.headlineSmall.copyWith(color: pal.text, fontWeight: FontWeight.w700)),
                 if (item.subtitle.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(item.subtitle,
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.bodyMedium.copyWith(color: theme.secondaryText)),
+                      style: theme.bodyMedium.copyWith(color: pal.muted)),
                 ],
                 if (errorText != null) ...[
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: theme.error.withValues(alpha: 0.12),
+                      color: pal.error.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(children: [
-                      Icon(Icons.info_outline_rounded, color: theme.error, size: 20),
+                      Icon(Icons.info_outline_rounded, color: pal.error, size: 20),
                       const SizedBox(width: 8),
-                      Expanded(child: Text(errorText, style: theme.bodySmall.copyWith(color: theme.error))),
+                      Expanded(child: Text(errorText, style: theme.bodySmall.copyWith(color: pal.error))),
                     ]),
                   ),
                 ],
@@ -97,41 +99,41 @@ class FullPlayer extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     ActionChip(
-                      avatar: Icon(Icons.speed_rounded, size: 18, color: theme.primaryText),
-                      label: Text('${snap.speed}x', style: theme.labelMedium.copyWith(color: theme.primaryText)),
-                      backgroundColor: theme.secondaryBackground,
-                      side: BorderSide(color: theme.alternate),
+                      avatar: Icon(Icons.speed_rounded, size: 18, color: pal.text),
+                      label: Text('${snap.speed}x', style: theme.labelMedium.copyWith(color: pal.text)),
+                      backgroundColor: pal.surface,
+                      side: BorderSide(color: pal.outline),
                       onPressed: () => PlayerSheets.speed(context, service),
                     ),
                     ActionChip(
                       avatar: Icon(Icons.bedtime_outlined,
-                          size: 18, color: snap.sleepActive ? theme.primary : theme.primaryText),
+                          size: 18, color: snap.sleepActive ? pal.accent : pal.text),
                       label: Text(
                         snap.sleepRemaining != null
                             ? formatDuration(snap.sleepRemaining!)
                             : snap.sleepAfterEpisode
                                 ? PlayerStrings.endOfEpisode
                                 : PlayerStrings.sleepTimer,
-                        style: theme.labelMedium.copyWith(color: snap.sleepActive ? theme.primary : theme.primaryText),
+                        style: theme.labelMedium.copyWith(color: snap.sleepActive ? pal.accent : pal.text),
                       ),
-                      backgroundColor: theme.secondaryBackground,
-                      side: BorderSide(color: snap.sleepActive ? theme.primary : theme.alternate),
+                      backgroundColor: pal.surface,
+                      side: BorderSide(color: snap.sleepActive ? pal.accent : pal.outline),
                       onPressed: () => PlayerSheets.sleepTimer(context, service),
                     ),
                     DownloadChip(item: item),
                     ActionChip(
-                      avatar: Icon(Icons.playlist_add_rounded, size: 18, color: theme.primaryText),
-                      label: Text(PlayerStrings.addToPlaylist, style: theme.labelMedium.copyWith(color: theme.primaryText)),
-                      backgroundColor: theme.secondaryBackground,
-                      side: BorderSide(color: theme.alternate),
+                      avatar: Icon(Icons.playlist_add_rounded, size: 18, color: pal.text),
+                      label: Text(PlayerStrings.addToPlaylist, style: theme.labelMedium.copyWith(color: pal.text)),
+                      backgroundColor: pal.surface,
+                      side: BorderSide(color: pal.outline),
                       onPressed: () => PlayerSheets.addToPlaylist(context, item),
                     ),
                     ActionChip(
-                      avatar: Icon(Icons.queue_music_rounded, size: 18, color: theme.primaryText),
+                      avatar: Icon(Icons.queue_music_rounded, size: 18, color: pal.text),
                       label: Text('${PlayerStrings.queue} (${snap.queue.length})',
-                          style: theme.labelMedium.copyWith(color: theme.primaryText)),
-                      backgroundColor: theme.secondaryBackground,
-                      side: BorderSide(color: theme.alternate),
+                          style: theme.labelMedium.copyWith(color: pal.text)),
+                      backgroundColor: pal.surface,
+                      side: BorderSide(color: pal.outline),
                       onPressed: () => PlayerSheets.queue(context, service),
                     ),
                   ],
@@ -154,6 +156,7 @@ class _Transport extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
 
     IconData repeatIcon() =>
         snap.repeat == QueueRepeat.one ? Icons.repeat_one_rounded : Icons.repeat_rounded;
@@ -163,52 +166,52 @@ class _Transport extends StatelessWidget {
       children: [
         IconButton(
           tooltip: 'Changanya',
-          icon: Icon(Icons.shuffle_rounded, color: snap.shuffle ? theme.primary : theme.secondaryText),
+          icon: Icon(Icons.shuffle_rounded, color: snap.shuffle ? pal.accent : pal.muted),
           onPressed: () => service.setShuffle(!snap.shuffle),
         ),
         IconButton(
           iconSize: 34,
           tooltip: 'Iliyopita',
-          icon: Icon(Icons.skip_previous_rounded, color: theme.primaryText),
+          icon: Icon(Icons.skip_previous_rounded, color: pal.text),
           onPressed: service.previous,
         ),
         IconButton(
           iconSize: 30,
           tooltip: 'Rudi sekunde 15',
-          icon: Icon(Icons.replay_10_rounded, color: theme.primaryText),
+          icon: Icon(Icons.replay_10_rounded, color: pal.text),
           onPressed: () => service.seekRelative(const Duration(seconds: -15)),
         ),
         SizedBox(
           width: 68,
           height: 68,
           child: snap.loading && !snap.playing
-              ? Center(child: CircularProgressIndicator(color: theme.primary))
+              ? Center(child: CircularProgressIndicator(color: pal.accent))
               : Material(
-                  color: theme.primary,
+                  color: pal.accent,
                   shape: const CircleBorder(),
                   child: InkWell(
                     customBorder: const CircleBorder(),
                     onTap: service.toggle,
                     child: Icon(snap.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                        size: 40, color: theme.primaryBackground),
+                        size: 40, color: pal.onAccent),
                   ),
                 ),
         ),
         IconButton(
           iconSize: 30,
           tooltip: 'Songa sekunde 30',
-          icon: Icon(Icons.forward_30_rounded, color: theme.primaryText),
+          icon: Icon(Icons.forward_30_rounded, color: pal.text),
           onPressed: () => service.seekRelative(const Duration(seconds: 30)),
         ),
         IconButton(
           iconSize: 34,
           tooltip: 'Inayofuata',
-          icon: Icon(Icons.skip_next_rounded, color: theme.primaryText),
+          icon: Icon(Icons.skip_next_rounded, color: pal.text),
           onPressed: service.next,
         ),
         IconButton(
           tooltip: 'Rudia',
-          icon: Icon(repeatIcon(), color: snap.repeat == QueueRepeat.off ? theme.secondaryText : theme.primary),
+          icon: Icon(repeatIcon(), color: snap.repeat == QueueRepeat.off ? pal.muted : pal.accent),
           onPressed: service.cycleRepeat,
         ),
       ],

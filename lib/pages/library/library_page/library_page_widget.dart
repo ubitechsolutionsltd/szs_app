@@ -1,7 +1,7 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/backend/api_requests/api_calls.dart';
 import '/components/balance_component_widget.dart';
 import '/components/custom_loading_indicator_widget.dart';
-import '/components/no_notification_yet_comp_widget.dart';
 import '/components/no_song_playlist_comp_widget.dart';
 import '/components/package_lists_component_widget.dart';
 import '/components/play_list_container_widget.dart';
@@ -281,7 +281,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).primary,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             showLoadingIndicator: false,
                           ),
@@ -438,26 +438,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                                   ),
                                 ],
                               ),
-                              ListView(
-                                padding: EdgeInsets.fromLTRB(
-                                  0,
-                                  0,
-                                  0,
-                                  24.0,
-                                ),
-                                scrollDirection: Axis.vertical,
-                                children: [
-                                  Container(
-                                    height:
-                                        MediaQuery.sizeOf(context).height * 0.5,
-                                    child: wrapWithModel(
-                                      model: _model.noNotificationYetCompModel,
-                                      updateCallback: () => safeSetState(() {}),
-                                      child: NoNotificationYetCompWidget(),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              custom_widgets.DownloadsList(),
                             ],
                           ),
                         ),

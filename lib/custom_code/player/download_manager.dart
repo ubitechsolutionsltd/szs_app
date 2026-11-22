@@ -65,6 +65,7 @@ class DownloadManager {
   final ValueNotifier<Map<int, DownloadState>> states = ValueNotifier({});
 
   final Map<int, DownloadedEpisode> _index = {};
+  final Map<int, PlayableItem> _known = {};
   final List<PlayableItem> _queue = [];
   final Set<int> _cancelled = {};
   Directory? _directory;
@@ -80,6 +81,16 @@ class DownloadManager {
   int get totalBytes => _index.values.fold(0, (sum, e) => sum + e.bytes);
 
   bool isDownloaded(int id) => _index.containsKey(id);
+
+  /// Episodes that are waiting, downloading or failed (not yet downloaded), for progress lists.
+  List<PlayableItem> get activeDownloads => [
+        for (final entry in states.value.entries)
+          if ((entry.value.status == DownloadStatus.waiting ||
+                  entry.value.status == DownloadStatus.downloading ||
+                  entry.value.status == DownloadStatus.failed) &&
+              _known.containsKey(entry.key))
+            _known[entry.key]!
+      ];
 
   DownloadState stateOf(int id) =>
       states.value[id] ?? const DownloadState(DownloadStatus.none);
@@ -129,6 +140,7 @@ class DownloadManager {
     final current = stateOf(item.id).status;
     if (current == DownloadStatus.waiting || current == DownloadStatus.downloading) return;
     _cancelled.remove(item.id);
+    _known[item.id] = item;
     _queue.add(item);
     _setState(item.id, const DownloadState(DownloadStatus.waiting));
     unawaited(_pump());

@@ -44,7 +44,7 @@ class SzsAudioHandler extends BaseAudioHandler with SeekHandler {
       controls: [
         MediaControl.skipToPrevious,
         MediaControl.rewind,
-        if (player.playing) MediaControl.pause else MediaControl.play,
+        if (player.playing && player.processingState != ProcessingState.completed) MediaControl.pause else MediaControl.play,
         MediaControl.fastForward,
         MediaControl.skipToNext,
       ],
@@ -61,7 +61,7 @@ class SzsAudioHandler extends BaseAudioHandler with SeekHandler {
         ProcessingState.ready: AudioProcessingState.ready,
         ProcessingState.completed: AudioProcessingState.completed,
       }[player.processingState]!,
-      playing: player.playing,
+      playing: player.playing && player.processingState != ProcessingState.completed,
       updatePosition: player.position,
       bufferedPosition: player.bufferedPosition,
       speed: player.speed,

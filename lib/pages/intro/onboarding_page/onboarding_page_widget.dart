@@ -359,7 +359,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
                                   letterSpacing: 0.0,
                                 ),
                         elevation: 0.0,
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(14.0),
                       ),
                     ),
                   ]

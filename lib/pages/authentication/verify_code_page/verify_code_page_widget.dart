@@ -254,7 +254,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                         ),
                         options: FFButtonOptions(
                           width: double.infinity,
-                          height: 50.0,
+                          height: 54.0,
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24.0, 0.0, 24.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -267,7 +267,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                                         .primaryBackground,
                                     fontSize: 16.0,
                                     letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w700,
                                     lineHeight: 1.2,
                                   ),
                           elevation: 0.0,
@@ -275,7 +275,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                             color: Colors.transparent,
                             width: 1.0,
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(14.0),
                         ),
                         showLoadingIndicator: false,
                       ),

@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
@@ -31,7 +32,7 @@ class MiniPlayerBar extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: AppPalette.of(context).background,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
       builder: (_) => const FullPlayer(),
     );
@@ -41,6 +42,7 @@ class MiniPlayerBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final service = PlayerService.instance;
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
 
     return ValueListenableBuilder<PlayerSnapshot>(
       valueListenable: service.snapshot,
@@ -49,7 +51,7 @@ class MiniPlayerBar extends StatelessWidget {
         if (item == null) return const SizedBox.shrink();
 
         return Material(
-          color: theme.secondaryBackground,
+          color: pal.surface,
           elevation: 6,
           borderRadius: BorderRadius.circular(16),
           clipBehavior: Clip.antiAlias,
@@ -70,8 +72,8 @@ class MiniPlayerBar extends StatelessWidget {
                       return LinearProgressIndicator(
                         value: value,
                         minHeight: 2,
-                        backgroundColor: theme.alternate,
-                        color: theme.primary,
+                        backgroundColor: pal.outline,
+                        color: pal.accent,
                       );
                     },
                   ),
@@ -91,14 +93,14 @@ class MiniPlayerBar extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: theme.bodyLarge.copyWith(
-                                        color: theme.primaryText, fontWeight: FontWeight.w600)),
+                                        color: pal.text, fontWeight: FontWeight.w600)),
                                 Text(
                                   PlayerStrings.errorText(snap.error) ??
                                       (item.subtitle.isEmpty ? PlayerStrings.nowPlaying : item.subtitle),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: theme.bodySmall.copyWith(
-                                      color: snap.error == PlayerErrorCode.none ? theme.secondaryText : theme.error),
+                                      color: snap.error == PlayerErrorCode.none ? pal.muted : pal.error),
                                 ),
                               ],
                             ),
@@ -109,11 +111,11 @@ class MiniPlayerBar extends StatelessWidget {
                           else
                             IconButton(
                               icon: Icon(snap.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                                  color: theme.primaryText, size: 30),
+                                  color: pal.text, size: 30),
                               onPressed: service.toggle,
                             ),
                           IconButton(
-                            icon: Icon(Icons.skip_next_rounded, color: theme.primaryText, size: 28),
+                            icon: Icon(Icons.skip_next_rounded, color: pal.text, size: 28),
                             onPressed: service.next,
                           ),
                         ],

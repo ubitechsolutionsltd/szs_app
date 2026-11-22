@@ -125,7 +125,7 @@ class _FeedbackSubmitAlrtWidgetState extends State<FeedbackSubmitAlrtWidget> {
                 ),
                 options: FFButtonOptions(
                   width: double.infinity,
-                  height: 50.0,
+                  height: 54.0,
                   padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                   iconPadding:
                       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
@@ -135,7 +135,7 @@ class _FeedbackSubmitAlrtWidgetState extends State<FeedbackSubmitAlrtWidget> {
                         color: FlutterFlowTheme.of(context).primaryBackground,
                         fontSize: 16.0,
                         letterSpacing: 0.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                         lineHeight: 1.2,
                       ),
                   elevation: 0.0,
@@ -143,7 +143,7 @@ class _FeedbackSubmitAlrtWidgetState extends State<FeedbackSubmitAlrtWidget> {
                     color: Colors.transparent,
                     width: 1.0,
                   ),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(14.0),
                 ),
                 showLoadingIndicator: false,
               ),

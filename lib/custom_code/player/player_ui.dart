@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart' hide RepeatMode;
 
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/custom_code/ui/app_palette.dart';
 import 'download_manager.dart';
 import 'player_core.dart';
 import 'player_service.dart';
@@ -31,6 +32,7 @@ class PlayerStrings {
   static const added = 'Imeongezwa kwenye orodha';
   static const nothingPlaying = 'Hakuna kinachochezwa';
   static const locked = 'Simulizi hii imefungwa. Ifungue kwanza ili kuisikiliza.';
+  static const nextLocked = 'Sehemu zinazofuata zimefungwa. Zifungue ili kuendelea.';
   static const offline = 'Hakuna mtandao. Pakua simulizi ili kusikiliza bila mtandao.';
   static const failed = 'Imeshindikana kucheza. Jaribu tena.';
   static String minutes(int m) => 'Dakika $m';
@@ -39,6 +41,8 @@ class PlayerStrings {
     switch (code) {
       case PlayerErrorCode.locked:
         return locked;
+      case PlayerErrorCode.nextLocked:
+        return nextLocked;
       case PlayerErrorCode.offline:
         return offline;
       case PlayerErrorCode.failed:
@@ -66,11 +70,12 @@ class PlayerArtwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
     final placeholder = Container(
       width: size,
       height: size,
-      color: theme.alternate,
-      child: Icon(Icons.headphones_rounded, color: theme.secondaryText, size: size * 0.4),
+      color: pal.outline,
+      child: Icon(Icons.headphones_rounded, color: pal.muted, size: size * 0.4),
     );
 
     return ClipRRect(
@@ -105,6 +110,7 @@ class _SeekBarState extends State<SeekBar> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
 
     return StreamBuilder<PlaybackPosition>(
       stream: widget.service.positionStream,
@@ -123,10 +129,10 @@ class _SeekBarState extends State<SeekBar> {
                 trackHeight: 4,
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-                activeTrackColor: theme.primary,
-                inactiveTrackColor: theme.alternate,
-                thumbColor: theme.primary,
-                secondaryActiveTrackColor: theme.primary.withValues(alpha: 0.3),
+                activeTrackColor: pal.accent,
+                inactiveTrackColor: pal.outline,
+                thumbColor: pal.accent,
+                secondaryActiveTrackColor: pal.accent.withValues(alpha: 0.3),
               ),
               child: Slider(
                 value: valueMs,
@@ -146,9 +152,9 @@ class _SeekBarState extends State<SeekBar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(formatDuration(Duration(milliseconds: valueMs.toInt())),
-                      style: theme.labelSmall.copyWith(color: theme.secondaryText)),
+                      style: theme.labelSmall.copyWith(color: pal.muted)),
                   Text(formatDuration(duration),
-                      style: theme.labelSmall.copyWith(color: theme.secondaryText)),
+                      style: theme.labelSmall.copyWith(color: pal.muted)),
                 ],
               ),
             ),
@@ -170,6 +176,7 @@ class DownloadChip extends StatelessWidget {
     final manager = DownloadManager.instance;
     if (!manager.supported) return const SizedBox.shrink();
     final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
 
     return ValueListenableBuilder<Map<int, DownloadState>>(
       valueListenable: manager.states,
@@ -192,7 +199,7 @@ class DownloadChip extends StatelessWidget {
             leading = SizedBox(
               width: 18,
               height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2, value: state.fraction, color: theme.primary),
+              child: CircularProgressIndicator(strokeWidth: 2, value: state.fraction, color: pal.accent),
             );
             onTap = () => manager.cancel(item.id);
           case DownloadStatus.failed:
@@ -206,10 +213,10 @@ class DownloadChip extends StatelessWidget {
         }
 
         return ActionChip(
-          avatar: leading ?? Icon(icon, size: 18, color: theme.primaryText),
-          label: Text(label, style: theme.labelMedium.copyWith(color: theme.primaryText)),
-          backgroundColor: theme.secondaryBackground,
-          side: BorderSide(color: theme.alternate),
+          avatar: leading ?? Icon(icon, size: 18, color: pal.text),
+          label: Text(label, style: theme.labelMedium.copyWith(color: pal.text)),
+          backgroundColor: pal.surface,
+          side: BorderSide(color: pal.outline),
           onPressed: onTap,
         );
       },
@@ -224,7 +231,7 @@ class PlayerSheets {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+      backgroundColor: AppPalette.of(context).surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) => DraggableScrollableSheet(
         expand: false,
@@ -234,6 +241,7 @@ class PlayerSheets {
           valueListenable: service.snapshot,
           builder: (context, snap, _) {
             final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
             if (snap.queue.isEmpty) {
               return Center(child: Text(PlayerStrings.queueEmpty, style: theme.bodyLarge));
             }
@@ -258,15 +266,15 @@ class PlayerSheets {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.bodyLarge.copyWith(
-                          color: current ? theme.primary : theme.primaryText,
+                          color: current ? pal.accent : pal.text,
                           fontWeight: current ? FontWeight.w700 : FontWeight.w500)),
                   subtitle: item.subtitle.isEmpty ? null : Text(item.subtitle, maxLines: 1),
                   trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                    if (!available) Icon(Icons.lock_outline_rounded, color: theme.secondaryText, size: 20),
-                    if (current && snap.playing) Icon(Icons.graphic_eq_rounded, color: theme.primary),
+                    if (!available) Icon(Icons.lock_outline_rounded, color: pal.muted, size: 20),
+                    if (current && snap.playing) Icon(Icons.graphic_eq_rounded, color: pal.accent),
                     IconButton(
                       tooltip: PlayerStrings.remove,
-                      icon: Icon(Icons.close_rounded, color: theme.secondaryText),
+                      icon: Icon(Icons.close_rounded, color: pal.muted),
                       onPressed: () => service.removeFromQueue(index),
                     ),
                   ]),
@@ -283,12 +291,13 @@ class PlayerSheets {
   static Future<void> sleepTimer(BuildContext context, PlayerService service) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+      backgroundColor: AppPalette.of(context).surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
         Widget option(String text, VoidCallback action, {IconData? icon}) => ListTile(
-              leading: icon == null ? null : Icon(icon, color: theme.primaryText),
+              leading: icon == null ? null : Icon(icon, color: pal.text),
               title: Text(text, style: theme.bodyLarge),
               onTap: () {
                 action();
@@ -317,10 +326,11 @@ class PlayerSheets {
   static Future<void> speed(BuildContext context, PlayerService service) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+      backgroundColor: AppPalette.of(context).surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         final theme = FlutterFlowTheme.of(context);
+    final pal = AppPalette.of(context);
         return SafeArea(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Padding(
@@ -330,7 +340,7 @@ class PlayerSheets {
             for (final value in speeds)
               ListTile(
                 title: Text('${value}x', style: theme.bodyLarge),
-                trailing: service.snapshot.value.speed == value ? Icon(Icons.check_rounded, color: theme.primary) : null,
+                trailing: service.snapshot.value.speed == value ? Icon(Icons.check_rounded, color: pal.accent) : null,
                 onTap: () {
                   service.setSpeed(value);
                   Navigator.of(context).pop();
@@ -348,10 +358,11 @@ class PlayerSheets {
     final store = PlaylistStore.instance;
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+      backgroundColor: AppPalette.of(context).surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (sheetContext) {
         final theme = FlutterFlowTheme.of(sheetContext);
+    final pal = AppPalette.of(sheetContext);
 
         Future<void> add(String playlistId) async {
           await store.addItem(playlistId, item);
@@ -396,13 +407,13 @@ class PlayerSheets {
                   child: Text(PlayerStrings.addToPlaylist, style: theme.titleLarge),
                 ),
                 ListTile(
-                  leading: Icon(Icons.add_rounded, color: theme.primary),
-                  title: Text(PlayerStrings.newPlaylist, style: theme.bodyLarge.copyWith(color: theme.primary)),
+                  leading: Icon(Icons.add_rounded, color: pal.accent),
+                  title: Text(PlayerStrings.newPlaylist, style: theme.bodyLarge.copyWith(color: pal.accent)),
                   onTap: createAndAdd,
                 ),
                 for (final list in lists)
                   ListTile(
-                    leading: Icon(Icons.queue_music_rounded, color: theme.primaryText),
+                    leading: Icon(Icons.queue_music_rounded, color: pal.text),
                     title: Text(list.name, style: theme.bodyLarge),
                     subtitle: Text('${list.items.length}'),
                     onTap: () => add(list.id),

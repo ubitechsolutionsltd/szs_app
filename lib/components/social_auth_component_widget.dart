@@ -47,7 +47,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
         color: Colors.transparent,
       ),
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -186,23 +186,24 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
               ),
               options: FFButtonOptions(
                 width: double.infinity,
-                height: 50.0,
+                height: 54.0,
                 padding: EdgeInsets.all(8.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                 iconColor: FlutterFlowTheme.of(context).error,
-                color: FlutterFlowTheme.of(context).primaryBackground,
+                color: FlutterFlowTheme.of(context).secondary,
                 textStyle: FlutterFlowTheme.of(context).titleLarge.override(
                       fontFamily: 'SF Pro Display',
                       color: FlutterFlowTheme.of(context).tertiary,
                       fontSize: 18.0,
                       letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w700,
                     ),
                 elevation: 0.0,
                 borderSide: BorderSide(
-                  color: FlutterFlowTheme.of(context).primary,
+                  color: Color(0xFF2E3833),
                   width: 1.0,
                 ),
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(14.0),
               ),
             ),
           ].divide(SizedBox(height: 12.0)),

@@ -14,7 +14,7 @@ import 'download_manager.dart';
 import 'media_access.dart';
 import 'player_core.dart';
 
-enum PlayerErrorCode { none, locked, offline, failed }
+enum PlayerErrorCode { none, locked, nextLocked, offline, failed }
 
 class PlaybackPosition {
   const PlaybackPosition(this.position, this.buffered, this.duration);
@@ -307,8 +307,10 @@ class PlayerService {
 
   // ---- loading and completion -----------------------------------------------------------------------------
 
-  Future<void> _loadCurrent({bool autoplay = true}) async {
-    final item = _queue.current;
+  /// Loads the queue's current item. With [skipLocked] (used when moving on by itself) episodes the user has
+  /// not unlocked are passed over instead of stopping the queue.
+  Future<void> _loadCurrent({bool autoplay = true, bool skipLocked = false, int? fallbackIndex}) async {
+    var item = _queue.current;
     if (item == null) return;
 
     final seq = ++_loadSeq;
@@ -317,14 +319,38 @@ class PlayerService {
     _publish();
 
     try {
-      final source = await _resolveSource(item);
-      if (seq != _loadSeq) return;
+      final startIndex = _queue.currentIndex;
+      AudioSource? source;
+      for (var attempt = 0; attempt <= _queue.items.length; attempt++) {
+        source = await _resolveSource(item!);
+        if (seq != _loadSeq) return;
+        if (source != null) break;
+
+        if (skipLocked && _error == PlayerErrorCode.locked) {
+          final next = _queue.next();
+          if (next == null) break;
+          item = next;
+          _error = PlayerErrorCode.none;
+          _publish();
+          continue;
+        }
+        break;
+      }
+
       if (source == null) {
+        if (skipLocked && _error == PlayerErrorCode.locked) {
+          // Everything after this episode is locked: stay on the episode that just finished.
+          _queue.jumpTo(fallbackIndex ?? startIndex);
+          _error = PlayerErrorCode.nextLocked;
+          _loading = false;
+          _publish();
+          return;
+        }
         _fail(_error == PlayerErrorCode.none ? PlayerErrorCode.failed : _error);
         return;
       }
 
-      final resume = await _savedPosition(item);
+      final resume = await _savedPosition(item!);
       await player.setAudioSource(source, initialPosition: resume);
       if (seq != _loadSeq) return;
 
@@ -333,7 +359,7 @@ class PlayerService {
       if (autoplay) unawaited(player.play());
       unawaited(_saveSession());
     } catch (e) {
-      debugPrint('Could not load ${item.id}: $e');
+      debugPrint('Could not load the episode: $e');
       if (seq == _loadSeq) {
         _fail(_looksOffline(e) ? PlayerErrorCode.offline : PlayerErrorCode.failed);
       }
@@ -355,14 +381,15 @@ class PlayerService {
       return null;
     }
 
-    if (MediaUrlPolicy.needsRefresh(url)) {
-      final refreshed = await MediaAccess.instance.refresh(url);
-      if (refreshed.locked) {
+    if (MediaUrlPolicy.isGateUrl(url)) {
+      // Ask the server every time: it answers "locked" reliably and hands back a fresh signed link.
+      final access = await MediaAccess.instance.refresh(url);
+      if (access.locked) {
         _error = PlayerErrorCode.locked;
         return null;
       }
-      if (refreshed.url != null) {
-        url = refreshed.url!;
+      if (access.url != null) {
+        url = access.url!;
         _queue.updateRemoteUrl(item.id, url);
       }
     }
@@ -394,8 +421,9 @@ class PlayerService {
       return;
     }
 
+    final finishedIndex = _queue.currentIndex;
     if (_queue.advanceOnComplete() != null) {
-      unawaited(_loadCurrent());
+      unawaited(_loadCurrent(skipLocked: true, fallbackIndex: finishedIndex));
     }
   }
 
@@ -475,7 +503,8 @@ class PlayerService {
       item: _queue.current,
       queue: _queue.items,
       index: _queue.currentIndex,
-      playing: player.playing,
+      // just_audio keeps `playing` true after the last episode completes; to the user it has stopped.
+      playing: player.playing && player.processingState != ProcessingState.completed,
       loading: _loading ||
           player.processingState == ProcessingState.loading ||
           player.processingState == ProcessingState.buffering,
