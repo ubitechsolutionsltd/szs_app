@@ -1,14 +1,12 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/components/custom_center_app_bar_widget.dart';
-import '/components/package_lists_component_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webviewx_plus/webviewx_plus.dart';
 import 'my_profile_page_model.dart';
 export 'my_profile_page_model.dart';
 
@@ -38,35 +36,6 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
     _model.dispose();
 
     super.dispose();
-  }
-
-  Future<void> _refreshWallet() async {
-    final response = await GeneralGroup.meCall.call();
-    final coin = GeneralGroup.loginCall.walletcoin(response.jsonBody);
-    if (coin != null) {
-      FFAppState().walletcoin = coin;
-      FFAppState().update(() {});
-    }
-  }
-
-  Future<void> _openTopUp() async {
-    await showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      useSafeArea: true,
-      context: context,
-      builder: (context) {
-        return WebViewAware(
-          child: Padding(
-            padding: MediaQuery.viewInsetsOf(context),
-            child: Container(
-              height: MediaQuery.sizeOf(context).height * 0.75,
-              child: PackageListsComponentWidget(),
-            ),
-          ),
-        );
-      },
-    ).then((value) => safeSetState(() {}));
   }
 
   Widget _infoRow(BuildContext context, IconData icon, String label, String value) {
@@ -173,64 +142,7 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
           ),
         ),
         SizedBox(height: 24.0),
-        Container(
-          padding: EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpace.radiusLg),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [palette.accent, Color.lerp(palette.accent, Colors.black, 0.55)!],
-            ),
-          ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Icon(Icons.toll_rounded, color: palette.onAccent.withValues(alpha: 0.8), size: 20.0),
-              SizedBox(width: 8.0),
-              Expanded(
-                child: Text('Salio lako',
-                    style: theme.bodyMedium.override(
-                        fontFamily: 'SF Pro Display',
-                        color: palette.onAccent.withValues(alpha: 0.85),
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.0)),
-              ),
-              IconButton(
-                tooltip: 'Onyesha upya',
-                visualDensity: VisualDensity.compact,
-                icon: Icon(Icons.refresh_rounded, color: palette.onAccent),
-                onPressed: _refreshWallet,
-              ),
-            ]),
-            SizedBox(height: 4.0),
-            Text('${state.walletcoin}',
-                style: theme.bodyMedium.override(
-                    fontFamily: 'SF Pro Display',
-                    color: Colors.white,
-                    fontSize: 44.0,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -1.0)),
-            Text('sarafu',
-                style: theme.bodyMedium.override(
-                    fontFamily: 'SF Pro Display', color: Colors.white70, fontSize: 14.0, letterSpacing: 0.0)),
-            SizedBox(height: 16.0),
-            SizedBox(
-              width: double.infinity,
-              height: 48.0,
-              child: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.0)),
-                ),
-                icon: Icon(Icons.add_circle_outline_rounded),
-                label: Text('Jaza kibubu', style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
-                onPressed: _openTopUp,
-              ),
-            ),
-          ]),
-        ),
+        custom_widgets.WalletCard(),
         if ([state.fullname, state.email, state.phonenumber, state.bio, state.joinedat]
             .any((v) => v.trim().isNotEmpty)) ...[
         SizedBox(height: 24.0),
@@ -265,7 +177,7 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(

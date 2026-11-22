@@ -127,7 +127,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                           'Successfully Logged In.',
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).tertiary,
+                            color: Colors.white,
                           ),
                         ),
                         duration: Duration(milliseconds: 4000),
@@ -145,7 +145,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                           )!,
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).alternate,
+                            color: Colors.white,
                           ),
                         ),
                         duration: Duration(milliseconds: 4000),
@@ -162,7 +162,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                         'Oops ! Technical Error. Try Again.',
                         style: TextStyle(
                           fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).tertiary,
+                          color: Colors.white,
                         ),
                       ),
                       duration: Duration(milliseconds: 4000),
@@ -200,7 +200,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                     ),
                 elevation: 0.0,
                 borderSide: BorderSide(
-                  color: Color(0xFF2E3833),
+                  color: FlutterFlowTheme.of(context).borderColor,
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(14.0),

@@ -56,7 +56,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(

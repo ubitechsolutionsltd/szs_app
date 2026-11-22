@@ -34,8 +34,18 @@ class FFLocalizations {
       ? languages().indexOf(languageCode)
       : 0;
 
-  String getText(String key) =>
-      (kTranslationsMap[key] ?? {})[locale.toString()] ?? '';
+  /// Text for [key] in the current language. A missing or blank translation falls back to Swahili, then
+  /// English, so a screen never shows an empty label or button.
+  String getText(String key) {
+    final translations = kTranslationsMap[key] ?? {};
+    final current = translations[locale.toString()];
+    if (current != null && current.isNotEmpty) return current;
+    for (final fallback in const ['sw', 'en']) {
+      final text = translations[fallback];
+      if (text != null && text.isNotEmpty) return text;
+    }
+    return '';
+  }
 
   String getVariableText({
     String? swText = '',

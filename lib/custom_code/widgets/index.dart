@@ -9,3 +9,5 @@ export 'downloads_list.dart' show DownloadsList;
 export 'home_hero.dart' show HomeHero;
 export 'home_header.dart' show HomeHeader;
 export 'category_grid.dart' show CategoryGrid;
+export 'wallet_card.dart' show WalletCard;
+export 'settings_header.dart' show SettingsHeader;

@@ -55,7 +55,7 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -159,7 +159,7 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -266,7 +266,7 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -384,8 +384,7 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
                                           .labelLarge
                                           .override(
                                             fontFamily: 'SF Pro Display',
-                                            color: FlutterFlowTheme.of(context)
-                                                .tertiary,
+                                            color: Colors.white,
                                             letterSpacing: 0.0,
                                           ),
                                     ),

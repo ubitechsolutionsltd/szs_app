@@ -75,7 +75,7 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -187,7 +187,7 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
                               borderRadius: BorderRadius.circular(14.0),
                             ),
                             filled: true,
-                            fillColor: Color(0xFF161616),
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,

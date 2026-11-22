@@ -87,7 +87,7 @@ class _LogoutAlrtDialogWidgetState extends State<LogoutAlrtDialogWidget>
           }
         }(),
         decoration: BoxDecoration(
-          color: Color(0xFF313030),
+          color: FlutterFlowTheme.of(context).secondary,
           borderRadius: BorderRadius.circular(28.0),
         ),
         child: Padding(

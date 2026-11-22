@@ -48,7 +48,7 @@ class _AddSongPageWidgetState extends State<AddSongPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -184,8 +184,7 @@ class _AddSongPageWidgetState extends State<AddSongPageWidget> {
                                         .bodyLarge
                                         .override(
                                           fontFamily: 'SF Pro Display',
-                                          color: FlutterFlowTheme.of(context)
-                                              .tertiary,
+                                          color: Colors.white,
                                           letterSpacing: 0.0,
                                         ),
                                   ),
@@ -199,7 +198,7 @@ class _AddSongPageWidgetState extends State<AddSongPageWidget> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).secondary,
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(

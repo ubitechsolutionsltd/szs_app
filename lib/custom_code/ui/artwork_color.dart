@@ -117,7 +117,11 @@ class _ArtworkBackdropState extends State<ArtworkBackdrop> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [(color ?? palette.surface).withValues(alpha: 0.85), palette.background],
+                  colors: [
+                    (color ?? palette.surface).withValues(
+                        alpha: Theme.of(context).brightness == Brightness.dark ? 0.85 : 0.32),
+                    palette.background,
+                  ],
                 ),
               ),
             ),

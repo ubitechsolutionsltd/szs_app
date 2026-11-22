@@ -70,8 +70,8 @@ class _ArtistContainerPlaylistCompWidgetState
         }(),
         height: 119.0,
         decoration: BoxDecoration(
-          color: Color(0xFF161616),
-          borderRadius: BorderRadius.circular(8.0),
+          color: FlutterFlowTheme.of(context).secondary,
+          borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
             width: 1.0,
           ),

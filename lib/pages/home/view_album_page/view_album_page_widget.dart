@@ -91,7 +91,7 @@ class _ViewAlbumPageWidgetState extends State<ViewAlbumPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -259,9 +259,9 @@ class _ViewAlbumPageWidgetState extends State<ViewAlbumPageWidget>
                                             }
                                           }(),
                                           decoration: BoxDecoration(
-                                            color: Color(0xFF161616),
+                                            color: FlutterFlowTheme.of(context).secondary,
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                                BorderRadius.circular(16.0),
                                           ),
                                           child: Padding(
                                             padding:

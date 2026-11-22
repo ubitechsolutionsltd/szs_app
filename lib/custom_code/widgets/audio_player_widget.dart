@@ -172,7 +172,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                     context: context,
                     isScrollControlled: true,
                     useSafeArea: true,
-                    backgroundColor: pal.background,
+                    backgroundColor: Colors.transparent,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
                     builder: (_) => const FullPlayer(),
                   ),

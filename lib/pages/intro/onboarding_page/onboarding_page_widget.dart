@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -62,7 +61,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
                   )!,
                   style: TextStyle(
                     fontFamily: 'SF Pro Display',
-                    color: FlutterFlowTheme.of(context).alternate,
+                    color: Colors.white,
                   ),
                 ),
                 duration: Duration(milliseconds: 4000),
@@ -78,7 +77,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
                 'Oops ! Technical Error. Try Again.',
                 style: TextStyle(
                   fontFamily: 'SF Pro Display',
-                  color: FlutterFlowTheme.of(context).tertiary,
+                  color: Colors.white,
                 ),
               ),
               duration: Duration(milliseconds: 4000),
@@ -114,7 +113,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0.0, 46.0, 0.0, 0.0),
           child: Stack(

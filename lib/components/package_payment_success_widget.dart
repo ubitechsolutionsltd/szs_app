@@ -77,7 +77,7 @@ class _PackagePaymentSuccessWidgetState
           }
         }(),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryBackground,
+          color: Colors.transparent,
           boxShadow: [
             BoxShadow(
               blurRadius: 4.0,

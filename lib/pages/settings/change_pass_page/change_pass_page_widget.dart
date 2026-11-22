@@ -53,7 +53,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -137,7 +137,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -227,7 +227,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -297,8 +297,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
                                         .bodyLarge
                                         .override(
                                           fontFamily: 'SF Pro Display',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                          color: Colors.white,
                                           letterSpacing: 0.0,
                                         ),
                                   ),
@@ -318,8 +317,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
                                         .bodyLarge
                                         .override(
                                           fontFamily: 'SF Pro Display',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                          color: Colors.white,
                                           letterSpacing: 0.0,
                                         ),
                                   ),

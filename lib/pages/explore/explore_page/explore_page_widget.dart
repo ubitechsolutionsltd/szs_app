@@ -64,7 +64,7 @@ class _ExplorePageWidgetState extends State<ExplorePageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -94,7 +94,7 @@ class _ExplorePageWidgetState extends State<ExplorePageWidget>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondary,
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(

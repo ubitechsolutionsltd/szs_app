@@ -9,6 +9,8 @@ import 'auth/firebase_auth/auth_util.dart';
 import 'backend/firebase/firebase_config.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/theme_mode_store.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
@@ -26,6 +28,8 @@ void main() async {
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
+
+  await ThemeModeStore.init();
 
   await actions.initPlayer();
 
@@ -47,7 +51,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Locale? _locale = FFLocalizations.getStoredLocale();
 
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeModeStore.current;
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
@@ -70,6 +74,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    ThemeModeStore.notifier.addListener(() {
+      if (mounted && ThemeModeStore.notifier.value != _themeMode) {
+        safeSetState(() => _themeMode = ThemeModeStore.notifier.value);
+      }
+    });
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = simuliziFirebaseUserStream()
@@ -88,9 +97,14 @@ class _MyAppState extends State<MyApp> {
     FFLocalizations.storeLocale(language);
   }
 
-  void setThemeMode(ThemeMode mode) => safeSetState(() {
-        _themeMode = mode;
-      });
+  void setThemeMode(ThemeMode mode) {
+    ThemeModeStore.save(mode);
+    safeSetState(() {
+      _themeMode = mode;
+    });
+  }
+
+  ThemeMode get themeMode => _themeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +127,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,
+        scaffoldBackgroundColor: LightModeTheme().primaryBackground,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: false,
+        scaffoldBackgroundColor: DarkModeTheme().primaryBackground,
       ),
       themeMode: _themeMode,
+      builder: (context, child) => AuroraBackground(child: child ?? const SizedBox.shrink()),
       routerConfig: _router,
     );
   }
@@ -160,12 +181,10 @@ class _NavBarPageState extends State<NavBarPage> {
     final palette = AppPalette.of(context);
 
     return Scaffold(
-      backgroundColor: palette.background,
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: !widget.disableResizeToAvoidBottomInset,
       body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: ColoredBox(
-        color: palette.background,
-        child: Column(
+      bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Persistent "now playing" bar (hidden when nothing is loaded).
@@ -173,11 +192,11 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 8.0),
             child: custom_widgets.MiniPlayerBar(),
           ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: palette.surface,
-              border: Border(top: BorderSide(color: palette.outline, width: 0.5)),
-            ),
+          Glass(
+            blur: 28,
+            shadow: false,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(26.0)),
+            strong: true,
             child: NavigationBarTheme(
               data: NavigationBarThemeData(
                 height: 66.0,
@@ -247,7 +266,6 @@ class _NavBarPageState extends State<NavBarPage> {
             ),
           ),
         ],
-      ),
       ),
     );
   }

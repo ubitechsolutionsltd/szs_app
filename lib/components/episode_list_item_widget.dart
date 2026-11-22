@@ -260,7 +260,7 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
                         )!,
                         style: TextStyle(
                           fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).tertiary,
+                          color: Colors.white,
                         ),
                       ),
                       duration: Duration(milliseconds: 4000),
@@ -277,7 +277,7 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
                       'Imeshindwa kununua. Jaribu tena baadae.',
                       style: TextStyle(
                         fontFamily: 'SF Pro Display',
-                        color: FlutterFlowTheme.of(context).tertiary,
+                        color: Colors.white,
                       ),
                     ),
                     duration: Duration(milliseconds: 4000),

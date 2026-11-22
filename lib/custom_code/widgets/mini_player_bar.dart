@@ -2,6 +2,7 @@
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/glass.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
@@ -32,7 +33,7 @@ class MiniPlayerBar extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: AppPalette.of(context).background,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
       builder: (_) => const FullPlayer(),
     );
@@ -50,10 +51,11 @@ class MiniPlayerBar extends StatelessWidget {
         final item = snap.item;
         if (item == null) return const SizedBox.shrink();
 
-        return Material(
-          color: pal.surface,
-          elevation: 6,
-          borderRadius: BorderRadius.circular(16),
+        return Glass(
+          radius: 18,
+          strong: true,
+          child: Material(
+          color: Colors.transparent,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () => onTap != null ? onTap!() : _openFullPlayer(context),
@@ -126,7 +128,7 @@ class MiniPlayerBar extends StatelessWidget {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

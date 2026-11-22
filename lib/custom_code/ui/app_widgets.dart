@@ -251,3 +251,27 @@ class _ExpandableTextState extends State<ExpandableText> {
     });
   }
 }
+
+
+/// Round icon badge used at the top of empty states.
+class EmptyBadge extends StatelessWidget {
+  const EmptyBadge({super.key, required this.icon, this.size = 112});
+
+  final IconData icon;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: palette.accent.withValues(alpha: 0.10),
+        border: Border.all(color: palette.accent.withValues(alpha: 0.35), width: 1.5),
+      ),
+      child: Icon(icon, size: size * 0.46, color: palette.accent),
+    );
+  }
+}

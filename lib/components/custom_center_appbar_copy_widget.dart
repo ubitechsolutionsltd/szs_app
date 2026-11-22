@@ -53,7 +53,7 @@ class _CustomCenterAppbarCopyWidgetState
       width: double.infinity,
       height: 79.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryBackground,
+        color: Colors.transparent,
       ),
       alignment: AlignmentDirectional(0.0, 0.0),
       child: Padding(
@@ -81,7 +81,8 @@ class _CustomCenterAppbarCopyWidgetState
                           width: 40.0,
                           height: 40.0,
                           decoration: BoxDecoration(
-                            color: Color(0xFF161616),
+                            color: FlutterFlowTheme.of(context).secondary,
+                            border: Border.all(color: FlutterFlowTheme.of(context).borderColor, width: 0.8),
                             shape: BoxShape.circle,
                           ),
                           alignment: AlignmentDirectional(0.0, 0.0),
@@ -91,6 +92,7 @@ class _CustomCenterAppbarCopyWidgetState
                               borderRadius: BorderRadius.circular(8.0),
                               child: SvgPicture.asset(
                                 'assets/images/arrow_back_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                 fit: BoxFit.contain,
                                 alignment: Alignment(0.0, 0.0),
                               ),
@@ -144,14 +146,16 @@ class _CustomCenterAppbarCopyWidgetState
                         width: 40.0,
                         height: 40.0,
                         decoration: BoxDecoration(
-                          color: Color(0xFF161616),
-                          shape: BoxShape.circle,
+                          color: FlutterFlowTheme.of(context).secondary,
+                          border: Border.all(color: FlutterFlowTheme.of(context).borderColor, width: 0.8),
+                            shape: BoxShape.circle,
                         ),
                         alignment: AlignmentDirectional(0.0, 0.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(0.0),
                           child: SvgPicture.asset(
                             'assets/images/more_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                             fit: BoxFit.contain,
                             alignment: Alignment(0.0, 0.0),
                           ),

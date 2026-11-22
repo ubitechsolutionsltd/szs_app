@@ -2,6 +2,7 @@
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/glass.dart';
 import '/custom_code/ui/artwork_color.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
@@ -31,7 +32,12 @@ class FullPlayer extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     final pal = AppPalette.of(context);
 
-    return SizedBox(
+    return Glass(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      blur: 30,
+      strong: true,
+      shadow: false,
+      child: SizedBox(
       width: width,
       height: height,
       child: ValueListenableBuilder<PlayerSnapshot>(
@@ -147,6 +153,7 @@ class FullPlayer extends StatelessWidget {
           ),
           );
         },
+      ),
       ),
     );
   }

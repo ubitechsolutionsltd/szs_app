@@ -40,7 +40,7 @@ class _SortByBtmWidgetState extends State<SortByBtmWidget> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Color(0xFF313030),
+          color: FlutterFlowTheme.of(context).secondary,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(28.0),
             topRight: Radius.circular(28.0),

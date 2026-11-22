@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 abstract class FlutterFlowTheme {
   static FlutterFlowTheme of(BuildContext context) {
-    return LightModeTheme();
+    return Theme.of(context).brightness == Brightness.dark
+        ? DarkModeTheme()
+        : LightModeTheme();
   }
 
   @Deprecated('Use primary instead')
@@ -129,31 +131,70 @@ class LightModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF04B155);
-  late Color secondary = const Color(0xFF171D1A);
-  late Color tertiary = const Color(0xFFF4F7F5);
-  late Color alternate = const Color(0xFFE0E3E7);
-  late Color primaryText = const Color(0xFF04130B);
-  late Color secondaryText = const Color(0xFF8E9C94);
-  late Color primaryBackground = const Color(0xFF0B0F0D);
-  late Color secondaryBackground = const Color(0xFFF4F7F5);
+  // Brand blue taken from the Simulizi za Sauti logo.
+  late Color primary = const Color(0xFF0070C0);
+  // Cards and inputs.
+  late Color secondary = const Color(0xCCFFFFFF);
+  // Main text colour.
+  late Color tertiary = const Color(0xFF0F1B2D);
+  late Color alternate = const Color(0xFFD9E2EC);
+  // Text and icons placed on the primary colour.
+  late Color primaryText = const Color(0xFFFFFFFF);
+  late Color secondaryText = const Color(0xFF5B6B80);
+  late Color primaryBackground = const Color(0xFFF3F7FB);
+  late Color secondaryBackground = const Color(0xFF0F1B2D);
   late Color accent1 = const Color(0xFFA8C9EE);
   late Color accent2 = const Color(0x4D39D2C0);
   late Color accent3 = const Color(0x4DEE8B60);
   late Color accent4 = const Color(0xCCFFFFFF);
-  late Color success = const Color(0xFF04B155);
-  late Color warning = const Color(0xFFF5B544);
-  late Color error = const Color(0xFFF45C5C);
-  late Color info = const Color(0xFFFFFFFF);
+  late Color success = const Color(0xFF16A34A);
+  late Color warning = const Color(0xFFF5A524);
+  late Color error = const Color(0xFFE5484D);
+  late Color info = const Color(0xFF0F1B2D);
 
-  late Color lightGray = const Color(0xFFF8F8F8);
-  late Color black30 = const Color(0xFFC0C0C0);
-  late Color gray = const Color(0xFF8E9C94);
-  late Color black10 = const Color(0xFFF4F4F4);
-  late Color black40 = const Color(0xFF696969);
-  late Color borderColor = const Color(0xFFDCDCDC);
-  late Color shadowColor = const Color(0x14000000);
-  late Color black20 = const Color(0xFFDCDCDC);
+  late Color lightGray = const Color(0xFFF3F7FB);
+  late Color black30 = const Color(0xFFC0C9D4);
+  late Color gray = const Color(0xFF6B7A90);
+  late Color black10 = const Color(0xFFE8EEF4);
+  late Color black40 = const Color(0xFF5B6B80);
+  late Color borderColor = const Color(0xFFD9E2EC);
+  late Color shadowColor = const Color(0x1A0F1B2D);
+  late Color black20 = const Color(0xFFD9E2EC);
+}
+
+class DarkModeTheme extends FlutterFlowTheme {
+  @Deprecated('Use primary instead')
+  Color get primaryColor => primary;
+  @Deprecated('Use secondary instead')
+  Color get secondaryColor => secondary;
+  @Deprecated('Use tertiary instead')
+  Color get tertiaryColor => tertiary;
+
+  late Color primary = const Color(0xFF3B9BF0);
+  late Color secondary = const Color(0xB3162540);
+  late Color tertiary = const Color(0xFFEAF1FA);
+  late Color alternate = const Color(0xFF263449);
+  late Color primaryText = const Color(0xFF04182B);
+  late Color secondaryText = const Color(0xFF8FA3BD);
+  late Color primaryBackground = const Color(0xFF0A1220);
+  late Color secondaryBackground = const Color(0xFFEAF1FA);
+  late Color accent1 = const Color(0xFFA8C9EE);
+  late Color accent2 = const Color(0x4D39D2C0);
+  late Color accent3 = const Color(0x4DEE8B60);
+  late Color accent4 = const Color(0xCCFFFFFF);
+  late Color success = const Color(0xFF22C55E);
+  late Color warning = const Color(0xFFF5B544);
+  late Color error = const Color(0xFFF26B6F);
+  late Color info = const Color(0xFFEAF1FA);
+
+  late Color lightGray = const Color(0xFF121C2E);
+  late Color black30 = const Color(0xFF3A4A63);
+  late Color gray = const Color(0xFF8FA3BD);
+  late Color black10 = const Color(0xFF0F1827);
+  late Color borderColor = const Color(0xFF263449);
+  late Color shadowColor = const Color(0x66000000);
+  late Color black40 = const Color(0xFF8FA3BD);
+  late Color black20 = const Color(0xFF263449);
 }
 
 abstract class Typography {
@@ -213,7 +254,7 @@ class ThemeTypography extends Typography {
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 64.0,
       );
@@ -221,7 +262,7 @@ class ThemeTypography extends Typography {
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 44.0,
       );
@@ -229,7 +270,7 @@ class ThemeTypography extends Typography {
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.w600,
         fontSize: 36.0,
       );
@@ -237,7 +278,7 @@ class ThemeTypography extends Typography {
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.w600,
         fontSize: 32.0,
       );
@@ -245,7 +286,7 @@ class ThemeTypography extends Typography {
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 24.0,
       );
@@ -253,7 +294,7 @@ class ThemeTypography extends Typography {
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.w500,
         fontSize: 24.0,
       );
@@ -261,7 +302,7 @@ class ThemeTypography extends Typography {
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.w500,
         fontSize: 22.0,
       );
@@ -309,7 +350,7 @@ class ThemeTypography extends Typography {
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
       );
@@ -317,7 +358,7 @@ class ThemeTypography extends Typography {
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 14.0,
       );
@@ -325,7 +366,7 @@ class ThemeTypography extends Typography {
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => TextStyle(
         fontFamily: 'SF Pro Display',
-        color: theme.primaryText,
+        color: theme.tertiary,
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
       );

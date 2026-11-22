@@ -71,7 +71,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -207,6 +207,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                       borderRadius: BorderRadius.circular(0.0),
                                       child: SvgPicture.asset(
                                         'assets/images/pic_img_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                         fit: BoxFit.contain,
                                         alignment: Alignment(0.0, 0.0),
                                       ),
@@ -337,7 +338,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFF2E3833),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
                                   borderRadius: BorderRadius.circular(14.0),
@@ -442,7 +443,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFF2E3833),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
                                   borderRadius: BorderRadius.circular(14.0),
@@ -547,7 +548,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFF2E3833),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
                                   borderRadius: BorderRadius.circular(14.0),

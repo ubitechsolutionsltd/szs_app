@@ -80,7 +80,7 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(

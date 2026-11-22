@@ -70,7 +70,7 @@ class _NotificationPageWidgetState extends State<NotificationPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -245,7 +245,7 @@ class _NotificationPageWidgetState extends State<NotificationPageWidget>
                                           color: FlutterFlowTheme.of(context)
                                               .secondary,
                                           borderRadius:
-                                              BorderRadius.circular(8.0),
+                                              BorderRadius.circular(16.0),
                                         ),
                                         child: Padding(
                                           padding:

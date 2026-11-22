@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_logo.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/social_auth_component_widget.dart';
@@ -73,7 +74,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -99,12 +100,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                           alignment: AlignmentDirectional(-1.0, 0.0),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(18.0),
-                            child: Image.asset(
-                              'assets/images/app_launcher_icon.png',
-                              width: 64.0,
-                              height: 64.0,
-                              fit: BoxFit.cover,
-                            ),
+                            child: AppLogo(size: 64.0, radius: 18.0),
                           ),
                         ),
                       ),
@@ -187,7 +183,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -279,7 +275,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
@@ -468,8 +464,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                       'Successfully Logged In.',
                                       style: TextStyle(
                                         fontFamily: 'SF Pro Display',
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiary,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     duration: Duration(milliseconds: 4000),
@@ -493,8 +488,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                       ),
                                       style: TextStyle(
                                         fontFamily: 'SF Pro Display',
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     duration: Duration(milliseconds: 4000),
@@ -513,7 +507,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                     style: TextStyle(
                                       fontFamily: 'SF Pro Display',
                                       color:
-                                          FlutterFlowTheme.of(context).tertiary,
+                                          Colors.white,
                                     ),
                                   ),
                                   duration: Duration(milliseconds: 4000),

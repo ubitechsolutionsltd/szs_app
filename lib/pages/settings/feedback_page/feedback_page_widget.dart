@@ -48,7 +48,7 @@ class _FeedbackPageWidgetState extends State<FeedbackPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -110,7 +110,7 @@ class _FeedbackPageWidgetState extends State<FeedbackPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFF2E3833),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14.0),
