@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -58,12 +59,18 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                 if (user == null) {
                   return;
                 }
+                // The backend verifies this Firebase ID token, so it never trusts a bare email address.
+                final googleIdToken =
+                    await fb.FirebaseAuth.instance.currentUser?.getIdToken(true);
+                if (googleIdToken == null || googleIdToken.isEmpty) {
+                  return;
+                }
                 _model.googleAuthResp = await GeneralGroup.loginCall.call(
                   type: '2',
                   email: currentUserEmail,
-                  password: currentUserEmail,
+                  idToken: googleIdToken,
                   deviceType: '1',
-                  deviceToken: currentJwtToken,
+                  deviceToken: '',
                   fullName: currentUserDisplayName,
                   mobileNumber: currentPhoneNumber,
                   image: currentUserPhoto,
@@ -82,9 +89,10 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                     FFAppState().username = GeneralGroup.loginCall.username(
                       (_model.googleAuthResp?.jsonBody ?? ''),
                     )!;
-                    FFAppState().password = GeneralGroup.loginCall.email(
-                      (_model.googleAuthResp?.jsonBody ?? ''),
-                    )!;
+                    FFAppState().authToken = GeneralGroup.loginCall.token(
+                          (_model.googleAuthResp?.jsonBody ?? ''),
+                        ) ??
+                        '';
                     FFAppState().phonenumber =
                         GeneralGroup.loginCall.mobilenumber(
                       (_model.googleAuthResp?.jsonBody ?? ''),
@@ -93,7 +101,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                       (_model.googleAuthResp?.jsonBody ?? ''),
                     )!;
                     FFAppState().email = currentUserEmail;
-                    FFAppState().devicetoken = currentJwtToken;
+                    FFAppState().devicetoken = '';
                     FFAppState().userid = GeneralGroup.loginCall
                         .id(
                           (_model.googleAuthResp?.jsonBody ?? ''),

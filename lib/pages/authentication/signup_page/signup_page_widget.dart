@@ -511,14 +511,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                               return;
                             }
                             _model.signUpResponse =
-                                await GeneralGroup.loginCall.call(
-                              type: '4',
+                                await GeneralGroup.registerCall.call(
                               email: _model.textController3.text,
                               fullName: _model.textController1.text,
                               mobileNumber: _model.textController2.text,
                               password: _model.textController4.text,
                               deviceType: '1',
-                              deviceToken: _model.textController4.text,
                             );
 
                             _shouldSetState = true;
@@ -536,8 +534,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                     GeneralGroup.loginCall.username(
                                   (_model.signUpResponse?.jsonBody ?? ''),
                                 )!;
-                                FFAppState().password =
-                                    _model.textController4.text;
+                                FFAppState().authToken =
+                                    GeneralGroup.loginCall.token(
+                                          (_model.signUpResponse?.jsonBody ??
+                                              ''),
+                                        ) ??
+                                        '';
                                 FFAppState().phonenumber =
                                     GeneralGroup.loginCall.mobilenumber(
                                   (_model.signUpResponse?.jsonBody ?? ''),

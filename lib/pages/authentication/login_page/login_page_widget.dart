@@ -353,7 +353,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                               email: _model.textController1.text,
                               password: _model.textController2.text,
                               deviceType: '1',
-                              deviceToken: _model.textController2.text,
+                              deviceToken: '',
                               fullName: currentUserDisplayName,
                               mobileNumber: currentPhoneNumber,
                               image: currentUserPhoto,
@@ -379,8 +379,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                   (_model.appleAuthlLoginResponse?.jsonBody ??
                                       ''),
                                 )!;
-                                FFAppState().password =
-                                    _model.textController2.text;
+                                FFAppState().authToken =
+                                    GeneralGroup.loginCall.token(
+                                          (_model.appleAuthlLoginResponse
+                                                  ?.jsonBody ??
+                                              ''),
+                                        ) ??
+                                        '';
                                 FFAppState().phonenumber =
                                     GeneralGroup.loginCall.mobilenumber(
                                   (_model.appleAuthlLoginResponse?.jsonBody ??

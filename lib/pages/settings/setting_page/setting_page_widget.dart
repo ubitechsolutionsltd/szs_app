@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/language_select_a_lrt_dialog_widget.dart';
 import '/components/logout_alrt_dialog_widget.dart';
@@ -692,6 +693,8 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                         },
                                         child: LogoutAlrtDialogWidget(
                                           onTapLogout: () async {
+                                            await GeneralGroup.logoutCall.call();
+                                            FFAppState().authToken = '';
                                             FFAppState().isLogin = false;
                                             safeSetState(() {});
                                             Navigator.pop(context);

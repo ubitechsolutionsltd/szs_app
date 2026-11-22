@@ -65,13 +65,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
               onPressed: () async {
                 var _shouldSetState = false;
                 _model.loginForBalanceInLibararyPage =
-                    await GeneralGroup.loginCall.call(
-                  email: FFAppState().username,
-                  password: FFAppState().password,
-                  deviceToken: FFAppState().devicetoken,
-                  type: '1',
-                  mobileNumber: FFAppState().phonenumber,
-                );
+                    await GeneralGroup.meCall.call();
 
                 _shouldSetState = true;
                 if (GeneralGroup.loginCall.walletcoin(

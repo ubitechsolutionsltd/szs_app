@@ -36,16 +36,8 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (FFAppState().userid != '') {
-        _model.autologinresponse = await GeneralGroup.loginCall.call(
-          type: '4',
-          email: FFAppState().email,
-          password: FFAppState().password,
-          deviceType: '1',
-          deviceToken: FFAppState().password,
-          fullName: FFAppState().fullname,
-          mobileNumber: FFAppState().phonenumber,
-          image: currentUserPhoto,
-        );
+        // Sessions from before token login have no token: the server answers 401 and the user logs in again.
+        _model.autologinresponse = await GeneralGroup.meCall.call();
 
         if ((_model.autologinresponse?.succeeded ?? true) == true) {
           if (GeneralGroup.loginCall.statusCode(
@@ -59,6 +51,9 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
             FFAppState().update(() {});
             return;
           } else {
+            FFAppState().isLogin = false;
+            FFAppState().authToken = '';
+            FFAppState().update(() {});
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
