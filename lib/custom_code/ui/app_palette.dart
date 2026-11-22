@@ -24,6 +24,10 @@ class AppPalette {
   /// Hairlines, borders and inactive tracks.
   Color get outline => Color.lerp(theme.secondary, theme.tertiary, 0.16)!;
 
+  /// Opaque surface for dialogs and sheets, where text must stay readable over whatever is behind.
+  Color get solid =>
+      theme.primaryBackground.computeLuminance() < 0.5 ? const Color(0xFF16233A) : const Color(0xFFFFFFFF);
+
   Color get text => theme.tertiary;
   Color get muted => theme.gray;
   Color get accent => theme.primary;

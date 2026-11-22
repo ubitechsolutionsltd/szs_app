@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -43,7 +44,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondary,
+          color: AppPalette.of(context).solid,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(28.0),
             topRight: Radius.circular(28.0),

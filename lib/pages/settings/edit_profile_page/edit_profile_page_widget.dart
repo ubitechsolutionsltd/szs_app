@@ -122,11 +122,15 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                               alignment: AlignmentDirectional(1.3, 1.0),
                               children: [
                                 Container(
-                                  width: 80.0,
-                                  height: 80.0,
+                                  width: 96.0,
+                                  height: 96.0,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      width: 2.5,
+                                    ),
                                   ),
                                   child: Image.memory(
                                     _model.uploadedLocalFile_pickedImgPr
@@ -135,9 +139,20 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
-                                            Image.asset(
-                                      'assets/images/error_image.png',
-                                      fit: BoxFit.cover,
+                                            Container(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        FFAppState().fullname.trim().isEmpty
+                                            ? 'S'
+                                            : FFAppState().fullname.trim()[0].toUpperCase(),
+                                        style: TextStyle(
+                                          fontFamily: 'SF Pro Display',
+                                          color: Colors.white,
+                                          fontSize: 38.0,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

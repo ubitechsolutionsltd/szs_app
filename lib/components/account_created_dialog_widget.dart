@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -69,7 +70,7 @@ class _AccountCreatedDialogWidgetState
           }
         }(),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondary,
+          color: AppPalette.of(context).solid,
           borderRadius: BorderRadius.circular(28.0),
         ),
         child: Padding(

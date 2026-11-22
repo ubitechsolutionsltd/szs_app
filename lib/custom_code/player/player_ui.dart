@@ -231,7 +231,7 @@ class PlayerSheets {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppPalette.of(context).surface,
+      backgroundColor: AppPalette.of(context).solid,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) => DraggableScrollableSheet(
         expand: false,
@@ -291,7 +291,7 @@ class PlayerSheets {
   static Future<void> sleepTimer(BuildContext context, PlayerService service) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppPalette.of(context).surface,
+      backgroundColor: AppPalette.of(context).solid,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         final theme = FlutterFlowTheme.of(context);
@@ -326,7 +326,7 @@ class PlayerSheets {
   static Future<void> speed(BuildContext context, PlayerService service) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppPalette.of(context).surface,
+      backgroundColor: AppPalette.of(context).solid,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         final theme = FlutterFlowTheme.of(context);
@@ -358,7 +358,7 @@ class PlayerSheets {
     final store = PlaylistStore.instance;
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppPalette.of(context).surface,
+      backgroundColor: AppPalette.of(context).solid,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (sheetContext) {
         final theme = FlutterFlowTheme.of(sheetContext);

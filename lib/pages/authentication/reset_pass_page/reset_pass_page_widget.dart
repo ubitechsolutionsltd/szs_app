@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_widgets.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/password_succsess_alrt_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -81,6 +82,10 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
                   addIcon: false,
                   onTapAdd: () async {},
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 4.0),
+                child: Center(child: EmptyBadge(icon: Icons.lock_reset_rounded, size: 88.0)),
               ),
               Expanded(
                 child: Form(

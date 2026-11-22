@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_widgets.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -82,6 +83,10 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                   addIcon: false,
                   onTapAdd: () async {},
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 4.0),
+                child: Center(child: EmptyBadge(icon: Icons.mark_email_read_outlined, size: 88.0)),
               ),
               Expanded(
                 child: ListView(
