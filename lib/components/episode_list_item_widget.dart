@@ -290,7 +290,7 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
             } else {
               await showModalBottomSheet(
                 isScrollControlled: true,
-                backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+                backgroundColor: Colors.transparent,
                 useSafeArea: true,
                 context: context,
                 builder: (context) {

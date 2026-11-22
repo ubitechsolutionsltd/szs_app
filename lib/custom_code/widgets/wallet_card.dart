@@ -35,7 +35,7 @@ class WalletCard extends StatelessWidget {
   Future<void> _topUp(BuildContext context) async {
     await showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Colors.transparent,
       useSafeArea: true,
       context: context,
       builder: (context) {

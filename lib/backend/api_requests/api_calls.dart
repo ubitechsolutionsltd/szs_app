@@ -41,6 +41,8 @@ class GeneralGroup {
   static ReadNotificationCall readNotificationCall = ReadNotificationCall();
   static PayForPackageCall payForPackageCall = PayForPackageCall();
   static BuyEpisodeCall buyEpisodeCall = BuyEpisodeCall();
+  static ArtistDetailCall artistDetailCall = ArtistDetailCall();
+  static FollowCall followCall = FollowCall();
   static RegisterCall registerCall = RegisterCall();
   static MeCall meCall = MeCall();
   static LogoutCall logoutCall = LogoutCall();
@@ -853,6 +855,74 @@ class BuyEpisodeCall {
         r'''$.result''',
         true,
       ) as List?;
+}
+
+/// One author's profile: photo, bio, follower count and whether the signed-in user follows them.
+class ArtistDetailCall {
+  Future<ApiCallResponse> call({
+    String? artistId = '',
+    String? userId = '',
+  }) async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "artist_id": ${artistId == null ? 'null' : '"${escapeStringForJson(artistId)}"'},
+  "user_id": ${userId == null ? 'null' : '"${escapeStringForJson(userId)}"'}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'ArtistDetail',
+      apiUrl: '${baseUrl}/get_artist_detail',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// Follows or unfollows an author (it toggles).
+class FollowCall {
+  Future<ApiCallResponse> call({
+    String? userId = '',
+    String? artistId = '',
+  }) async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "user_id": ${userId == null ? 'null' : '"${escapeStringForJson(userId)}"'},
+  "artist_id": ${artistId == null ? 'null' : '"${escapeStringForJson(artistId)}"'}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Follow',
+      apiUrl: '${baseUrl}/add_remove_follow',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
 }
 
 /// Creates an email + password account. The response has the same shape as the Login call
