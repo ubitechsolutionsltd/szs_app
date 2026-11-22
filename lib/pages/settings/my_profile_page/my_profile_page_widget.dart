@@ -1,4 +1,6 @@
-import '/components/balance_component_widget.dart';
+import '/index.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/custom_code/ui/app_palette.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/package_lists_component_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -38,6 +40,220 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
     super.dispose();
   }
 
+  Future<void> _refreshWallet() async {
+    final response = await GeneralGroup.meCall.call();
+    final coin = GeneralGroup.loginCall.walletcoin(response.jsonBody);
+    if (coin != null) {
+      FFAppState().walletcoin = coin;
+      FFAppState().update(() {});
+    }
+  }
+
+  Future<void> _openTopUp() async {
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      useSafeArea: true,
+      context: context,
+      builder: (context) {
+        return WebViewAware(
+          child: Padding(
+            padding: MediaQuery.viewInsetsOf(context),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height * 0.75,
+              child: PackageListsComponentWidget(),
+            ),
+          ),
+        );
+      },
+    ).then((value) => safeSetState(() {}));
+  }
+
+  Widget _infoRow(BuildContext context, IconData icon, String label, String value) {
+    final palette = AppPalette.of(context);
+    final theme = FlutterFlowTheme.of(context);
+    if (value.trim().isEmpty) return SizedBox.shrink();
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(children: [
+        Container(
+          width: 40.0,
+          height: 40.0,
+          decoration: BoxDecoration(color: palette.surfaceHigh, shape: BoxShape.circle),
+          child: Icon(icon, color: palette.accent, size: 20.0),
+        ),
+        SizedBox(width: 14.0),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(label,
+                style: theme.bodySmall.override(
+                    fontFamily: 'SF Pro Display', color: palette.muted, fontSize: 13.0, letterSpacing: 0.0)),
+            SizedBox(height: 2.0),
+            Text(value,
+                style: theme.bodyMedium.override(
+                    fontFamily: 'SF Pro Display',
+                    color: palette.text,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.0)),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildProfile(BuildContext context) {
+    final palette = AppPalette.of(context);
+    final theme = FlutterFlowTheme.of(context);
+    final state = FFAppState();
+    final name = state.fullname.trim();
+
+    Widget avatar = Container(
+      width: 96.0,
+      height: 96.0,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: palette.accent, shape: BoxShape.circle),
+      child: Text(name.isEmpty ? 'S' : name[0].toUpperCase(),
+          style: TextStyle(fontFamily: 'SF Pro Display', color: palette.onAccent, fontSize: 40.0, fontWeight: FontWeight.w800)),
+    );
+    if (state.userphoto.isNotEmpty) {
+      avatar = ClipOval(
+        child: CachedNetworkImage(
+          imageUrl: state.userphoto,
+          width: 96.0,
+          height: 96.0,
+          fit: BoxFit.cover,
+          errorWidget: (_, __, ___) => avatar,
+        ),
+      );
+    }
+
+    return ListView(
+      padding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 32.0),
+      children: [
+        Center(
+          child: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: palette.accent, width: 2.5)),
+            child: avatar,
+          ),
+        ),
+        SizedBox(height: 14.0),
+        Center(
+          child: Text(name.isEmpty ? 'Mgeni' : name,
+              textAlign: TextAlign.center,
+              style: theme.bodyMedium.override(
+                  fontFamily: 'SF Pro Display',
+                  color: palette.text,
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.4)),
+        ),
+        if (state.username.isNotEmpty)
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 2.0),
+              child: Text(state.username,
+                  style: theme.bodyMedium.override(
+                      fontFamily: 'SF Pro Display', color: palette.muted, fontSize: 15.0, letterSpacing: 0.0)),
+            ),
+          ),
+        SizedBox(height: 16.0),
+        Center(
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: palette.text,
+              side: BorderSide(color: palette.outline),
+              shape: StadiumBorder(),
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+            ),
+            icon: Icon(Icons.edit_outlined, size: 18.0),
+            label: Text('Hariri wasifu', style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w700)),
+            onPressed: () => context.pushNamed(EditProfilePageWidget.routeName),
+          ),
+        ),
+        SizedBox(height: 24.0),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpace.radiusLg),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [palette.accent, Color.lerp(palette.accent, Colors.black, 0.55)!],
+            ),
+          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Icon(Icons.toll_rounded, color: palette.onAccent.withValues(alpha: 0.8), size: 20.0),
+              SizedBox(width: 8.0),
+              Expanded(
+                child: Text('Salio lako',
+                    style: theme.bodyMedium.override(
+                        fontFamily: 'SF Pro Display',
+                        color: palette.onAccent.withValues(alpha: 0.85),
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.0)),
+              ),
+              IconButton(
+                tooltip: 'Onyesha upya',
+                visualDensity: VisualDensity.compact,
+                icon: Icon(Icons.refresh_rounded, color: palette.onAccent),
+                onPressed: _refreshWallet,
+              ),
+            ]),
+            SizedBox(height: 4.0),
+            Text('${state.walletcoin}',
+                style: theme.bodyMedium.override(
+                    fontFamily: 'SF Pro Display',
+                    color: Colors.white,
+                    fontSize: 44.0,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -1.0)),
+            Text('sarafu',
+                style: theme.bodyMedium.override(
+                    fontFamily: 'SF Pro Display', color: Colors.white70, fontSize: 14.0, letterSpacing: 0.0)),
+            SizedBox(height: 16.0),
+            SizedBox(
+              width: double.infinity,
+              height: 48.0,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.0)),
+                ),
+                icon: Icon(Icons.add_circle_outline_rounded),
+                label: Text('Jaza kibubu', style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
+                onPressed: _openTopUp,
+              ),
+            ),
+          ]),
+        ),
+        if ([state.fullname, state.email, state.phonenumber, state.bio, state.joinedat]
+            .any((v) => v.trim().isNotEmpty)) ...[
+        SizedBox(height: 24.0),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            color: palette.surface,
+            borderRadius: BorderRadius.circular(AppSpace.radiusMd),
+            border: Border.all(color: palette.outline, width: 0.5),
+          ),
+          child: Column(children: [
+            _infoRow(context, Icons.person_outline_rounded, 'Jina kamili', state.fullname),
+            _infoRow(context, Icons.mail_outline_rounded, 'Barua pepe', state.email),
+            _infoRow(context, Icons.phone_outlined, 'Simu', state.phonenumber),
+            _infoRow(context, Icons.info_outline_rounded, 'Kuhusu mimi', state.bio),
+            _infoRow(context, Icons.calendar_today_outlined, 'Alijiunga', state.joinedat),
+          ]),
+        ),
+        ],
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -66,488 +282,7 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
                 ),
               ),
               Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(
-                    0,
-                    24.0,
-                    0,
-                    24.0,
-                  ),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: 80.0,
-                            height: 80.0,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: CachedNetworkImage(
-                              fadeInDuration: Duration(milliseconds: 500),
-                              fadeOutDuration: Duration(milliseconds: 500),
-                              imageUrl: FFAppState().userphoto,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, error, stackTrace) =>
-                                  Image.asset(
-                                'assets/images/error_image.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 0.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().username,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().email,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 2.0)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFLocalizations.of(context).getText(
-                                            'hpnw4a0q' /* Jina */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().fullname,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 4.0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFLocalizations.of(context).getText(
-                                            '78t09vij' /* Simu */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().phonenumber,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 4.0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFLocalizations.of(context).getText(
-                                            'ex80160f' /* Wasifu */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().bio,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 4.0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 78.21,
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 5.0, 0.0, 0.0),
-                                    child: wrapWithModel(
-                                      model: _model.balanceComponentModel,
-                                      updateCallback: () => safeSetState(() {}),
-                                      child: BalanceComponentWidget(),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 15.0, 0.0),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                        useSafeArea: true,
-                                        context: context,
-                                        builder: (context) {
-                                          return WebViewAware(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    MediaQuery.viewInsetsOf(
-                                                        context),
-                                                child: Container(
-                                                  height:
-                                                      MediaQuery.sizeOf(context)
-                                                              .height *
-                                                          0.75,
-                                                  child:
-                                                      PackageListsComponentWidget(),
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => safeSetState(() {}));
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Icon(
-                                          Icons.add_card,
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          size: 24.0,
-                                        ),
-                                        Text(
-                                          FFLocalizations.of(context).getText(
-                                            '3hn3y8nb' /* Jaza */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(height: 8.0)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFLocalizations.of(context).getText(
-                                            '794hvx2w' /* Kujiunga */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          FFAppState().joinedat,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 1,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ].divide(SizedBox(height: 4.0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ]
-                          .divide(SizedBox(height: 16.0))
-                          .addToStart(SizedBox(height: 32.0))
-                          .addToEnd(SizedBox(height: 16.0)),
-                    ),
-                  ],
-                ),
+                child: _buildProfile(context),
               ),
             ],
           ),

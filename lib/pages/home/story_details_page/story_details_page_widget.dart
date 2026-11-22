@@ -1,4 +1,5 @@
 import '/custom_code/ui/app_widgets.dart';
+import '/custom_code/ui/artwork_color.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
@@ -316,14 +317,16 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
           top: true,
           child: Stack(
             children: [
-              Column(
+ArtworkBackdrop(
+                imageUrl: widget.story?.portraitImg ?? '',
+                child:               Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Container(
                       width: double.infinity,
                       height: 79.0,
                       decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        color: Colors.transparent,
                       ),
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Padding(
@@ -517,6 +520,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
                     ),
                   Expanded(child: _buildBody(context)),
                 ],
+              ),
               ),
               if (FFAppState().isLoading)
                 wrapWithModel(

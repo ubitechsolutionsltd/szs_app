@@ -11,6 +11,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 import '/backend/api_requests/api_calls.dart';
 import '/components/song_container_widget.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/home_data.dart';
 import '/custom_code/ui/app_widgets.dart';
 
 /// Horizontal rail of portrait story cards (trending stories) for the home page.
@@ -20,11 +21,7 @@ class HomeTrending extends StatelessWidget {
   final double? width;
   final double? height;
 
-  static Future<List<dynamic>> _load() async {
-    final response = await GeneralGroup.trendingsCall.call();
-    if (!response.succeeded) throw Exception('trending');
-    return GeneralGroup.trendingsCall.result(response.jsonBody)?.toList() ?? [];
-  }
+  static Future<List<dynamic>> _load() => HomeData.trending();
 
   @override
   Widget build(BuildContext context) {

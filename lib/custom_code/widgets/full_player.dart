@@ -2,6 +2,7 @@
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/artwork_color.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
@@ -44,7 +45,10 @@ class FullPlayer extends StatelessWidget {
           final errorText = PlayerStrings.errorText(snap.error);
           final artSize = (MediaQuery.sizeOf(context).width * 0.72).clamp(160.0, 340.0);
 
-          return SingleChildScrollView(
+          return ArtworkBackdrop(
+            imageUrl: item.artUrl,
+            height: 560,
+            child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -140,6 +144,7 @@ class FullPlayer extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           );
         },
       ),
