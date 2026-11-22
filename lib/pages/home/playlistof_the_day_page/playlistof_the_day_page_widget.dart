@@ -1,6 +1,5 @@
 import '/components/custom_center_app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/pages/components/artist_container_playlist_comp/artist_container_playlist_comp_widget.dart';
 import '/index.dart';
@@ -68,7 +67,7 @@ class _PlaylistofTheDayPageWidgetState extends State<PlaylistofTheDayPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(

@@ -41,6 +41,11 @@ class GeneralGroup {
   static ReadNotificationCall readNotificationCall = ReadNotificationCall();
   static PayForPackageCall payForPackageCall = PayForPackageCall();
   static BuyEpisodeCall buyEpisodeCall = BuyEpisodeCall();
+  static ArtistDetailCall artistDetailCall = ArtistDetailCall();
+  static FollowCall followCall = FollowCall();
+  static RegisterCall registerCall = RegisterCall();
+  static MeCall meCall = MeCall();
+  static LogoutCall logoutCall = LogoutCall();
   static AkCall akCall = AkCall();
   static AlCall alCall = AlCall();
   static AmCall amCall = AmCall();
@@ -56,6 +61,7 @@ class LoginCall {
     String? deviceType = '',
     String? deviceToken = '1',
     String? image = '',
+    String? idToken = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
 
@@ -68,7 +74,8 @@ class LoginCall {
   "password": ${password == null ? 'null' : '"${escapeStringForJson(password)}"'},
   "device_type": ${deviceType == null ? 'null' : '"${escapeStringForJson(deviceType)}"'},
   "device_token": ${deviceToken == null ? 'null' : '"${escapeStringForJson(deviceToken)}"'},
-  "image": ${image == null ? 'null' : '"${escapeStringForJson(image)}"'}
+  "image": ${image == null ? 'null' : '"${escapeStringForJson(image)}"'},
+  "id_token": ${idToken == null ? 'null' : '"${escapeStringForJson(idToken)}"'}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Login',
@@ -97,6 +104,10 @@ class LoginCall {
   String? message(dynamic response) => castToType<String>(getJsonField(
         response,
         r'''$.message''',
+      ));
+  String? token(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.token''',
       ));
   int? id(dynamic response) => castToType<int>(getJsonField(
         response,
@@ -844,6 +855,167 @@ class BuyEpisodeCall {
         r'''$.result''',
         true,
       ) as List?;
+}
+
+/// One author's profile: photo, bio, follower count and whether the signed-in user follows them.
+class ArtistDetailCall {
+  Future<ApiCallResponse> call({
+    String? artistId = '',
+    String? userId = '',
+  }) async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "artist_id": ${artistId == null ? 'null' : '"${escapeStringForJson(artistId)}"'},
+  "user_id": ${userId == null ? 'null' : '"${escapeStringForJson(userId)}"'}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'ArtistDetail',
+      apiUrl: '${baseUrl}/get_artist_detail',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// Follows or unfollows an author (it toggles).
+class FollowCall {
+  Future<ApiCallResponse> call({
+    String? userId = '',
+    String? artistId = '',
+  }) async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "user_id": ${userId == null ? 'null' : '"${escapeStringForJson(userId)}"'},
+  "artist_id": ${artistId == null ? 'null' : '"${escapeStringForJson(artistId)}"'}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Follow',
+      apiUrl: '${baseUrl}/add_remove_follow',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// Creates an email + password account. The response has the same shape as the Login call
+/// (parse it with GeneralGroup.loginCall getters) and includes `token`.
+class RegisterCall {
+  Future<ApiCallResponse> call({
+    String? fullName = '',
+    String? email = '',
+    String? mobileNumber = '',
+    String? password = '',
+    String? deviceType = '1',
+  }) async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "full_name": ${fullName == null ? 'null' : '"${escapeStringForJson(fullName)}"'},
+  "email": ${email == null ? 'null' : '"${escapeStringForJson(email)}"'},
+  "mobile_number": ${mobileNumber == null ? 'null' : '"${escapeStringForJson(mobileNumber)}"'},
+  "password": ${password == null ? 'null' : '"${escapeStringForJson(password)}"'},
+  "device_type": ${deviceType == null ? 'null' : '"${escapeStringForJson(deviceType)}"'}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Register',
+      apiUrl: '${baseUrl}/auth/register',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// The signed-in user's profile (needs the stored token). Same response shape as Login.
+class MeCall {
+  Future<ApiCallResponse> call() async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Me',
+      apiUrl: '${baseUrl}/auth/me',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: '{}',
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// Revokes the current login token on the server.
+class LogoutCall {
+  Future<ApiCallResponse> call() async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Logout',
+      apiUrl: '${baseUrl}/auth/logout',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: '{}',
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
 }
 
 class AkCall {

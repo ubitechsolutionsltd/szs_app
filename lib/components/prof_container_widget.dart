@@ -64,7 +64,7 @@ class _ProfContainerWidgetState extends State<ProfContainerWidget> {
             width: double.infinity,
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondary,
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 16.0, 8.0),
@@ -116,6 +116,7 @@ class _ProfContainerWidgetState extends State<ProfContainerWidget> {
                     borderRadius: BorderRadius.circular(0.0),
                     child: SvgPicture.asset(
                       'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                       width: 24.0,
                       height: 24.0,
                       fit: BoxFit.contain,

@@ -71,7 +71,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -122,11 +122,15 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                               alignment: AlignmentDirectional(1.3, 1.0),
                               children: [
                                 Container(
-                                  width: 80.0,
-                                  height: 80.0,
+                                  width: 96.0,
+                                  height: 96.0,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      width: 2.5,
+                                    ),
                                   ),
                                   child: Image.memory(
                                     _model.uploadedLocalFile_pickedImgPr
@@ -135,9 +139,20 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
-                                            Image.asset(
-                                      'assets/images/error_image.png',
-                                      fit: BoxFit.cover,
+                                            Container(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        FFAppState().fullname.trim().isEmpty
+                                            ? 'S'
+                                            : FFAppState().fullname.trim()[0].toUpperCase(),
+                                        style: TextStyle(
+                                          fontFamily: 'SF Pro Display',
+                                          color: Colors.white,
+                                          fontSize: 38.0,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -207,6 +222,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                       borderRadius: BorderRadius.circular(0.0),
                                       child: SvgPicture.asset(
                                         'assets/images/pic_img_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                         fit: BoxFit.contain,
                                         alignment: Alignment(0.0, 0.0),
                                       ),
@@ -337,33 +353,35 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
-                                    width: 1.0,
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 1.5,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context).error,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context).error,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
-                                contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 16.0, 16.0, 16.0),
                                 hoverColor: Colors.transparent,
                               ),
@@ -440,33 +458,35 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
-                                    width: 1.0,
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 1.5,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context).error,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context).error,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
-                                contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 16.0, 16.0, 16.0),
                                 hoverColor: Colors.transparent,
                               ),
@@ -543,31 +563,31 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
+                                    color: FlutterFlowTheme.of(context).borderColor,
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color(0xFFC5C5C5),
-                                    width: 1.0,
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 1.5,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Color(0x00000000),
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Color(0x00000000),
                                     width: 1.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 filled: true,
                                 fillColor:
@@ -623,7 +643,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                   ),
                   options: FFButtonOptions(
                     width: double.infinity,
-                    height: 50.0,
+                    height: 54.0,
                     padding:
                         EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     iconPadding:
@@ -634,7 +654,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                           color: FlutterFlowTheme.of(context).primaryBackground,
                           fontSize: 16.0,
                           letterSpacing: 0.0,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
                           lineHeight: 1.2,
                         ),
                     elevation: 0.0,
@@ -642,7 +662,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                       color: Colors.transparent,
                       width: 1.0,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(14.0),
                   ),
                   showLoadingIndicator: false,
                 ),

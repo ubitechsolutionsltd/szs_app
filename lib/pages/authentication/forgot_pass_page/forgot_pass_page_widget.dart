@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_widgets.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -47,7 +48,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -62,6 +63,10 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                   addIcon: false,
                   onTapAdd: () async {},
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 4.0),
+                child: Center(child: EmptyBadge(icon: Icons.lock_reset_rounded, size: 88.0)),
               ),
               Expanded(
                 child: Form(
@@ -141,32 +146,34 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -209,7 +216,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                             ),
                             options: FFButtonOptions(
                               width: double.infinity,
-                              height: 50.0,
+                              height: 54.0,
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   24.0, 0.0, 24.0, 0.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -223,7 +230,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                                         .primaryBackground,
                                     fontSize: 16.0,
                                     letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w700,
                                     lineHeight: 1.2,
                                   ),
                               elevation: 0.0,
@@ -231,7 +238,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                                 color: Colors.transparent,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             showLoadingIndicator: false,
                           ),

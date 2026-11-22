@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -69,7 +70,7 @@ class _PasswordSuccessAlrtDialogWidgetState
           }
         }(),
         decoration: BoxDecoration(
-          color: Color(0xFF313030),
+          color: AppPalette.of(context).solid,
           borderRadius: BorderRadius.circular(28.0),
         ),
         child: Padding(
@@ -138,7 +139,7 @@ class _PasswordSuccessAlrtDialogWidgetState
                         color: FlutterFlowTheme.of(context).primaryBackground,
                         fontSize: 16.0,
                         letterSpacing: 0.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                         lineHeight: 1.2,
                       ),
                   elevation: 0.0,
@@ -146,7 +147,7 @@ class _PasswordSuccessAlrtDialogWidgetState
                     color: Colors.transparent,
                     width: 1.0,
                   ),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(14.0),
                 ),
                 showLoadingIndicator: false,
               ),

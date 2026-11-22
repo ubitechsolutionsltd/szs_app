@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_palette.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -43,7 +44,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Color(0xFF313030),
+          color: AppPalette.of(context).solid,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(28.0),
             topRight: Radius.circular(28.0),
@@ -95,6 +96,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
                     borderRadius: BorderRadius.circular(0.0),
                     child: SvgPicture.asset(
                       'assets/images/w_download_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                       width: 24.0,
                       height: 24.0,
                       fit: BoxFit.cover,
@@ -135,6 +137,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
                       borderRadius: BorderRadius.circular(0.0),
                       child: SvgPicture.asset(
                         'assets/images/w_addp_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                         width: 24.0,
                         height: 24.0,
                         fit: BoxFit.cover,
@@ -170,6 +173,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
                     borderRadius: BorderRadius.circular(0.0),
                     child: SvgPicture.asset(
                       'assets/images/sort_item_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                       width: 24.0,
                       height: 24.0,
                       fit: BoxFit.cover,
@@ -210,6 +214,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
                       borderRadius: BorderRadius.circular(0.0),
                       child: SvgPicture.asset(
                         'assets/images/wva_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                         width: 24.0,
                         height: 24.0,
                         fit: BoxFit.cover,
@@ -257,6 +262,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
                         borderRadius: BorderRadius.circular(0.0),
                         child: SvgPicture.asset(
                           'assets/images/w_share_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                           width: 24.0,
                           height: 24.0,
                           fit: BoxFit.cover,

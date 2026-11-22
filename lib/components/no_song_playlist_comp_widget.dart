@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_widgets.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -42,16 +43,7 @@ class _NoSongPlaylistCompWidgetState extends State<NoSongPlaylistCompWidget> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(0.0),
-            child: Image.asset(
-              'assets/images/no_result_ic.png',
-              width: 156.0,
-              height: 137.0,
-              fit: BoxFit.cover,
-              alignment: Alignment(0.0, 0.0),
-            ),
-          ),
+          EmptyBadge(icon: Icons.favorite_border_rounded),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(44.0, 0.0, 44.0, 80.0),
             child: Column(
@@ -83,7 +75,7 @@ class _NoSongPlaylistCompWidgetState extends State<NoSongPlaylistCompWidget> {
                 ),
               ]
                   .divide(SizedBox(height: 8.0))
-                  .addToStart(SizedBox(height: 16.0)),
+                  .addToStart(SizedBox(height: 20.0)),
             ),
           ),
         ],

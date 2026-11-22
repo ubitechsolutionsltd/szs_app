@@ -1,3 +1,5 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
+import '/backend/api_requests/api_calls.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/language_select_a_lrt_dialog_widget.dart';
 import '/components/logout_alrt_dialog_widget.dart';
@@ -143,7 +145,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -169,86 +171,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                   ),
                   scrollDirection: Axis.vertical,
                   children: [
-                    if (!FFAppState().skipUser)
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            context.pushNamed(MyProfilePageWidget.routeName);
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 8.0, 16.0, 8.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 48.0,
-                                    height: 48.0,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: SvgPicture.asset(
-                                        'assets/images/pr_ic.svg',
-                                        fit: BoxFit.contain,
-                                        alignment: Alignment(0.0, 0.0),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        FFLocalizations.of(context).getText(
-                                          'sonue45h' /* Wasifu */,
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'SF Pro Display',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .tertiary,
-                                              fontSize: 17.0,
-                                              letterSpacing: 0.0,
-                                              lineHeight: 1.5,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(0.0),
-                                    child: SvgPicture.asset(
-                                      'assets/images/arrow_right_white_ic.svg',
-                                      width: 24.0,
-                                      height: 24.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ).animateOnPageLoad(
-                            animationsMap['containerOnPageLoadAnimation1']!),
-                      ),
+                    custom_widgets.SettingsHeader(),
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
@@ -264,7 +187,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).secondary,
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -284,6 +207,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: SvgPicture.asset(
                                       'assets/images/pr_s_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                       fit: BoxFit.contain,
                                       alignment: Alignment(0.0, 0.0),
                                     ),
@@ -314,6 +238,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                   borderRadius: BorderRadius.circular(0.0),
                                   child: SvgPicture.asset(
                                     'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                     width: 24.0,
                                     height: 24.0,
                                     fit: BoxFit.cover,
@@ -341,7 +266,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).secondary,
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -361,6 +286,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: SvgPicture.asset(
                                       'assets/images/pr_au_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                       fit: BoxFit.contain,
                                       alignment: Alignment(0.0, 0.0),
                                     ),
@@ -391,6 +317,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                   borderRadius: BorderRadius.circular(0.0),
                                   child: SvgPicture.asset(
                                     'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                     width: 24.0,
                                     height: 24.0,
                                     fit: BoxFit.cover,
@@ -442,7 +369,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).secondary,
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
@@ -464,6 +391,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                             BorderRadius.circular(8.0),
                                         child: SvgPicture.asset(
                                           'assets/images/pr_au_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                           fit: BoxFit.contain,
                                           alignment: Alignment(0.0, 0.0),
                                         ),
@@ -495,6 +423,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                       borderRadius: BorderRadius.circular(0.0),
                                       child: SvgPicture.asset(
                                         'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                         width: 24.0,
                                         height: 24.0,
                                         fit: BoxFit.cover,
@@ -523,7 +452,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).secondary,
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -543,6 +472,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: SvgPicture.asset(
                                       'assets/images/pr_h_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                       fit: BoxFit.contain,
                                       alignment: Alignment(0.0, 0.0),
                                     ),
@@ -573,6 +503,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                   borderRadius: BorderRadius.circular(0.0),
                                   child: SvgPicture.asset(
                                     'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                     width: 24.0,
                                     height: 24.0,
                                     fit: BoxFit.cover,
@@ -600,7 +531,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).secondary,
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -620,6 +551,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: SvgPicture.asset(
                                       'assets/images/pr_f_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                       fit: BoxFit.contain,
                                       alignment: Alignment(0.0, 0.0),
                                     ),
@@ -650,6 +582,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                   borderRadius: BorderRadius.circular(0.0),
                                   child: SvgPicture.asset(
                                     'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                     width: 24.0,
                                     height: 24.0,
                                     fit: BoxFit.cover,
@@ -692,6 +625,8 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                         },
                                         child: LogoutAlrtDialogWidget(
                                           onTapLogout: () async {
+                                            await GeneralGroup.logoutCall.call();
+                                            FFAppState().authToken = '';
                                             FFAppState().isLogin = false;
                                             safeSetState(() {});
                                             Navigator.pop(context);
@@ -710,7 +645,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).secondary,
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
@@ -732,6 +667,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                             BorderRadius.circular(8.0),
                                         child: SvgPicture.asset(
                                           'assets/images/pr_lo_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                           fit: BoxFit.contain,
                                           alignment: Alignment(0.0, 0.0),
                                         ),
@@ -763,6 +699,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                       borderRadius: BorderRadius.circular(0.0),
                                       child: SvgPicture.asset(
                                         'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                         width: 24.0,
                                         height: 24.0,
                                         fit: BoxFit.cover,
@@ -791,7 +728,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                     ),
                     options: FFButtonOptions(
                       width: double.infinity,
-                      height: 50.0,
+                      height: 54.0,
                       padding:
                           EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                       iconPadding:
@@ -803,7 +740,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                                 color: FlutterFlowTheme.of(context).primaryText,
                                 fontSize: 16.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w700,
                                 lineHeight: 1.2,
                               ),
                       elevation: 0.0,
@@ -811,7 +748,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                         color: Colors.transparent,
                         width: 1.0,
                       ),
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(14.0),
                     ),
                     showLoadingIndicator: false,
                   ),

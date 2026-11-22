@@ -1,5 +1,4 @@
-import '/backend/api_requests/api_calls.dart';
-import '/components/cat_container_three_widget.dart';
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/components/custom_center_app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -65,7 +64,7 @@ class _ExplorePageWidgetState extends State<ExplorePageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -95,7 +94,7 @@ class _ExplorePageWidgetState extends State<ExplorePageWidget>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondary,
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -162,123 +161,9 @@ class _ExplorePageWidgetState extends State<ExplorePageWidget>
                             ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          20.0, 16.0, 20.0, 24.0),
-                      child: FutureBuilder<ApiCallResponse>(
-                        future: GeneralGroup.categoriesCall.call(),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: SizedBox(
-                                width: 50.0,
-                                height: 50.0,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    FlutterFlowTheme.of(context).primary,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          final wrapCategoriesResponse = snapshot.data!;
-
-                          return Builder(
-                            builder: (context) {
-                              final allcategories = GeneralGroup.categoriesCall
-                                      .result(
-                                        wrapCategoriesResponse.jsonBody,
-                                      )
-                                      ?.toList() ??
-                                  [];
-
-                              return Wrap(
-                                spacing: 16.0,
-                                runSpacing: 16.0,
-                                alignment: WrapAlignment.start,
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                direction: Axis.horizontal,
-                                runAlignment: WrapAlignment.start,
-                                verticalDirection: VerticalDirection.down,
-                                clipBehavior: Clip.none,
-                                children: List.generate(allcategories.length,
-                                    (allcategoriesIndex) {
-                                  final allcategoriesItem =
-                                      allcategories[allcategoriesIndex];
-                                  return InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      context.pushNamed(
-                                        SubCatListPageWidget.routeName,
-                                        queryParameters: {
-                                          'title': serializeParam(
-                                            getJsonField(
-                                              allcategoriesItem,
-                                              r'''$.name''',
-                                            ).toString(),
-                                            ParamType.String,
-                                          ),
-                                          'index': serializeParam(
-                                            getJsonField(
-                                              allcategoriesItem,
-                                              r'''$.id''',
-                                            ),
-                                            ParamType.int,
-                                          ),
-                                          'catId': serializeParam(
-                                            getJsonField(
-                                              allcategoriesItem,
-                                              r'''$.id''',
-                                            ).toString(),
-                                            ParamType.String,
-                                          ),
-                                        }.withoutNulls,
-                                      );
-                                    },
-                                    child: wrapWithModel(
-                                      model: _model.catContainerThreeModels
-                                          .getModel(
-                                        getJsonField(
-                                          allcategoriesItem,
-                                          r'''$.id''',
-                                        ).toString(),
-                                        allcategoriesIndex,
-                                      ),
-                                      updateCallback: () => safeSetState(() {}),
-                                      child: CatContainerThreeWidget(
-                                        key: Key(
-                                          'Keyvo5_${getJsonField(
-                                            allcategoriesItem,
-                                            r'''$.id''',
-                                          ).toString()}',
-                                        ),
-                                        title: getJsonField(
-                                          allcategoriesItem,
-                                          r'''$.name''',
-                                        ).toString(),
-                                        id: getJsonField(
-                                          allcategoriesItem,
-                                          r'''$.id''',
-                                        ),
-                                        image: getJsonField(
-                                          allcategoriesItem,
-                                          r'''$.image''',
-                                        ).toString(),
-                                      ),
-                                    ),
-                                  ).animateOnPageLoad(animationsMap[
-                                      'catContainerThreeOnPageLoadAnimation']!);
-                                }),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    SizedBox(height: 14.0),
+                        custom_widgets.CategoryGrid(),
+                        SizedBox(height: 24.0),
                   ],
                 ),
               ),

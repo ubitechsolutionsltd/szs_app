@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -46,7 +47,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
         color: Colors.transparent,
       ),
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -58,12 +59,18 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                 if (user == null) {
                   return;
                 }
+                // The backend verifies this Firebase ID token, so it never trusts a bare email address.
+                final googleIdToken =
+                    await fb.FirebaseAuth.instance.currentUser?.getIdToken(true);
+                if (googleIdToken == null || googleIdToken.isEmpty) {
+                  return;
+                }
                 _model.googleAuthResp = await GeneralGroup.loginCall.call(
                   type: '2',
                   email: currentUserEmail,
-                  password: currentUserEmail,
+                  idToken: googleIdToken,
                   deviceType: '1',
-                  deviceToken: currentJwtToken,
+                  deviceToken: '',
                   fullName: currentUserDisplayName,
                   mobileNumber: currentPhoneNumber,
                   image: currentUserPhoto,
@@ -82,9 +89,10 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                     FFAppState().username = GeneralGroup.loginCall.username(
                       (_model.googleAuthResp?.jsonBody ?? ''),
                     )!;
-                    FFAppState().password = GeneralGroup.loginCall.email(
-                      (_model.googleAuthResp?.jsonBody ?? ''),
-                    )!;
+                    FFAppState().authToken = GeneralGroup.loginCall.token(
+                          (_model.googleAuthResp?.jsonBody ?? ''),
+                        ) ??
+                        '';
                     FFAppState().phonenumber =
                         GeneralGroup.loginCall.mobilenumber(
                       (_model.googleAuthResp?.jsonBody ?? ''),
@@ -93,7 +101,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                       (_model.googleAuthResp?.jsonBody ?? ''),
                     )!;
                     FFAppState().email = currentUserEmail;
-                    FFAppState().devicetoken = currentJwtToken;
+                    FFAppState().devicetoken = '';
                     FFAppState().userid = GeneralGroup.loginCall
                         .id(
                           (_model.googleAuthResp?.jsonBody ?? ''),
@@ -119,7 +127,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                           'Successfully Logged In.',
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).tertiary,
+                            color: Colors.white,
                           ),
                         ),
                         duration: Duration(milliseconds: 4000),
@@ -137,7 +145,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                           )!,
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).alternate,
+                            color: Colors.white,
                           ),
                         ),
                         duration: Duration(milliseconds: 4000),
@@ -154,7 +162,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                         'Oops ! Technical Error. Try Again.',
                         style: TextStyle(
                           fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).tertiary,
+                          color: Colors.white,
                         ),
                       ),
                       duration: Duration(milliseconds: 4000),
@@ -178,23 +186,24 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
               ),
               options: FFButtonOptions(
                 width: double.infinity,
-                height: 50.0,
+                height: 54.0,
                 padding: EdgeInsets.all(8.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                 iconColor: FlutterFlowTheme.of(context).error,
-                color: FlutterFlowTheme.of(context).primaryBackground,
+                color: FlutterFlowTheme.of(context).secondary,
                 textStyle: FlutterFlowTheme.of(context).titleLarge.override(
                       fontFamily: 'SF Pro Display',
                       color: FlutterFlowTheme.of(context).tertiary,
                       fontSize: 18.0,
                       letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w700,
                     ),
                 elevation: 0.0,
                 borderSide: BorderSide(
-                  color: FlutterFlowTheme.of(context).primary,
+                  color: FlutterFlowTheme.of(context).borderColor,
                   width: 1.0,
                 ),
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(14.0),
               ),
             ),
           ].divide(SizedBox(height: 12.0)),

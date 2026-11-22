@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_logo.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -104,7 +105,7 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Align(
@@ -116,15 +117,7 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(0.0),
-                    child: Image.asset(
-                      'assets/images/szs_no_bg.png',
-                      width: 108.0,
-                      height: 118.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ).animateOnPageLoad(
+                  AppLogo(size: 128.0, radius: 32.0).animateOnPageLoad(
                       animationsMap['imageOnPageLoadAnimation']!),
                   Text(
                     FFLocalizations.of(context).getText(
@@ -140,6 +133,16 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
                         ),
                   ).animateOnPageLoad(
                       animationsMap['textOnPageLoadAnimation']!),
+                  Text(
+                    'Maisha ni Hadithi',
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'SF Pro Display',
+                          color: FlutterFlowTheme.of(context).primary,
+                          fontSize: 16.0,
+                          fontStyle: FontStyle.italic,
+                          letterSpacing: 0.4,
+                        ),
+                  ),
                 ].divide(SizedBox(height: 15.0)),
               ),
             ),

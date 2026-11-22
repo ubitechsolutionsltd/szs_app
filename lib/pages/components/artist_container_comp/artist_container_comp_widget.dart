@@ -63,14 +63,8 @@ class _ArtistContainerCompWidgetState extends State<ArtistContainerCompWidget> {
           return ((MediaQuery.sizeOf(context).width - 168) * 1 / 9);
         }
       }(),
-      height: 137.0,
-      decoration: BoxDecoration(
-        color: Color(0xFF161616),
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          width: 1.0,
-        ),
-      ),
+      height: 136.0,
+      decoration: BoxDecoration(color: Colors.transparent),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
         child: Column(
@@ -81,12 +75,17 @@ class _ArtistContainerCompWidgetState extends State<ArtistContainerCompWidget> {
               child: Align(
                 alignment: AlignmentDirectional(0.0, -1.0),
                 child: Container(
-                  width: 56.0,
-                  height: 56.0,
-                  clipBehavior: Clip.antiAlias,
+                  width: 82.0,
+                  height: 82.0,
+                  padding: EdgeInsets.all(2.5),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: FlutterFlowTheme.of(context).primary,
+                      width: 2.0,
+                    ),
                   ),
+                  child: ClipOval(
                   child: CachedNetworkImage(
                     fadeInDuration: Duration(milliseconds: 500),
                     fadeOutDuration: Duration(milliseconds: 500),
@@ -96,7 +95,7 @@ class _ArtistContainerCompWidgetState extends State<ArtistContainerCompWidget> {
                       'assets/images/error_image.png',
                       fit: BoxFit.cover,
                     ),
-                  ),
+                  )),
                 ),
               ),
             ),
@@ -113,13 +112,14 @@ class _ArtistContainerCompWidgetState extends State<ArtistContainerCompWidget> {
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,
-                    minFontSize: 17.0,
+                    minFontSize: 12.0,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'SF Pro Display',
                           color: FlutterFlowTheme.of(context).tertiary,
-                          fontSize: 17.0,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.0,
-                          lineHeight: 1.5,
+                          lineHeight: 1.3,
                         ),
                   ),
                 ),

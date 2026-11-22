@@ -1,3 +1,4 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/custom_loading_indicator_widget.dart';
@@ -80,7 +81,7 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -101,6 +102,10 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
                       onTapAdd: () async {},
                     ),
                   ),
+              custom_widgets.CategoryHero(
+                title: widget.title,
+                categoryId: widget.index,
+              ),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.zero,

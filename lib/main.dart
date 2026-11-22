@@ -7,6 +7,11 @@ import 'auth/firebase_auth/firebase_user_provider.dart';
 import 'auth/firebase_auth/auth_util.dart';
 
 import 'backend/firebase/firebase_config.dart';
+import '/custom_code/actions/index.dart' as actions;
+import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/theme_mode_store.dart';
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -23,6 +28,10 @@ void main() async {
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
+
+  await ThemeModeStore.init();
+
+  await actions.initPlayer();
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
@@ -42,7 +51,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Locale? _locale = FFLocalizations.getStoredLocale();
 
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeModeStore.current;
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
@@ -65,6 +74,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    ThemeModeStore.notifier.addListener(() {
+      if (mounted && ThemeModeStore.notifier.value != _themeMode) {
+        safeSetState(() => _themeMode = ThemeModeStore.notifier.value);
+      }
+    });
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = simuliziFirebaseUserStream()
@@ -83,9 +97,14 @@ class _MyAppState extends State<MyApp> {
     FFLocalizations.storeLocale(language);
   }
 
-  void setThemeMode(ThemeMode mode) => safeSetState(() {
-        _themeMode = mode;
-      });
+  void setThemeMode(ThemeMode mode) {
+    ThemeModeStore.save(mode);
+    safeSetState(() {
+      _themeMode = mode;
+    });
+  }
+
+  ThemeMode get themeMode => _themeMode;
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +127,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: false,
+        scaffoldBackgroundColor: LightModeTheme().primaryBackground,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: false,
+        scaffoldBackgroundColor: DarkModeTheme().primaryBackground,
       ),
       themeMode: _themeMode,
+      builder: (context, child) => AuroraBackground(child: child ?? const SizedBox.shrink()),
       routerConfig: _router,
     );
   }
@@ -152,79 +178,93 @@ class _NavBarPageState extends State<NavBarPage> {
       'SettingPage': SettingPageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    final palette = AppPalette.of(context);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: !widget.disableResizeToAvoidBottomInset,
       body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (i) => safeSetState(() {
-          _currentPage = null;
-          _currentPageName = tabs.keys.toList()[i];
-        }),
-        backgroundColor: FlutterFlowTheme.of(context).primaryText,
-        selectedItemColor: FlutterFlowTheme.of(context).primary,
-        unselectedItemColor: FlutterFlowTheme.of(context).tertiary,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              size: 24.0,
-            ),
-            activeIcon: Icon(
-              Icons.home,
-              size: 24.0,
-            ),
-            label: FFLocalizations.of(context).getText(
-              '9zuihdkf' /* Mwanzo */,
-            ),
-            tooltip: '',
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Persistent "now playing" bar (hidden when nothing is loaded).
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 8.0),
+            child: custom_widgets.MiniPlayerBar(),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search_sharp,
-              size: 24.0,
+          Glass(
+            blur: 28,
+            shadow: false,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(26.0)),
+            strong: true,
+            child: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                height: 66.0,
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                indicatorColor: palette.accent.withValues(alpha: 0.18),
+                labelTextStyle: WidgetStateProperty.resolveWith(
+                  (states) => FlutterFlowTheme.of(context).bodySmall.override(
+                        fontFamily: 'SF Pro Display',
+                        color: states.contains(WidgetState.selected)
+                            ? palette.accent
+                            : palette.muted,
+                        fontSize: 12.0,
+                        letterSpacing: 0.0,
+                        fontWeight: states.contains(WidgetState.selected)
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
+                ),
+                iconTheme: WidgetStateProperty.resolveWith(
+                  (states) => IconThemeData(
+                    size: 24.0,
+                    color: states.contains(WidgetState.selected)
+                        ? palette.accent
+                        : palette.muted,
+                  ),
+                ),
+              ),
+              child: NavigationBar(
+                selectedIndex: currentIndex < 0 ? 0 : currentIndex,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                onDestinationSelected: (i) => safeSetState(() {
+                  _currentPage = null;
+                  _currentPageName = tabs.keys.toList()[i];
+                }),
+                destinations: <NavigationDestination>[
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home_rounded),
+                    label: FFLocalizations.of(context).getText(
+                      '9zuihdkf' /* Mwanzo */,
+                    ),
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.search_rounded),
+                    selectedIcon: Icon(Icons.search_rounded),
+                    label: FFLocalizations.of(context).getText(
+                      '1izax02y' /* Tafuta */,
+                    ),
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.library_music_outlined),
+                    selectedIcon: Icon(Icons.library_music_rounded),
+                    label: FFLocalizations.of(context).getText(
+                      'ztt7zgno' /* Maktaba */,
+                    ),
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.settings_outlined),
+                    selectedIcon: Icon(Icons.settings_rounded),
+                    label: FFLocalizations.of(context).getText(
+                      'e46mrzzy' /* Mpangilio */,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            activeIcon: Icon(
-              Icons.search_sharp,
-              size: 24.0,
-            ),
-            label: FFLocalizations.of(context).getText(
-              '1izax02y' /* Tafuta */,
-            ),
-            tooltip: '',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.library_music_outlined,
-              size: 24.0,
-            ),
-            activeIcon: Icon(
-              Icons.library_music,
-              size: 24.0,
-            ),
-            label: FFLocalizations.of(context).getText(
-              'ztt7zgno' /* Maktaba */,
-            ),
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings_sharp,
-              size: 24.0,
-            ),
-            activeIcon: Icon(
-              Icons.settings_sharp,
-              size: 24.0,
-            ),
-            label: FFLocalizations.of(context).getText(
-              'e46mrzzy' /* Mpangilio */,
-            ),
-            tooltip: '',
-          )
         ],
       ),
     );

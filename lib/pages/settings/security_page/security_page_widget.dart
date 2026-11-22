@@ -47,7 +47,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -91,7 +91,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context).secondary,
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
@@ -111,6 +111,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: SvgPicture.asset(
                                     'assets/images/pr_n_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                     fit: BoxFit.contain,
                                     alignment: Alignment(0.0, 0.0),
                                   ),
@@ -200,7 +201,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context).secondary,
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(16.0),
                             ),
                             child: Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
@@ -221,6 +222,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                                       borderRadius: BorderRadius.circular(8.0),
                                       child: SvgPicture.asset(
                                         'assets/images/pr_s_ic.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                         fit: BoxFit.contain,
                                         alignment: Alignment(0.0, 0.0),
                                       ),
@@ -252,6 +254,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                                     borderRadius: BorderRadius.circular(0.0),
                                     child: SvgPicture.asset(
                                       'assets/images/arrow_right_white_ic.svg',
+                      colorFilter: ColorFilter.mode(FlutterFlowTheme.of(context).tertiary, BlendMode.srcIn),
                                       width: 24.0,
                                       height: 24.0,
                                       fit: BoxFit.cover,

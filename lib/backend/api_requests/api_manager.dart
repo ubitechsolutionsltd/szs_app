@@ -260,6 +260,12 @@ class ApiManager {
   // If your API calls need authentication, populate this field once
   // the user has authenticated. Alter this as needed.
   static String? _accessToken;
+  // Set once after login (see FFAppState.authToken) so every API call sends `Authorization: Bearer <token>`.
+  static String? get accessToken => _accessToken;
+  static set accessToken(String? value) {
+    _accessToken = (value == null || value.isEmpty) ? null : value;
+  }
+
   // You may want to call this if, for example, you make a change to the
   // database and no longer want the cached result of a call that may
   // have changed.

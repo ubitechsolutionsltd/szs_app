@@ -82,7 +82,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Colors.transparent,
           body: SafeArea(
             top: true,
             child: Column(
@@ -257,16 +257,20 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                     }(),
                                     height: 137.0,
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF161616),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: FlutterFlowTheme.of(context).secondary,
+                                      borderRadius: BorderRadius.circular(16.0),
                                       border: Border.all(
                                         color: _model.likedArtist.contains(
                                                     selectArListItem.id) ==
                                                 true
                                             ? FlutterFlowTheme.of(context)
                                                 .primary
-                                            : Color(0x00000000),
-                                        width: 1.0,
+                                            : FlutterFlowTheme.of(context)
+                                                .borderColor,
+                                        width: _model.likedArtist.contains(
+                                                selectArListItem.id)
+                                            ? 2.0
+                                            : 0.8,
                                       ),
                                     ),
                                     child: Padding(
@@ -281,18 +285,45 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                             child: Align(
                                               alignment: AlignmentDirectional(
                                                   0.0, -1.0),
-                                              child: Container(
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.network(
+                                              child: Stack(
+                                                clipBehavior: Clip.none,
+                                                children: [
+                                                  Container(
+                                                    width: 72.0,
+                                                    height: 72.0,
+                                                    padding: EdgeInsets.all(2.5),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: _model.likedArtist.contains(selectArListItem.id)
+                                                            ? FlutterFlowTheme.of(context).primary
+                                                            : FlutterFlowTheme.of(context).borderColor,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipOval(child: Image.network(
                                                   valueOrDefault<String>(
                                                     selectArListItem.img,
                                                     'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/tune-track-music-app-omyrkn/assets/ucvqe2zikw23/a1.png',
                                                   ),
                                                   fit: BoxFit.cover,
-                                                ),
+                                                )),
+                                                  ),
+                                                  if (_model.likedArtist.contains(selectArListItem.id))
+                                                    Positioned(
+                                                      right: -2.0,
+                                                      bottom: -2.0,
+                                                      child: Container(
+                                                        width: 24.0,
+                                                        height: 24.0,
+                                                        decoration: BoxDecoration(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          shape: BoxShape.circle,
+                                                        ),
+                                                        child: Icon(Icons.check_rounded, color: Colors.white, size: 16.0),
+                                                      ),
+                                                    ),
+                                                ],
                                               ),
                                             ),
                                           ),
@@ -309,7 +340,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                                   ),
                                                   textAlign: TextAlign.center,
                                                   maxLines: 1,
-                                                  minFontSize: 17.0,
+                                                  minFontSize: 12.0,
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -320,7 +351,8 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .tertiary,
-                                                        fontSize: 17.0,
+                                                        fontSize: 14.0,
+                                                        fontWeight: FontWeight.w600,
                                                         letterSpacing: 0.0,
                                                         lineHeight: 1.5,
                                                       ),
@@ -362,8 +394,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                   .bodyLarge
                                   .override(
                                     fontFamily: 'SF Pro Display',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
+                                    color: Colors.white,
                                     letterSpacing: 0.0,
                                   ),
                             ),
@@ -379,7 +410,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                     ),
                     options: FFButtonOptions(
                       width: double.infinity,
-                      height: 50.0,
+                      height: 54.0,
                       padding:
                           EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                       iconPadding:
@@ -393,7 +424,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                                 FlutterFlowTheme.of(context).primaryBackground,
                             fontSize: 16.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w700,
                             lineHeight: 1.2,
                           ),
                       elevation: 0.0,
@@ -401,7 +432,7 @@ class _ChooseArtistLikePageWidgetState extends State<ChooseArtistLikePageWidget>
                         color: Colors.transparent,
                         width: 1.0,
                       ),
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(14.0),
                     ),
                     showLoadingIndicator: false,
                   ),

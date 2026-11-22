@@ -1,19 +1,14 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/backend/api_requests/api_calls.dart';
-import '/components/balance_component_widget.dart';
 import '/components/custom_loading_indicator_widget.dart';
-import '/components/no_notification_yet_comp_widget.dart';
 import '/components/no_song_playlist_comp_widget.dart';
-import '/components/package_lists_component_widget.dart';
 import '/components/play_list_container_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/backend/schema/structs/index.dart';
 import '/index.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webviewx_plus/webviewx_plus.dart';
 import 'library_page_model.dart';
 export 'library_page_model.dart';
 
@@ -63,7 +58,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -74,7 +69,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      color: Colors.transparent,
                     ),
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -114,7 +109,8 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                               height: 40.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).secondary,
-                                shape: BoxShape.circle,
+                                border: Border.all(color: FlutterFlowTheme.of(context).borderColor, width: 0.8),
+                            shape: BoxShape.circle,
                               ),
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Align(
@@ -134,160 +130,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                   Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 24.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 130.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondary,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                12.0, 12.0, 16.0, 12.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                  width: 56.0,
-                                  height: 56.0,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: CachedNetworkImage(
-                                    fadeInDuration: Duration(milliseconds: 500),
-                                    fadeOutDuration:
-                                        Duration(milliseconds: 500),
-                                    imageUrl: FFAppState().userphoto,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, error, stackTrace) =>
-                                        Image.asset(
-                                      'assets/images/error_image.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 0.0, 0.0, 0.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          FFAppState().username,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .gray,
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                        Text(
-                                          FFAppState().fullname,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'SF Pro Display',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .tertiary,
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(height: 7.0)),
-                                    ),
-                                  ),
-                                ),
-                                wrapWithModel(
-                                  model: _model.balanceComponentModel,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: BalanceComponentWidget(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                useSafeArea: true,
-                                context: context,
-                                builder: (context) {
-                                  return WebViewAware(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        FocusScope.of(context).unfocus();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                      },
-                                      child: Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: Container(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              0.75,
-                                          child: PackageListsComponentWidget(),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ).then((value) => safeSetState(() {}));
-                            },
-                            text: FFLocalizations.of(context).getText(
-                              'iaf3iuiz' /* Jaza Kibubu */,
-                            ),
-                            icon: Icon(
-                              Icons.add_card,
-                              size: 15.0,
-                            ),
-                            options: FFButtonOptions(
-                              width: MediaQuery.sizeOf(context).width * 0.85,
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconAlignment: IconAlignment.end,
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'SF Pro Display',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 0.0,
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            showLoadingIndicator: false,
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: custom_widgets.WalletCard(),
                   ),
                   Expanded(
                     child: Column(
@@ -438,26 +281,7 @@ class _LibraryPageWidgetState extends State<LibraryPageWidget>
                                   ),
                                 ],
                               ),
-                              ListView(
-                                padding: EdgeInsets.fromLTRB(
-                                  0,
-                                  0,
-                                  0,
-                                  24.0,
-                                ),
-                                scrollDirection: Axis.vertical,
-                                children: [
-                                  Container(
-                                    height:
-                                        MediaQuery.sizeOf(context).height * 0.5,
-                                    child: wrapWithModel(
-                                      model: _model.noNotificationYetCompModel,
-                                      updateCallback: () => safeSetState(() {}),
-                                      child: NoNotificationYetCompWidget(),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              custom_widgets.DownloadsList(),
                             ],
                           ),
                         ),

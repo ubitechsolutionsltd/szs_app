@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_logo.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/social_auth_component_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
@@ -84,7 +85,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -105,6 +106,17 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 8.0, 20.0, 20.0),
+                        child: Align(
+                          alignment: AlignmentDirectional(-1.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(18.0),
+                            child: AppLogo(size: 64.0, radius: 18.0),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 0.0, 20.0, 0.0),
                         child: Text(
                           FFLocalizations.of(context).getText(
@@ -122,6 +134,20 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                               ),
                         ).animateOnPageLoad(
                             animationsMap['textOnPageLoadAnimation']!),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
+                        child: Text(
+                          'Fungua akaunti yako ili usikilize simulizi za Kiswahili.',
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                fontFamily: 'SF Pro Display',
+                                color: FlutterFlowTheme.of(context).gray,
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                lineHeight: 1.4,
+                              ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -168,32 +194,34 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -258,32 +286,34 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -349,32 +379,34 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -439,32 +471,34 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                 ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
+                                color: FlutterFlowTheme.of(context).borderColor,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color(0xFFC5C5C5),
-                                width: 1.0,
+                                color: FlutterFlowTheme.of(context).primary,
+                                width: 1.5,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).error,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -511,14 +545,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                               return;
                             }
                             _model.signUpResponse =
-                                await GeneralGroup.loginCall.call(
-                              type: '4',
+                                await GeneralGroup.registerCall.call(
                               email: _model.textController3.text,
                               fullName: _model.textController1.text,
                               mobileNumber: _model.textController2.text,
                               password: _model.textController4.text,
                               deviceType: '1',
-                              deviceToken: _model.textController4.text,
                             );
 
                             _shouldSetState = true;
@@ -536,8 +568,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                     GeneralGroup.loginCall.username(
                                   (_model.signUpResponse?.jsonBody ?? ''),
                                 )!;
-                                FFAppState().password =
-                                    _model.textController4.text;
+                                FFAppState().authToken =
+                                    GeneralGroup.loginCall.token(
+                                          (_model.signUpResponse?.jsonBody ??
+                                              ''),
+                                        ) ??
+                                        '';
                                 FFAppState().phonenumber =
                                     GeneralGroup.loginCall.mobilenumber(
                                   (_model.signUpResponse?.jsonBody ?? ''),
@@ -578,8 +614,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                       'Successfully Logged In.',
                                       style: TextStyle(
                                         fontFamily: 'SF Pro Display',
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiary,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     duration: Duration(milliseconds: 4000),
@@ -598,8 +633,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                       )!,
                                       style: TextStyle(
                                         fontFamily: 'SF Pro Display',
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     duration: Duration(milliseconds: 4000),
@@ -622,7 +656,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                           ),
                           options: FFButtonOptions(
                             width: double.infinity,
-                            height: 50.0,
+                            height: 54.0,
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -636,7 +670,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                                       .primaryBackground,
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w700,
                                   lineHeight: 1.2,
                                 ),
                             elevation: 0.0,
@@ -644,7 +678,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(14.0),
                           ),
                         ),
                       ),

@@ -1,3 +1,4 @@
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/components/custom_loading_indicator_widget.dart';
@@ -75,7 +76,7 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -163,31 +164,31 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
                                 color: Color(0x00000000),
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color(0x00000000),
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).accent3,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: FlutterFlowTheme.of(context).accent3,
                                 width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(14.0),
                             ),
                             filled: true,
-                            fillColor: Color(0xFF161616),
+                            fillColor: FlutterFlowTheme.of(context).secondary,
                             contentPadding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 16.0, 16.0, 16.0),
                             hoverColor: Colors.transparent,
@@ -212,6 +213,7 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
                               .asValidator(context),
                         ),
                       ),
+                      if (_model.searchFieldTextController.text.trim().length >= 3)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 30.0, 20.0, 0.0),
@@ -255,6 +257,12 @@ class _HomeSearchPageWidgetState extends State<HomeSearchPageWidget>
                                       ?.toList() ??
                                   [];
                               if (trendings.isEmpty) {
+                                if (_model.searchFieldTextController.text
+                                        .trim()
+                                        .length <
+                                    3) {
+                                  return custom_widgets.SearchSuggestions();
+                                }
                                 return NoResultFoundCompWidget();
                               }
 

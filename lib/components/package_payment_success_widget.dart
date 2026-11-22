@@ -77,7 +77,7 @@ class _PackagePaymentSuccessWidgetState
           }
         }(),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryBackground,
+          color: Colors.transparent,
           boxShadow: [
             BoxShadow(
               blurRadius: 4.0,
@@ -230,7 +230,7 @@ class _PackagePaymentSuccessWidgetState
                       color: FlutterFlowTheme.of(context).primary,
                       width: 1.0,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(14.0),
                   ),
                   showLoadingIndicator: false,
                 ),
@@ -265,7 +265,7 @@ class _PackagePaymentSuccessWidgetState
                       color: FlutterFlowTheme.of(context).primaryBackground,
                       width: 1.0,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(14.0),
                     hoverColor: FlutterFlowTheme.of(context).primaryBackground,
                   ),
                   showLoadingIndicator: false,

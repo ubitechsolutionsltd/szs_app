@@ -65,13 +65,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
               onPressed: () async {
                 var _shouldSetState = false;
                 _model.loginForBalanceInLibararyPage =
-                    await GeneralGroup.loginCall.call(
-                  email: FFAppState().username,
-                  password: FFAppState().password,
-                  deviceToken: FFAppState().devicetoken,
-                  type: '1',
-                  mobileNumber: FFAppState().phonenumber,
-                );
+                    await GeneralGroup.meCall.call();
 
                 _shouldSetState = true;
                 if (GeneralGroup.loginCall.walletcoin(
@@ -95,7 +89,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
                           'Kuna tatizo la kiufundi. Jaribu tena baadae.',
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).primaryText,
+                            color: Colors.white,
                           ),
                         ),
                         duration: Duration(milliseconds: 4000),
@@ -112,7 +106,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
                         'Kuna tatizo la kiufundi. Jaribu tena baadae.',
                         style: TextStyle(
                           fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).primaryText,
+                          color: Colors.white,
                         ),
                       ),
                       duration: Duration(milliseconds: 4000),
@@ -140,12 +134,12 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
                 color: FlutterFlowTheme.of(context).secondary,
                 textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                       fontFamily: 'SF Pro Display',
-                      color: Colors.white,
+                      color: FlutterFlowTheme.of(context).tertiary,
                       fontSize: 15.0,
                       letterSpacing: 0.0,
                     ),
                 elevation: 0.0,
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(14.0),
               ),
             ),
           ].divide(SizedBox(width: 10.0)),

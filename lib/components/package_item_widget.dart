@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_palette.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -40,139 +41,113 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
     super.dispose();
   }
 
+  static String _money(num value) {
+    final digits = value.round().toString();
+    final grouped = digits.replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',');
+    return 'TZS $grouped';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: Container(
-              width: double.infinity,
-              height: 80.0,
+    final palette = AppPalette.of(context);
+    final theme = FlutterFlowTheme.of(context);
+    final package = widget.package;
+    final coins = package?.coin ?? 0;
+    final price = package?.price ?? 0;
+    final perCoin = coins > 0 ? price / coins : 0;
+
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+      child: Container(
+        padding: EdgeInsets.all(14.0),
+        decoration: BoxDecoration(
+          color: palette.solid.withValues(alpha: 0.72),
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(color: palette.outline, width: 0.8),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 56.0,
+              height: 56.0,
               decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary
-                  ],
-                  stops: [0.0, 1.0],
-                  begin: AlignmentDirectional(0.0, -1.0),
-                  end: AlignmentDirectional(0, 1.0),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [palette.warning, Color.lerp(palette.warning, Colors.deepOrange, 0.55)!],
                 ),
-                borderRadius: BorderRadius.circular(12.0),
-                border: Border.all(
-                  color: FlutterFlowTheme.of(context).alternate,
-                  width: 1.0,
-                ),
+                boxShadow: [
+                  BoxShadow(color: palette.warning.withValues(alpha: 0.4), blurRadius: 12.0, offset: Offset(0.0, 5.0)),
+                ],
               ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 12.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        widget.package!.image,
-                        width: 56.0,
-                        height: 56.0,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                          'assets/images/error_image.png',
-                          width: 56.0,
-                          height: 56.0,
-                          fit: BoxFit.cover,
-                        ),
+              child: Icon(Icons.toll_rounded, color: Colors.white, size: 30.0),
+            ),
+            SizedBox(width: 14.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    valueOrDefault<String>(package?.name, 'Kifurushi'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.bodyLarge.override(
+                      fontFamily: 'SF Pro Display',
+                      color: palette.text,
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  SizedBox(height: 2.0),
+                  Text(
+                    '$coins sarafu',
+                    style: theme.bodyMedium.override(
+                      fontFamily: 'SF Pro Display',
+                      color: palette.warning,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.0,
+                    ),
+                  ),
+                  if (perCoin > 0)
+                    Text(
+                      'TZS ${perCoin.toStringAsFixed(perCoin >= 100 ? 0 : 1)} kwa sarafu',
+                      style: theme.bodySmall.override(
+                        fontFamily: 'SF Pro Display',
+                        color: palette.muted,
+                        fontSize: 12.0,
+                        letterSpacing: 0.0,
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            valueOrDefault<String>(
-                              widget.package?.name,
-                              'Package Name',
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyLarge
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          Text(
-                            FFLocalizations.of(context).getText(
-                              'ac0zqdlz' /* Bofya kufanya malipo */,
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                          ),
-                        ].divide(SizedBox(height: 4.0)),
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          valueOrDefault<String>(
-                            formatNumber(
-                              widget.package?.price,
-                              formatType: FormatType.decimal,
-                              decimalType: DecimalType.periodDecimal,
-                              currency: 'TZS',
-                            ),
-                            '0',
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                letterSpacing: 0.0,
-                              ),
-                        ),
-                        Text(
-                          '${valueOrDefault<String>(
-                            widget.package?.coin.toString(),
-                            '0',
-                          )} Coins',
-                          style: FlutterFlowTheme.of(context)
-                              .labelSmall
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                letterSpacing: 0.0,
-                              ),
-                        ),
-                      ].divide(SizedBox(height: 2.0)),
-                    ),
-                  ].divide(SizedBox(width: 16.0)),
+                ],
+              ),
+            ),
+            SizedBox(width: 10.0),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 11.0),
+              decoration: BoxDecoration(
+                color: palette.accent,
+                borderRadius: BorderRadius.circular(14.0),
+                boxShadow: [
+                  BoxShadow(color: palette.accent.withValues(alpha: 0.35), blurRadius: 10.0, offset: Offset(0.0, 4.0)),
+                ],
+              ),
+              child: Text(
+                _money(price),
+                style: theme.titleSmall.override(
+                  fontFamily: 'SF Pro Display',
+                  color: palette.onAccent,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.0,
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

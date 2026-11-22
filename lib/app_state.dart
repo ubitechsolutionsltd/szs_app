@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:csv/csv.dart';
 import 'package:synchronized/synchronized.dart';
 import 'flutter_flow/flutter_flow_util.dart';
+import '/backend/api_requests/api_manager.dart' show ApiManager;
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -93,6 +94,9 @@ class FFAppState extends ChangeNotifier {
     });
     await _safeInitAsync(() async {
       _password = await secureStorage.getString('ff_password') ?? _password;
+    });
+    await _safeInitAsync(() async {
+      await _restoreAuthToken();
     });
     await _safeInitAsync(() async {
       _fullname = await secureStorage.getString('ff_fullname') ?? _fullname;
@@ -810,6 +814,28 @@ class FFAppState extends ChangeNotifier {
       _username = '';
     }
     secureStorage.delete(key: 'ff_username');
+  }
+
+  // Login session token issued by the backend. Replaces storing the user's password.
+  String _authToken = '';
+  String get authToken => _authToken;
+  set authToken(String value) {
+    _authToken = value;
+    ApiManager.accessToken = value;
+    secureStorage.setString('ff_authToken', value);
+  }
+
+  void deleteAuthToken({bool resetState = false}) {
+    if (resetState) {
+      _authToken = '';
+      ApiManager.accessToken = null;
+    }
+    secureStorage.delete(key: 'ff_authToken');
+  }
+
+  Future<void> _restoreAuthToken() async {
+    _authToken = await secureStorage.getString('ff_authToken') ?? _authToken;
+    ApiManager.accessToken = _authToken;
   }
 
   String _password = '';

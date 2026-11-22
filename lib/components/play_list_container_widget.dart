@@ -108,7 +108,7 @@ class _PlayListContainerWidgetState extends State<PlayListContainerWidget> {
         height: 256.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondary,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,

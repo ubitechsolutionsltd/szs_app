@@ -1,3 +1,4 @@
+import '/custom_code/ui/app_logo.dart';
 import '/components/custom_center_app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -74,7 +75,7 @@ class _AboutUsPageWidgetState extends State<AboutUsPageWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           top: true,
           child: Column(
@@ -91,16 +92,33 @@ class _AboutUsPageWidgetState extends State<AboutUsPageWidget>
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Image.asset(
-                    'assets/images/szs_no_bg.png',
-                    width: MediaQuery.sizeOf(context).width * 0.2,
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment(0.0, 0.0),
-                  ),
-                ).animateOnPageLoad(animationsMap['imageOnPageLoadAnimation']!),
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 8.0, 20.0, 8.0),
+                child: Column(
+                  children: [
+                    AppLogo(size: 96.0, radius: 26.0),
+                    SizedBox(height: 12.0),
+                    Text(
+                      'Simulizi za Sauti',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'SF Pro Display',
+                            color: FlutterFlowTheme.of(context).tertiary,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.3,
+                          ),
+                    ),
+                    Text(
+                      'Maisha ni Hadithi',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'SF Pro Display',
+                            color: FlutterFlowTheme.of(context).primary,
+                            fontSize: 15.0,
+                            fontStyle: FontStyle.italic,
+                            letterSpacing: 0.3,
+                          ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: ListView(
