@@ -455,6 +455,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
                                       MediaQuery.sizeOf(context).height * 0.15,
                                   command: FFAppState().playercommand,
                                   episode: FFAppState().nowPlaying,
+                                  episodes: widget.episodes,
                                   onFinished: (episode) async {
                                     FFAppState().nowPlaying =
                                         functions.getAdjacentEpisode(episode,
