@@ -211,8 +211,12 @@ class _SeekBarState extends State<SeekBar> {
         final position = snap.data?.position ?? Duration.zero;
         final duration = snap.data?.duration ?? Duration.zero;
         final buffered = snap.data?.buffered ?? Duration.zero;
-        final maxMs = duration.inMilliseconds <= 0 ? 1.0 : duration.inMilliseconds.toDouble();
-        final valueMs = (_dragMs ?? position.inMilliseconds.toDouble()).clamp(0.0, maxMs);
+        // The server may report no length (audio_duration 0) and the player cannot always work it out. With an
+        // unknown total the bar must still show the live position instead of clamping it to nothing.
+        final known = duration.inMilliseconds > 0;
+        final positionMs = position.inMilliseconds.toDouble();
+        final maxMs = known ? duration.inMilliseconds.toDouble() : (positionMs > 1 ? positionMs : 1.0);
+        final valueMs = known ? (_dragMs ?? positionMs).clamp(0.0, maxMs) : positionMs;
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -228,11 +232,11 @@ class _SeekBarState extends State<SeekBar> {
                 secondaryActiveTrackColor: (widget.onDark ? Colors.white : pal.accent).withValues(alpha: 0.28),
               ),
               child: Slider(
-                value: valueMs,
+                value: known ? valueMs : 0,
                 min: 0,
                 max: maxMs,
                 secondaryTrackValue: buffered.inMilliseconds.toDouble().clamp(0.0, maxMs),
-                onChanged: duration == Duration.zero ? null : (v) => setState(() => _dragMs = v),
+                onChanged: !known ? null : (v) => setState(() => _dragMs = v),
                 onChangeEnd: (v) {
                   widget.service.seek(Duration(milliseconds: v.toInt()));
                   setState(() => _dragMs = null);
@@ -247,9 +251,11 @@ class _SeekBarState extends State<SeekBar> {
                   Text(formatDuration(Duration(milliseconds: valueMs.toInt())),
                       style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
                   Text(
-                      widget.onDark
-                          ? '-${formatDuration(Duration(milliseconds: (maxMs - valueMs).clamp(0.0, maxMs).toInt()))}'
-                          : formatDuration(duration),
+                      !known
+                          ? '--:--'
+                          : widget.onDark
+                              ? '-${formatDuration(Duration(milliseconds: (maxMs - valueMs).clamp(0.0, maxMs).toInt()))}'
+                              : formatDuration(duration),
                       style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
                 ],
               ),
