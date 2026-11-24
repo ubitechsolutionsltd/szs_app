@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '/custom_code/ui/app_tokens.dart';
+
 abstract class FlutterFlowTheme {
   static FlutterFlowTheme of(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark
@@ -132,32 +134,32 @@ class LightModeTheme extends FlutterFlowTheme {
   Color get tertiaryColor => tertiary;
 
   // Brand blue taken from the Simulizi za Sauti logo (#0071BD).
-  late Color primary = const Color(0xFF0071BD);
+  late Color primary = AppTokens.brandPrimary;
   // Cards and inputs.
-  late Color secondary = const Color(0xCCFFFFFF);
+  late Color secondary = AppTokens.surface;
   // Main text colour.
-  late Color tertiary = const Color(0xFF0F1B2D);
-  late Color alternate = const Color(0xFFD9E2EC);
+  late Color tertiary = AppTokens.textPrimary;
+  late Color alternate = AppTokens.border;
   // Text and icons placed on the primary colour.
   late Color primaryText = const Color(0xFFFFFFFF);
-  late Color secondaryText = const Color(0xFF5B6B80);
-  late Color primaryBackground = const Color(0xFFF3F7FB);
+  late Color secondaryText = AppTokens.textSecondary;
+  late Color primaryBackground = AppTokens.brandPale;
   late Color secondaryBackground = const Color(0xFF0F1B2D);
   late Color accent1 = const Color(0xFFA8C9EE);
   late Color accent2 = const Color(0x4D39D2C0);
   late Color accent3 = const Color(0x4DEE8B60);
   late Color accent4 = const Color(0xCCFFFFFF);
-  late Color success = const Color(0xFF16A34A);
-  late Color warning = const Color(0xFFF5A524);
-  late Color error = const Color(0xFFE5484D);
+  late Color success = AppTokens.success;
+  late Color warning = AppTokens.warning;
+  late Color error = AppTokens.error;
   late Color info = const Color(0xFF0F1B2D);
 
-  late Color lightGray = const Color(0xFFF3F7FB);
+  late Color lightGray = AppTokens.surfaceSubtle;
   late Color black30 = const Color(0xFFC0C9D4);
-  late Color gray = const Color(0xFF6B7A90);
+  late Color gray = AppTokens.textSecondary;
   late Color black10 = const Color(0xFFE8EEF4);
   late Color black40 = const Color(0xFF5B6B80);
-  late Color borderColor = const Color(0xFFD9E2EC);
+  late Color borderColor = AppTokens.border;
   late Color shadowColor = const Color(0x1A0F1B2D);
   late Color black20 = const Color(0xFFD9E2EC);
 }
@@ -170,13 +172,13 @@ class DarkModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF3B9BF0);
-  late Color secondary = const Color(0xB3162540);
-  late Color tertiary = const Color(0xFFEAF1FA);
-  late Color alternate = const Color(0xFF263449);
+  late Color primary = AppTokens.darkAccent;
+  late Color secondary = AppTokens.darkSurface;
+  late Color tertiary = AppTokens.darkText;
+  late Color alternate = AppTokens.darkBorder;
   late Color primaryText = const Color(0xFF04182B);
-  late Color secondaryText = const Color(0xFF8FA3BD);
-  late Color primaryBackground = const Color(0xFF0A1220);
+  late Color secondaryText = AppTokens.darkTextSecondary;
+  late Color primaryBackground = AppTokens.darkBackground;
   late Color secondaryBackground = const Color(0xFFEAF1FA);
   late Color accent1 = const Color(0xFFA8C9EE);
   late Color accent2 = const Color(0x4D39D2C0);
@@ -189,9 +191,9 @@ class DarkModeTheme extends FlutterFlowTheme {
 
   late Color lightGray = const Color(0xFF121C2E);
   late Color black30 = const Color(0xFF3A4A63);
-  late Color gray = const Color(0xFF8FA3BD);
+  late Color gray = AppTokens.darkTextSecondary;
   late Color black10 = const Color(0xFF0F1827);
-  late Color borderColor = const Color(0xFF263449);
+  late Color borderColor = AppTokens.darkBorder;
   late Color shadowColor = const Color(0x66000000);
   late Color black40 = const Color(0xFF8FA3BD);
   late Color black20 = const Color(0xFF263449);

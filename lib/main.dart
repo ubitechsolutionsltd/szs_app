@@ -8,11 +8,11 @@ import 'auth/firebase_auth/auth_util.dart';
 
 import 'backend/firebase/firebase_config.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/app_theme.dart';
 import '/custom_code/ui/glass.dart';
 import '/custom_code/ui/theme_mode_store.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
-import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'index.dart';
@@ -124,16 +124,8 @@ class _MyAppState extends State<MyApp> {
         Locale('sw'),
         Locale('en'),
       ],
-      theme: ThemeData(
-        brightness: Brightness.light,
-        useMaterial3: false,
-        scaffoldBackgroundColor: LightModeTheme().primaryBackground,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        useMaterial3: false,
-        scaffoldBackgroundColor: DarkModeTheme().primaryBackground,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       themeMode: _themeMode,
       builder: (context, child) => AuroraBackground(child: child ?? const SizedBox.shrink()),
       routerConfig: _router,
@@ -178,8 +170,6 @@ class _NavBarPageState extends State<NavBarPage> {
       'SettingPage': SettingPageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
-    final palette = AppPalette.of(context);
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: !widget.disableResizeToAvoidBottomInset,
@@ -192,78 +182,34 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 8.0),
             child: custom_widgets.MiniPlayerBar(),
           ),
-          Glass(
-            blur: 28,
-            shadow: false,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(26.0)),
-            strong: true,
-            child: NavigationBarTheme(
-              data: NavigationBarThemeData(
-                height: 66.0,
-                backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                indicatorColor: palette.accent.withValues(alpha: 0.18),
-                labelTextStyle: WidgetStateProperty.resolveWith(
-                  (states) => FlutterFlowTheme.of(context).bodySmall.override(
-                        fontFamily: 'SF Pro Display',
-                        color: states.contains(WidgetState.selected)
-                            ? palette.accent
-                            : palette.muted,
-                        fontSize: 12.0,
-                        letterSpacing: 0.0,
-                        fontWeight: states.contains(WidgetState.selected)
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                      ),
-                ),
-                iconTheme: WidgetStateProperty.resolveWith(
-                  (states) => IconThemeData(
-                    size: 24.0,
-                    color: states.contains(WidgetState.selected)
-                        ? palette.accent
-                        : palette.muted,
-                  ),
-                ),
+          AppBottomNav(
+            currentIndex: currentIndex < 0 ? 0 : currentIndex,
+            onSelected: (i) => safeSetState(() {
+              _currentPage = null;
+              _currentPageName = tabs.keys.toList()[i];
+            }),
+            items: [
+              AppNavItem(
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home_rounded,
+                label: FFLocalizations.of(context).getText('9zuihdkf' /* Mwanzo */),
               ),
-              child: NavigationBar(
-                selectedIndex: currentIndex < 0 ? 0 : currentIndex,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                onDestinationSelected: (i) => safeSetState(() {
-                  _currentPage = null;
-                  _currentPageName = tabs.keys.toList()[i];
-                }),
-                destinations: <NavigationDestination>[
-                  NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home_rounded),
-                    label: FFLocalizations.of(context).getText(
-                      '9zuihdkf' /* Mwanzo */,
-                    ),
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.search_rounded),
-                    selectedIcon: Icon(Icons.search_rounded),
-                    label: FFLocalizations.of(context).getText(
-                      '1izax02y' /* Tafuta */,
-                    ),
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.library_music_outlined),
-                    selectedIcon: Icon(Icons.library_music_rounded),
-                    label: FFLocalizations.of(context).getText(
-                      'ztt7zgno' /* Maktaba */,
-                    ),
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.settings_outlined),
-                    selectedIcon: Icon(Icons.settings_rounded),
-                    label: FFLocalizations.of(context).getText(
-                      'e46mrzzy' /* Mpangilio */,
-                    ),
-                  ),
-                ],
+              AppNavItem(
+                icon: Icons.search_rounded,
+                selectedIcon: Icons.search_rounded,
+                label: FFLocalizations.of(context).getText('1izax02y' /* Tafuta */),
               ),
-            ),
+              AppNavItem(
+                icon: Icons.library_music_outlined,
+                selectedIcon: Icons.library_music_rounded,
+                label: FFLocalizations.of(context).getText('ztt7zgno' /* Maktaba */),
+              ),
+              AppNavItem(
+                icon: Icons.settings_outlined,
+                selectedIcon: Icons.settings_rounded,
+                label: FFLocalizations.of(context).getText('e46mrzzy' /* Mpangilio */),
+              ),
+            ],
           ),
         ],
       ),

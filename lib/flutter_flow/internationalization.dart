@@ -684,8 +684,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Ingia',
     },
     'e46mrzzy': {
-      'sw': 'Mpangilio',
-      'en': 'Mpangilio',
+      'sw': 'Mipangilio',
+      'en': 'Mipangilio',
     },
   },
   // MyProfilePage
