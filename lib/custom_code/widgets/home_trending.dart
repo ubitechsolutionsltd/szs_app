@@ -30,6 +30,7 @@ class HomeTrending extends StatelessWidget {
       height: height ?? 274,
       child: AsyncSection(
         load: _load,
+        empty: const StateMessage(icon: Icons.headphones_rounded, message: 'Hakuna simulizi za kuonyesha kwa sasa.'),
         loading: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 20),

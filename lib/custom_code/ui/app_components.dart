@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import 'app_logo.dart';
 import 'app_tokens.dart';
+import 'wave_background.dart';
 
 bool _isDark(BuildContext c) => Theme.of(c).brightness == Brightness.dark;
 Color _accent(BuildContext c) => _isDark(c) ? AppTokens.darkAccent : AppTokens.brandPrimary;
@@ -77,16 +79,33 @@ class AppButton extends StatelessWidget {
     final Widget button;
     switch (kind) {
       case AppButtonKind.primary:
-        button = ElevatedButton(
-          onPressed: enabled ? onPressed : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: accent,
-            disabledBackgroundColor: accent.withValues(alpha: loading ? 1 : 0.4),
-            minimumSize: size,
-            elevation: 0,
-            shape: shape,
+        final dark = _isDark(context);
+        final grad = dark
+            ? const [Color(0xFF4DA8F5), Color(0xFF2B84D6)]
+            : const [Color(0xFF1189DA), AppTokens.brandPrimary, AppTokens.brandDeep];
+        button = DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppTokens.radiusButton),
+            gradient: enabled || loading
+                ? LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: grad)
+                : null,
+            color: enabled || loading ? null : accent.withValues(alpha: 0.4),
+            boxShadow: enabled
+                ? [BoxShadow(color: grad[grad.length > 2 ? 1 : 0].withValues(alpha: 0.38), blurRadius: 18, offset: const Offset(0, 8))]
+                : null,
           ),
-          child: content,
+          child: ElevatedButton(
+            onPressed: enabled ? onPressed : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              disabledBackgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              minimumSize: size,
+              elevation: 0,
+              shape: shape,
+            ),
+            child: content,
+          ),
         );
       case AppButtonKind.secondary:
         button = OutlinedButton(
@@ -152,7 +171,7 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     final muted = _muted(context);
-    final field = TextFormField(
+    final inner = TextFormField(
       controller: widget.controller,
       focusNode: widget.focusNode,
       enabled: widget.enabled,
@@ -177,6 +196,20 @@ class _AppTextFieldState extends State<AppTextField> {
               )
             : null,
       ),
+    );
+
+    final field = DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTokens.radiusInput),
+        boxShadow: [
+          BoxShadow(
+            color: (_isDark(context) ? Colors.black : const Color(0xFF0B3A66)).withValues(alpha: _isDark(context) ? 0.3 : 0.07),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: inner,
     );
 
     if (widget.label == null) return field;
@@ -362,30 +395,46 @@ class CategoryTile extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
-      child: Material(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+          boxShadow: [BoxShadow(color: colors.last.withValues(alpha: 0.28), blurRadius: 14, offset: const Offset(0, 6))],
+        ),
+        child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           onTap: onTap,
           child: Ink(
             height: 84,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppTokens.radiusCard),
               gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: colors),
-              boxShadow: [BoxShadow(color: colors.last.withValues(alpha: 0.28), blurRadius: 14, offset: const Offset(0, 6))],
             ),
-            child: Row(children: [
-              Icon(icon, color: Colors.white, size: 32),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(label,
-                    maxLines: 2, overflow: TextOverflow.ellipsis, style: _style(context, 16, FontWeight.w800, color: Colors.white)),
+            child: ClipRRect(borderRadius: BorderRadius.circular(AppTokens.radiusCard - 8), child: Stack(children: [
+              Positioned(
+                right: -10,
+                bottom: -14,
+                child: Icon(icon, size: 84, color: Colors.white.withValues(alpha: 0.16)),
               ),
-            ]),
+              Row(children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.22), shape: BoxShape.circle),
+                  child: Icon(icon, color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(label,
+                      maxLines: 2, overflow: TextOverflow.ellipsis, style: _style(context, 16, FontWeight.w800, color: Colors.white)),
+                ),
+              ]),
+            ])),
           ),
         ),
-      ),
+      )),
     );
   }
 }
@@ -459,26 +508,39 @@ class GradientHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.paddingOf(context).top;
-    return Container(
-      padding: EdgeInsets.fromLTRB(AppTokens.screenPadding, top + 16, AppTokens.screenPadding, 20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppTokens.brandPrimary, AppTokens.brandDeep]),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-        Row(children: [
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: _style(context, AppTokens.fsScreenTitle, FontWeight.w800, color: Colors.white)),
-              if (subtitle != null) ...[
-                const SizedBox(height: 4),
-                Text(subtitle!, style: _style(context, 14, FontWeight.w500, color: Colors.white.withValues(alpha: 0.85))),
-              ],
-            ]),
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
+      child: Stack(children: [
+        const Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF0A86D9), AppTokens.brandPrimary, AppTokens.brandDeep],
+              ),
+            ),
+            child: HeaderWaves(),
           ),
-          if (trailing != null) trailing!,
-        ]),
-        if (bottom != null) ...[const SizedBox(height: 16), bottom!],
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(AppTokens.screenPadding, top + 16, AppTokens.screenPadding, 22),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+            Row(children: [
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(title, style: _style(context, AppTokens.fsScreenTitle, FontWeight.w800, color: Colors.white)),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(subtitle!, style: _style(context, 14, FontWeight.w500, color: Colors.white.withValues(alpha: 0.85))),
+                  ],
+                ]),
+              ),
+              if (trailing != null) trailing!,
+            ]),
+            if (bottom != null) ...[const SizedBox(height: 16), bottom!],
+          ]),
+        ),
       ]),
     );
   }
@@ -626,15 +688,35 @@ class AuthHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding - 8, 0, AppTokens.screenPadding, 8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (showBack)
-          IconButton(
-            tooltip: 'Rudi nyuma',
-            constraints: const BoxConstraints(minWidth: AppTokens.minTouch, minHeight: AppTokens.minTouch),
-            icon: Icon(Icons.arrow_back_rounded, color: _text(context)),
-            onPressed: onBack ?? () => Navigator.of(context).maybePop(),
-          )
-        else
-          const SizedBox(height: 12),
+        Row(children: [
+          if (showBack)
+            Material(
+              color: _surface(context),
+              shape: const CircleBorder(),
+              elevation: 2,
+              shadowColor: const Color(0x330B3A66),
+              child: IconButton(
+                tooltip: 'Rudi nyuma',
+                constraints: const BoxConstraints(minWidth: AppTokens.minTouch, minHeight: AppTokens.minTouch),
+                icon: Icon(Icons.arrow_back_rounded, color: _text(context)),
+                onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+              ),
+            )
+          else
+            const SizedBox(height: 48),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [BoxShadow(color: AppTokens.brandPrimary.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))],
+              ),
+              child: const AppLogo(size: 46, radius: 14),
+            ),
+          ),
+        ]),
+        const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.only(left: 8),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -671,4 +753,22 @@ class LabeledDivider extends StatelessWidget {
       ]),
     );
   }
+}
+
+/// Picks a fitting icon for a story category by its (Swahili or English) name; a generic one otherwise.
+IconData categoryIconFor(String name) {
+  final n = name.toLowerCase();
+  bool has(List<String> keys) => keys.any(n.contains);
+  if (has(['kutisha', 'horror', 'hofu'])) return Icons.theater_comedy_rounded;
+  if (has(['uchawi', 'magic', 'ushirikina'])) return Icons.auto_fix_high_rounded;
+  if (has(['upelelezi', 'detective', 'fumbo', 'mystery'])) return Icons.search_rounded;
+  if (has(['mapenzi', 'love', 'romance'])) return Icons.favorite_rounded;
+  if (has(['siasa', 'politic'])) return Icons.account_balance_rounded;
+  if (has(['uchumi', 'biashara', 'business'])) return Icons.trending_up_rounded;
+  if (has(['historia', 'history'])) return Icons.history_edu_rounded;
+  if (has(['vita', 'war', 'action'])) return Icons.shield_rounded;
+  if (has(['dini', 'religio', 'imani'])) return Icons.volunteer_activism_rounded;
+  if (has(['familia', 'family', 'maisha'])) return Icons.family_restroom_rounded;
+  if (has(['vichekesho', 'comedy', 'ucheshi'])) return Icons.sentiment_very_satisfied_rounded;
+  return Icons.menu_book_rounded;
 }

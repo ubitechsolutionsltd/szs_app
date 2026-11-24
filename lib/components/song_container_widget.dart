@@ -187,7 +187,7 @@ class _SongContainerWidgetState extends State<SongContainerWidget> {
                         ),
                       ),
                     ),
-                    if (rating.isNotEmpty && rating != '0') ...[
+                    if ((double.tryParse(rating) ?? 0) > 0) ...[
                       Icon(Icons.star_rounded, color: palette.warning, size: 16.0),
                       SizedBox(width: 3.0),
                       Text(rating,
@@ -253,7 +253,7 @@ class _SongContainerWidgetState extends State<SongContainerWidget> {
                     ),
                   ),
                 ),
-                if (rating.isNotEmpty && rating != '0')
+                if ((double.tryParse(rating) ?? 0) > 0)
                   Positioned(
                     top: 8.0,
                     right: 8.0,

@@ -1,4 +1,5 @@
 import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/wave_background.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                   ),
                 ),
               ),
+              const FooterWave(),
             ],
           ),
         ),

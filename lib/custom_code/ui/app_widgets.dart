@@ -150,12 +150,16 @@ class AsyncSection extends StatefulWidget {
     required this.load,
     required this.builder,
     required this.loading,
+    this.empty,
     this.errorMessage = 'Imeshindikana kupakia. Angalia mtandao wako.',
   });
 
   final Future<List<dynamic>> Function() load;
   final Widget Function(BuildContext context, List<dynamic> items) builder;
   final Widget loading;
+
+  /// Shown when the request succeeds but returns nothing (nothing is shown if null).
+  final Widget? empty;
   final String errorMessage;
 
   @override
@@ -177,7 +181,7 @@ class _AsyncSectionState extends State<AsyncSection> {
           return StateMessage(icon: Icons.wifi_off_rounded, message: widget.errorMessage, onRetry: _retry);
         }
         final items = snapshot.data ?? const [];
-        if (items.isEmpty) return const SizedBox.shrink();
+        if (items.isEmpty) return widget.empty ?? const SizedBox.shrink();
         return widget.builder(context, items);
       },
     );

@@ -14,9 +14,31 @@ class AuroraBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    return ColoredBox(
-      color: dark ? AppTokens.darkBackground : AppTokens.brandPale,
-      child: child,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: dark
+              ? const [Color(0xFF0E1D38), AppTokens.darkBackground]
+              : const [Color(0xFFDDEEFF), Color(0xFFEFF7FF), Color(0xFFF8FBFF)],
+          stops: dark ? null : const [0.0, 0.38, 1.0],
+        ),
+      ),
+      child: DecoratedBox(
+        // Soft light bloom in the top-right corner (cheap radial gradient, no blur filter).
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: const Alignment(0.95, -0.95),
+            radius: 0.9,
+            colors: [
+              (dark ? AppTokens.darkAccent : AppTokens.brandPrimary).withValues(alpha: dark ? 0.22 : 0.13),
+              Colors.transparent,
+            ],
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 }

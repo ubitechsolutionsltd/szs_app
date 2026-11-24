@@ -1,4 +1,5 @@
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_widgets.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/components/custom_loading_indicator_widget.dart';
@@ -200,45 +201,32 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       onTap: () async {
                         context.pushNamed(HomeSearchPageWidget.routeName);
                       },
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondary,
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(
-                            color: AppPalette.of(context).outline,
-                            width: 0.5,
+                      child: Semantics(
+                        button: true,
+                        label: 'Tafuta simulizi au mwandishi',
+                        child: Container(
+                          width: double.infinity,
+                          constraints: const BoxConstraints(minHeight: AppTokens.minTouch + 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).secondary,
+                            borderRadius: BorderRadius.circular(AppTokens.radiusInput),
+                            border: Border.all(color: FlutterFlowTheme.of(context).borderColor),
+                            boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
                           ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              13.0, 13.0, 16.0, 13.0),
                           child: Row(
-                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              Icon(
-                                Icons.search,
-                                color: FlutterFlowTheme.of(context).gray,
-                                size: 24.0,
-                              ),
+                              Icon(Icons.search_rounded, color: FlutterFlowTheme.of(context).gray, size: 24.0),
+                              const SizedBox(width: 12.0),
                               Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    FFLocalizations.of(context).getText(
-                                      'lgb4aznq' /* Tafuta */,
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'SF Pro Display',
-                                          color:
-                                              FlutterFlowTheme.of(context).gray,
-                                          fontSize: 17.0,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.5,
-                                        ),
+                                child: Text(
+                                  'Tafuta simulizi, mwandishi…',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: AppTokens.fontFamily,
+                                    color: FlutterFlowTheme.of(context).gray,
+                                    fontSize: AppTokens.fsBody + 1,
                                   ),
                                 ),
                               ),
@@ -246,8 +234,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           ),
                         ),
                       ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation2']!),
+                    ),
                   ),
                   Expanded(
                     child: ListView(

@@ -62,6 +62,7 @@ class _HomeHeroState extends State<HomeHero> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SkeletonBox(height: height, radius: AppSpace.radiusLg),
         ),
+        empty: const StateMessage(icon: Icons.headphones_rounded, message: 'Simulizi mpya zitaonekana hapa hivi karibuni.'),
         errorMessage: 'Imeshindikana kupakia simulizi. Angalia mtandao wako.',
         builder: (context, stories) {
           final featured = stories.take(5).toList();
