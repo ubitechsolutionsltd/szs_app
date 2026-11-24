@@ -220,6 +220,8 @@ class EpisodesAudioByContentCall {
     String? userId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id, and the server rejects an empty one ("The user id must be a number"): it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
