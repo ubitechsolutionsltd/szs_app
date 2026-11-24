@@ -1,8 +1,5 @@
-import '/custom_code/ui/app_widgets.dart';
-import '/components/custom_center_app_bar_widget.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
+import '/custom_code/ui/app_components.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'forgot_pass_page_model.dart';
@@ -54,19 +51,10 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              wrapWithModel(
-                model: _model.customCenterAppBarModel,
-                updateCallback: () => safeSetState(() {}),
-                child: CustomCenterAppBarWidget(
-                  title: 'Rejesha Nywila',
-                  backIcon: false,
-                  addIcon: false,
-                  onTapAdd: () async {},
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 4.0),
-                child: Center(child: EmptyBadge(icon: Icons.lock_reset_rounded, size: 88.0)),
+              AuthHeader(
+                title: 'Rejesha Nywila',
+                subtitle: FFLocalizations.of(context).getText('bcrgr35y' /* Andikwa barua pepe utakayotumi... */),
+                onBack: () => context.safePop(),
               ),
               Expanded(
                 child: Form(
@@ -84,117 +72,22 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                       ),
                       scrollDirection: Axis.vertical,
                       children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 24.0, 0.0),
-                          child: Text(
-                            FFLocalizations.of(context).getText(
-                              'bcrgr35y' /* Andikwa barua pepe utakayotumi... */,
-                            ),
-                            textAlign: TextAlign.start,
-                            maxLines: 2,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                          ),
-                        ),
-                        TextFormField(
-                          controller: _model.textController,
+                        AppTextField(
+                          controller: _model.textController!,
                           focusNode: _model.textFieldFocusNode,
-                          autofocus: false,
-                          textInputAction: TextInputAction.next,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'x1d7pvns' /* Barua pepe */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              'jds1z5tn' /* Barua pepe */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textControllerValidator
-                              .asValidator(context),
+                          hint: FFLocalizations.of(context).getText('jds1z5tn' /* Barua pepe */),
+                          icon: Icons.mail_outline_rounded,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.done,
+                          validator: _model.textControllerValidator.asValidator(context),
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 8.0, 0.0, 0.0),
-                          child: FFButtonWidget(
+                          child: AppButton(
+                            label: FFLocalizations.of(context).getText('viv75x51' /* Endelea */),
+                            icon: Icons.arrow_forward_rounded,
+                            trailingIcon: true,
                             onPressed: () async {
                               if (_model.formKey.currentState == null ||
                                   !_model.formKey.currentState!.validate()) {
@@ -211,39 +104,9 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
                                 }.withoutNulls,
                               );
                             },
-                            text: FFLocalizations.of(context).getText(
-                              'viv75x51' /* Endelea */,
-                            ),
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 54.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 0.0, 24.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'SF Pro Display',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w700,
-                                    lineHeight: 1.2,
-                                  ),
-                              elevation: 0.0,
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            showLoadingIndicator: false,
                           ),
                         ),
-                      ].divide(SizedBox(height: 40.0)),
+                      ].divide(SizedBox(height: 24.0)),
                     ),
                   ),
                 ),

@@ -611,3 +611,64 @@ class AppBottomNav extends StatelessWidget {
     );
   }
 }
+
+/// Header for auth and form pages: back button, large title and supporting line.
+class AuthHeader extends StatelessWidget {
+  const AuthHeader({super.key, required this.title, this.subtitle, this.onBack, this.showBack = true});
+
+  final String title;
+  final String? subtitle;
+  final VoidCallback? onBack;
+  final bool showBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding - 8, 0, AppTokens.screenPadding, 8),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (showBack)
+          IconButton(
+            tooltip: 'Rudi nyuma',
+            constraints: const BoxConstraints(minWidth: AppTokens.minTouch, minHeight: AppTokens.minTouch),
+            icon: Icon(Icons.arrow_back_rounded, color: _text(context)),
+            onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+          )
+        else
+          const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: _style(context, AppTokens.fsScreenTitle + 2, FontWeight.w800, height: 1.15)),
+            if (subtitle != null) ...[
+              const SizedBox(height: 10),
+              Text(subtitle!, style: _style(context, 16, FontWeight.w400, color: _muted(context), height: 1.45)),
+            ],
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+/// "—— Au ——" divider between the form and social sign-in.
+class LabeledDivider extends StatelessWidget {
+  const LabeledDivider({super.key, required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = Expanded(child: Container(height: 1, color: _border(context)));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppTokens.screenPadding, vertical: 20),
+      child: Row(children: [
+        line,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Text(label, style: _style(context, 15, FontWeight.w600, color: _muted(context))),
+        ),
+        line,
+      ]),
+    );
+  }
+}

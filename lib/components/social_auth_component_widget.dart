@@ -158,7 +158,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
               ),
               options: FFButtonOptions(
                 width: double.infinity,
-                height: 54.0,
+                height: 52.0,
                 padding: EdgeInsets.all(8.0),
                 iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                 iconColor: FlutterFlowTheme.of(context).error,
@@ -166,16 +166,16 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                 textStyle: FlutterFlowTheme.of(context).titleLarge.override(
                       fontFamily: 'SF Pro Display',
                       color: FlutterFlowTheme.of(context).tertiary,
-                      fontSize: 18.0,
+                      fontSize: 16.0,
                       letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w700,
                     ),
                 elevation: 0.0,
                 borderSide: BorderSide(
                   color: FlutterFlowTheme.of(context).borderColor,
                   width: 1.0,
                 ),
-                borderRadius: BorderRadius.circular(14.0),
+                borderRadius: BorderRadius.circular(18.0),
               ),
             ),
           ].divide(SizedBox(height: 12.0)),

@@ -1,4 +1,4 @@
-import '/custom_code/ui/app_logo.dart';
+import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_toast.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -6,7 +6,6 @@ import '/components/social_auth_component_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,7 @@ class LoginPageWidget extends StatefulWidget {
 class _LoginPageWidgetState extends State<LoginPageWidget>
     with TickerProviderStateMixin {
   late LoginPageModel _model;
+  bool _loading = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -94,250 +94,38 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                     ),
                     scrollDirection: Axis.vertical,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 8.0, 20.0, 20.0),
-                        child: Align(
-                          alignment: AlignmentDirectional(-1.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(18.0),
-                            child: AppLogo(size: 64.0, radius: 18.0),
-                          ),
-                        ),
+                      AuthHeader(
+                        title: FFLocalizations.of(context).getText('gdn2b1x7' /* Ingia */),
+                        subtitle: 'Karibu tena. Ingia ili uendelee kusikiliza simulizi zako.',
+                        onBack: () => context.safePop(),
                       ),
+                      const SizedBox(height: 16.0),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: Text(
-                          FFLocalizations.of(context).getText(
-                            'gdn2b1x7' /* Ingia */,
-                          ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'SF Pro Display',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    fontSize: 34.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.5,
-                                  ),
-                        ).animateOnPageLoad(
-                            animationsMap['textOnPageLoadAnimation']!),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: Text(
-                          'Karibu tena. Ingia ili uendelee kusikiliza simulizi zako.',
-                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).gray,
-                                fontSize: 16.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.4,
-                              ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 32.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController1,
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController1!,
                           focusNode: _model.textFieldFocusNode1,
-                          autofocus: false,
-                          textInputAction: TextInputAction.next,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'nn8dwuu4' /* Barua pepe */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.3,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              '4gly7jca' /* Barua pepe */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
+                          hint: FFLocalizations.of(context).getText('4gly7jca' /* Barua pepe */),
+                          icon: Icons.mail_outline_rounded,
                           keyboardType: TextInputType.emailAddress,
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController1Validator
-                              .asValidator(context),
+                          textInputAction: TextInputAction.next,
+                          validator: _model.textController1Validator.asValidator(context),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 16.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController2,
+
+                                            Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController2!,
                           focusNode: _model.textFieldFocusNode2,
-                          autofocus: false,
+                          hint: FFLocalizations.of(context).getText('rq4szjuu' /* Nywila */),
+                          icon: Icons.lock_outline_rounded,
+                          obscure: true,
                           textInputAction: TextInputAction.done,
-                          obscureText: !_model.passwordVisibility,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'vtz9zqyc' /* Nywila */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              'rq4szjuu' /* Nywila */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                            suffixIcon: InkWell(
-                              onTap: () async {
-                                safeSetState(() => _model.passwordVisibility =
-                                    !_model.passwordVisibility);
-                              },
-                              focusNode:
-                                  _model.textFieldPasswordVisibilityFocusNode2
-                                    ..skipTraversal = !(false),
-                              child: Icon(
-                                _model.passwordVisibility
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: FlutterFlowTheme.of(context).gray,
-                                size: 20.0,
-                              ),
-                            ),
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController2Validator
-                              .asValidator(context),
+                          validator: _model.textController2Validator.asValidator(context),
                         ),
                       ),
+
                       Align(
                         alignment: AlignmentDirectional(1.0, 0.0),
                         child: Padding(
@@ -371,8 +159,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 0.0, 20.0, 0.0),
-                        child: FFButtonWidget(
+                        child: AppButton(
+                          loading: _loading,
+                          label: FFLocalizations.of(context).getText('x4nwc5r8' /* Ingia */),
                           onPressed: () async {
+                            if (_loading) return;
+                            safeSetState(() => _loading = true);
+                            try {
                             var _shouldSetState = false;
                             if (_model.formKey.currentState == null ||
                                 !_model.formKey.currentState!.validate()) {
@@ -487,83 +280,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                             }
 
                             if (_shouldSetState) safeSetState(() {});
+                          } finally {
+                              if (mounted) safeSetState(() => _loading = false);
+                            }
                           },
-                          text: FFLocalizations.of(context).getText(
-                            'x4nwc5r8' /* Ingia */,
-                          ),
-                          options: FFButtonOptions(
-                            width: double.infinity,
-                            height: 54.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  fontSize: 16.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w700,
-                                  lineHeight: 1.2,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(14.0),
-                          ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 24.0, 0.0, 24.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 1.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).gray,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                '0exjuge8' /* Au */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'SF Pro Display',
-                                    color:
-                                        FlutterFlowTheme.of(context).tertiary,
-                                    fontSize: 17.0,
-                                    letterSpacing: 0.0,
-                                    lineHeight: 1.5,
-                                  ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 1.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).gray,
-                                ),
-                              ),
-                            ),
-                          ]
-                              .divide(SizedBox(width: 8.0))
-                              .addToStart(SizedBox(width: 20.0))
-                              .addToEnd(SizedBox(width: 20.0)),
-                        ),
-                      ),
+                      LabeledDivider(label: FFLocalizations.of(context).getText('0exjuge8' /* Au */)),
                       wrapWithModel(
                         model: _model.socialAuthComponentModel,
                         updateCallback: () => safeSetState(() {}),
@@ -592,12 +315,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                             ),
                       ),
                       TextSpan(
-                        text: FFLocalizations.of(context).getText(
+                        text: ' ' + FFLocalizations.of(context).getText(
                           'ybm2n8lx' /* Jisajili */,
                         ),
                         style: TextStyle(
                           color: FlutterFlowTheme.of(context).primary,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.w800,
                           fontSize: 17.0,
                           height: 1.2,
                         ),
