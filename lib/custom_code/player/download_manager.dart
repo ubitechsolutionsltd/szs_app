@@ -75,8 +75,25 @@ class DownloadManager {
 
   bool get supported => !kIsWeb;
 
-  List<DownloadedEpisode> get downloaded => _index.values.toList()
-    ..sort((a, b) => b.downloadedAtMs.compareTo(a.downloadedAtMs));
+  /// Downloaded episodes grouped by story (the most recently downloaded story first) and, inside a story, in the
+  /// story's own order (Sehemu ya 01, 02, 03 ...), exactly as they appear before downloading.
+  List<DownloadedEpisode> get downloaded {
+    final all = _index.values.toList();
+    final newestPerStory = <int, int>{};
+    for (final e in all) {
+      final at = newestPerStory[e.item.contentId] ?? 0;
+      if (e.downloadedAtMs > at) newestPerStory[e.item.contentId] = e.downloadedAtMs;
+    }
+    all.sort((a, b) {
+      if (a.item.contentId != b.item.contentId) {
+        final byStory = newestPerStory[b.item.contentId]!.compareTo(newestPerStory[a.item.contentId]!);
+        return byStory != 0 ? byStory : a.item.contentId.compareTo(b.item.contentId);
+      }
+      final byName = naturalCompare(a.item.title, b.item.title);
+      return byName != 0 ? byName : a.item.id.compareTo(b.item.id);
+    });
+    return all;
+  }
 
   int get totalBytes => _index.values.fold(0, (sum, e) => sum + e.bytes);
 
@@ -313,4 +330,19 @@ class DownloadManager {
       _emit({...states.value, id: state});
 
   void _emit(Map<int, DownloadState> next) => states.value = next;
+}
+
+
+/// Compares strings so that "Sehemu ya 2" comes before "Sehemu ya 10" (numbers are compared as numbers).
+int naturalCompare(String a, String b) {
+  final re = RegExp(r'(\d+)|(\D+)');
+  final pa = re.allMatches(a.toLowerCase()).map((m) => m.group(0)!).toList();
+  final pb = re.allMatches(b.toLowerCase()).map((m) => m.group(0)!).toList();
+  for (var i = 0; i < pa.length && i < pb.length; i++) {
+    final na = int.tryParse(pa[i]);
+    final nb = int.tryParse(pb[i]);
+    final c = (na != null && nb != null) ? na.compareTo(nb) : pa[i].compareTo(pb[i]);
+    if (c != 0) return c;
+  }
+  return pa.length.compareTo(pb.length);
 }

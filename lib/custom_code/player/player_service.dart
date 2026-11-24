@@ -95,7 +95,7 @@ class PlayerService {
         (position, buffered, duration) => PlaybackPosition(
           position,
           buffered,
-          duration ?? Duration(seconds: _queue.current?.durationSeconds ?? 0),
+          _plausible(duration) ?? Duration(seconds: _queue.current?.durationSeconds ?? 0),
         ),
       );
 
@@ -200,8 +200,12 @@ class PlayerService {
 
   Future<void> seek(Duration position) => player.seek(position);
 
+  /// Some streams report a nonsense length (hundreds of hours) because the server does not send the real size.
+  /// No story episode is that long, so such a value is treated as "unknown".
+  static Duration? _plausible(Duration? d) => (d == null || d > const Duration(hours: 10)) ? null : d;
+
   Future<void> seekRelative(Duration delta) async {
-    final duration = player.duration ?? Duration(seconds: _queue.current?.durationSeconds ?? 0);
+    final duration = _plausible(player.duration) ?? Duration(seconds: _queue.current?.durationSeconds ?? 0);
     var target = player.position + delta;
     if (target < Duration.zero) target = Duration.zero;
     if (duration > Duration.zero && target > duration) target = duration;
