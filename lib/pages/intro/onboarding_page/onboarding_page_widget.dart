@@ -1,5 +1,6 @@
 import '/backend/schema/structs/index.dart';
-import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_logo.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_toast.dart';
@@ -97,61 +98,68 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
     context.goNamed(HomePageWidget.routeName);
   }
 
-  /// One onboarding slide: artwork on a glass card (a branded fallback when the image cannot load), then text.
+  /// One onboarding slide: artwork on a soft blue shape (the brand logo when the picture cannot load), then text.
   Widget _slide(BuildContext context, OnboardMStruct item) {
     final palette = AppPalette.of(context);
-    final theme = FlutterFlowTheme.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
 
-    // When the slide's picture cannot load, show the brand logo instead of an empty card.
-    Widget fallback = Center(child: AppLogo(size: 220.0, radius: 44.0));
+    Widget fallback = Center(child: AppLogo(size: 180.0, radius: 40.0));
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 8.0, AppTokens.screenPadding + 4, 0.0),
       child: Column(
         children: [
           Expanded(
-            child: Glass(
-              radius: 32.0,
-              strong: true,
-              padding: EdgeInsets.all(10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24.0),
-                child: SizedBox.expand(
+            child: LayoutBuilder(builder: (context, c) {
+              return Stack(alignment: Alignment.center, children: [
+                // Soft brand-blue backdrop shape behind the picture.
+                Container(
+                  width: c.maxWidth,
+                  height: c.maxHeight * 0.88,
+                  decoration: BoxDecoration(
+                    color: dark ? AppTokens.darkSurface : AppTokens.brandSky,
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: item.img.isEmpty
                       ? fallback
                       : Image.network(
                           item.img,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, progress) =>
+                              progress == null ? child : const Center(child: CircularProgressIndicator()),
                           errorBuilder: (_, __, ___) => fallback,
                         ),
                 ),
-              ),
-            ),
+              ]);
+            }),
           ),
-          SizedBox(height: 28.0),
+          const SizedBox(height: 28.0),
           Text(
             item.title,
             textAlign: TextAlign.center,
-            style: theme.bodyMedium.override(
-              fontFamily: 'SF Pro Display',
-              color: palette.text,
+            style: TextStyle(
+              fontFamily: AppTokens.fontFamily,
+              color: dark ? AppTokens.darkText : AppTokens.brandNavy,
               fontSize: 30.0,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.6,
-              lineHeight: 1.15,
+              height: 1.15,
             ),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text(
             item.subTitle,
             textAlign: TextAlign.center,
-            maxLines: 3,
-            style: theme.bodyMedium.override(
-              fontFamily: 'SF Pro Display',
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: AppTokens.fontFamily,
               color: palette.muted,
-              fontSize: 16.0,
-              letterSpacing: 0.0,
-              lineHeight: 1.45,
+              fontSize: AppTokens.fsBody + 1,
+              height: 1.5,
             ),
           ),
         ],
@@ -230,41 +238,27 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
             radius: 8.0,
             dotWidth: 8.0,
             dotHeight: 8.0,
-            expansionFactor: 3.5,
+            expansionFactor: 3.0,
             dotColor: palette.outline,
             activeDotColor: palette.accent,
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(24.0, 22.0, 24.0, 24.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56.0,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: palette.accent,
-                foregroundColor: palette.onAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-              ),
-              onPressed: () async {
-                if (!isLast) {
-                  await _model.pageViewController?.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                  );
-                } else {
-                  _finishIntro();
-                }
-              },
-              child: Text(
-                isLast ? 'Anza' : 'Endelea',
-                style: TextStyle(
-                  fontFamily: 'SF Pro Display',
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
+          padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 22.0, AppTokens.screenPadding + 4, 24.0),
+          child: AppButton(
+            label: isLast ? 'Anza' : 'Endelea',
+            icon: Icons.arrow_forward_rounded,
+            trailingIcon: true,
+            onPressed: () async {
+              if (!isLast) {
+                await _model.pageViewController?.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+              } else {
+                _finishIntro();
+              }
+            },
           ),
         ),
       ],

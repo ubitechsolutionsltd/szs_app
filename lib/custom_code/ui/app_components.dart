@@ -30,6 +30,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.kind = AppButtonKind.primary,
     this.icon,
+    this.trailingIcon = false,
     this.loading = false,
     this.expand = true,
   });
@@ -38,6 +39,9 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final AppButtonKind kind;
   final IconData? icon;
+
+  /// Puts [icon] after the label (e.g. a forward arrow) instead of before it.
+  final bool trailingIcon;
   final bool loading;
   final bool expand;
 
@@ -58,11 +62,12 @@ class AppButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[Icon(icon, size: 20, color: fg), const SizedBox(width: 8)],
+              if (icon != null && !trailingIcon) ...[Icon(icon, size: 20, color: fg), const SizedBox(width: 8)],
               Flexible(
                 child: Text(label,
                     maxLines: 1, overflow: TextOverflow.ellipsis, style: _style(context, 16, FontWeight.w700, color: fg)),
               ),
+              if (icon != null && trailingIcon) ...[const SizedBox(width: 8), Icon(icon, size: 20, color: fg)],
             ],
           );
 
