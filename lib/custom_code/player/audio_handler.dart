@@ -114,8 +114,9 @@ class BackgroundAudio {
           androidNotificationChannelId: 'com.simulizi.ruhundwa.playback',
           androidNotificationChannelName: 'Simulizi za Sauti',
           androidNotificationOngoing: true,
+          androidNotificationIcon: 'drawable/ic_stat_szs',
           androidStopForegroundOnPause: true,
-          fastForwardInterval: Duration(seconds: 30),
+          fastForwardInterval: Duration(seconds: 15),
           rewindInterval: Duration(seconds: 15),
         ),
       );

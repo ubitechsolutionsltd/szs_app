@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'download_manager.dart';
 import 'media_access.dart';
+import 'notification_permission.dart';
 import 'player_core.dart';
 
 enum PlayerErrorCode { none, locked, nextLocked, offline, failed, loginRequired }
@@ -121,6 +122,7 @@ class PlayerService {
 
   Future<void> playQueue(List<PlayableItem> items, {int startIndex = 0}) async {
     await init();
+    unawaited(NotificationPermission.ensure());
     _queue.setItems(items, startIndex: startIndex);
     await _loadCurrent();
   }
