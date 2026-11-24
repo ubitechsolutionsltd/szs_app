@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -350,7 +351,9 @@ class _SongContainerWidgetState extends State<SongContainerWidget> {
           child: Container(
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondary,
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(22.0),
+              border: Border.all(color: FlutterFlowTheme.of(context).borderColor),
+              boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
             ),
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
@@ -464,7 +467,7 @@ class _SongContainerWidgetState extends State<SongContainerWidget> {
                       ),
                       SizedBox(height: 8.0),
                       Row(mainAxisSize: MainAxisSize.min, children: [
-                        Icon(Icons.headphones_rounded, size: 14.0, color: AppPalette.of(context).muted),
+                        Icon(Icons.queue_music_rounded, size: 15.0, color: AppPalette.of(context).muted),
                         SizedBox(width: 4.0),
                         Text(
                           valueOrDefault<String>(

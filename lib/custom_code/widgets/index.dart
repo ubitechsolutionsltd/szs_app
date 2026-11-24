@@ -14,3 +14,4 @@ export 'settings_header.dart' show SettingsHeader;
 export 'search_suggestions.dart' show SearchSuggestions;
 export 'category_hero.dart' show CategoryHero;
 export 'author_profile.dart' show AuthorProfile;
+export 'search_view.dart' show SearchView;

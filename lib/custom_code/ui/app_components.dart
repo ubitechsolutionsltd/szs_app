@@ -772,3 +772,42 @@ IconData categoryIconFor(String name) {
   if (has(['vichekesho', 'comedy', 'ucheshi'])) return Icons.sentiment_very_satisfied_rounded;
   return Icons.menu_book_rounded;
 }
+
+/// Folder-with-magnifier illustration for "no results", built from icons (no raster asset).
+class SearchEmptyIllustration extends StatelessWidget {
+  const SearchEmptyIllustration({super.key, this.size = 150});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = _accent(context);
+    final dark = _isDark(context);
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(alignment: Alignment.center, children: [
+        Container(
+          width: size * 0.92,
+          height: size * 0.92,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: accent.withValues(alpha: dark ? 0.14 : 0.08)),
+        ),
+        Icon(Icons.folder_rounded, size: size * 0.72, color: dark ? AppTokens.darkSurfaceHigh : const Color(0xFFA9D2F7)),
+        Positioned(
+          right: size * 0.1,
+          bottom: size * 0.12,
+          child: Container(
+            width: size * 0.4,
+            height: size * 0.4,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _surface(context),
+              boxShadow: AppTokens.cardShadow(dark),
+            ),
+            child: Icon(Icons.search_rounded, size: size * 0.26, color: accent),
+          ),
+        ),
+      ]),
+    );
+  }
+}
