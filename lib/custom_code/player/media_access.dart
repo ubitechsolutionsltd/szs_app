@@ -9,7 +9,7 @@ import '/backend/api_requests/api_manager.dart';
 import 'player_core.dart';
 
 class MediaAccessResult {
-  const MediaAccessResult({this.url, this.locked = false});
+  const MediaAccessResult({this.url, this.locked = false, this.loginRequired = false});
 
   /// A fresh link, or null when none could be obtained.
   final String? url;
@@ -17,7 +17,10 @@ class MediaAccessResult {
   /// The server said this episode is not unlocked for the user.
   final bool locked;
 
-  bool get reachedServer => url != null || locked;
+  /// The server answered 401 / "Unauthenticated": nobody is logged in (or the session expired).
+  final bool loginRequired;
+
+  bool get reachedServer => url != null || locked || loginRequired;
 }
 
 class MediaAccess {
@@ -46,9 +49,13 @@ class MediaAccess {
           )
           .timeout(const Duration(seconds: 12));
 
+      if (response.statusCode == 401) return const MediaAccessResult(loginRequired: true);
       final body = jsonDecode(response.body);
       if (body is Map) {
         if (body['status'] == 403) return const MediaAccessResult(locked: true);
+        if (body['status'] == 401 || body['message'] == 'Unauthenticated.') {
+          return const MediaAccessResult(loginRequired: true);
+        }
         if (body['status'] == 200 && body['url'] is String) {
           return MediaAccessResult(url: body['url'] as String);
         }

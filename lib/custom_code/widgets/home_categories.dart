@@ -64,6 +64,7 @@ class HomeCategories extends StatelessWidget {
               return CategoryTile(
                 label: name,
                 icon: categoryIconFor(name),
+                imageUrl: getJsonField(category, r'''$.image''')?.toString(),
                 index: index,
                 onTap: () => context.pushNamed(
                   SubCatListPageWidget.routeName,

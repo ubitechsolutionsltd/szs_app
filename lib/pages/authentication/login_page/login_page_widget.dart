@@ -271,15 +271,24 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                 return;
                               }
                             } else {
+                              // Say what the server actually answered, so a failure can be diagnosed
+                              // instead of looking like a generic network problem.
+                              final status = _model.appleAuthlLoginResponse?.statusCode;
+                              final bodyMsg = GeneralGroup.loginCall.message(
+                                  (_model.appleAuthlLoginResponse?.jsonBody ?? ''));
                               AppToast.error(
                                 context,
-                                trs('connect_failed'),
+                                (bodyMsg != null && bodyMsg.isNotEmpty)
+                                    ? bodyMsg
+                                    : '${trs('connect_failed')} (${status == null || status < 0 ? 'no response' : 'HTTP $status'})',
                               );
                               if (_shouldSetState) safeSetState(() {});
                               return;
                             }
 
                             if (_shouldSetState) safeSetState(() {});
+                          } catch (e) {
+                            if (mounted) AppToast.error(context, '${trs('tech_try_later')} ($e)');
                           } finally {
                               if (mounted) safeSetState(() => _loading = false);
                             }

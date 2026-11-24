@@ -108,7 +108,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
   }
 
   /// One onboarding slide: artwork on a soft blue shape (the brand logo when the picture cannot load), then text.
-  Widget _slide(BuildContext context, OnboardMStruct item) {
+  Widget _slide(BuildContext context, OnboardMStruct item, int index) {
     final palette = AppPalette.of(context);
     final dark = Theme.of(context).brightness == Brightness.dark;
 
@@ -119,31 +119,21 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
       child: Column(
         children: [
           Expanded(
-            child: LayoutBuilder(builder: (context, c) {
-              return Stack(alignment: Alignment.center, children: [
-                // Soft brand-blue backdrop shape behind the picture.
-                Container(
-                  width: c.maxWidth,
-                  height: c.maxHeight * 0.88,
-                  decoration: BoxDecoration(
-                    color: dark ? AppTokens.darkSurface : AppTokens.brandSky,
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: item.img.isEmpty
+            // The bundled artwork carries its own soft blue shapes, so it fills the whole area.
+            child: SizedBox.expand(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(36.0),
+                child: Image.asset(
+                  'assets/images/onboarding_${index + 1}.png',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (_, __, ___) => item.img.isEmpty
                       ? fallback
-                      : Image.network(
-                          item.img,
-                          fit: BoxFit.contain,
-                          loadingBuilder: (context, child, progress) =>
-                              progress == null ? child : const Center(child: CircularProgressIndicator()),
-                          errorBuilder: (_, __, ___) => fallback,
-                        ),
+                      : Image.network(item.img, fit: BoxFit.contain, errorBuilder: (_, __, ___) => fallback),
                 ),
-              ]);
-            }),
+              ),
+            ),
           ),
           const SizedBox(height: 28.0),
           Text(
@@ -227,7 +217,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
               safeSetState(() {});
             },
             itemCount: introList.length,
-            itemBuilder: (context, index) => _slide(context, introList[index]),
+            itemBuilder: (context, index) => _slide(context, introList[index], index),
           ),
         ),
         SizedBox(height: 18.0),
@@ -255,8 +245,8 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
         Padding(
           padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 22.0, AppTokens.screenPadding + 4, 24.0),
           child: AppButton(
-            label: isLast ? 'Anza' : trs('viv75x51'),
-            icon: Icons.arrow_forward_rounded,
+            label: isLast ? trs('start') : trs('viv75x51'),
+            icon: isLast ? Icons.check_rounded : Icons.arrow_forward_rounded,
             trailingIcon: true,
             onPressed: () async {
               if (!isLast) {

@@ -14,7 +14,7 @@ import 'download_manager.dart';
 import 'media_access.dart';
 import 'player_core.dart';
 
-enum PlayerErrorCode { none, locked, nextLocked, offline, failed }
+enum PlayerErrorCode { none, locked, nextLocked, offline, failed, loginRequired }
 
 class PlaybackPosition {
   const PlaybackPosition(this.position, this.buffered, this.duration);
@@ -386,6 +386,10 @@ class PlayerService {
       final access = await MediaAccess.instance.refresh(url);
       if (access.locked) {
         _error = PlayerErrorCode.locked;
+        return null;
+      }
+      if (access.loginRequired) {
+        _error = PlayerErrorCode.loginRequired;
         return null;
       }
       if (access.url != null) {

@@ -79,6 +79,7 @@ class CategoryGrid extends StatelessWidget {
               return CategoryTile(
                 label: name,
                 icon: categoryIconFor(name),
+                imageUrl: getJsonField(category, r'''$.image''')?.toString(),
                 index: id.abs(),
                 onTap: () => context.pushNamed(
                   SubCatListPageWidget.routeName,

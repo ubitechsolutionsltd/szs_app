@@ -190,52 +190,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   custom_widgets.HomeHeader(),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 12.0),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        context.pushNamed(HomeSearchPageWidget.routeName);
-                      },
-                      child: Semantics(
-                        button: true,
-                        label: trs('search_a11y'),
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(minHeight: AppTokens.minTouch + 4),
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).secondary,
-                            borderRadius: BorderRadius.circular(AppTokens.radiusInput),
-                            border: Border.all(color: FlutterFlowTheme.of(context).borderColor),
-                            boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search_rounded, color: FlutterFlowTheme.of(context).gray, size: 24.0),
-                              const SizedBox(width: 12.0),
-                              Expanded(
-                                child: Text(
-                                  trs('search_hint_home'),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: AppTokens.fontFamily,
-                                    color: FlutterFlowTheme.of(context).gray,
-                                    fontSize: AppTokens.fsBody + 1,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.fromLTRB(

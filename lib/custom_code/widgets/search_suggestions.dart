@@ -65,6 +65,7 @@ class SearchSuggestions extends StatelessWidget {
                 return CategoryTile(
                   label: name,
                   icon: categoryIconFor(name),
+                imageUrl: getJsonField(category, r'''$.image''')?.toString(),
                   index: index + 4,
                   onTap: () => context.pushNamed(
                     SubCatListPageWidget.routeName,

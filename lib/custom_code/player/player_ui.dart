@@ -48,6 +48,8 @@ class PlayerStrings {
         return offline;
       case PlayerErrorCode.failed:
         return failed;
+      case PlayerErrorCode.loginRequired:
+        return trs('err_login');
       case PlayerErrorCode.none:
         return null;
     }

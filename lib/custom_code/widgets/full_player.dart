@@ -14,6 +14,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import '/index.dart';
 import '/custom_code/player/player_core.dart';
 import '/custom_code/player/player_service.dart';
 import '/custom_code/player/player_ui.dart';
@@ -192,6 +193,16 @@ class FullPlayer extends StatelessWidget {
                     child: Text(errorText,
                         style: const TextStyle(fontFamily: AppTokens.fontFamily, color: Color(0xFFFFC2C2), fontSize: 13, height: 1.35)),
                   ),
+                  if (snap.error == PlayerErrorCode.loginRequired)
+                    TextButton(
+                      onPressed: () {
+                        final router = context;
+                        Navigator.of(context).pop();
+                        router.pushNamed(LoginPageWidget.routeName);
+                      },
+                      child: Text(trs('gdn2b1x7'),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+                    ),
                 ]),
               ),
             ],

@@ -380,7 +380,11 @@ class StoryCard extends StatelessWidget {
 
 /// Coloured category tile (icon + label). Uses a gradient built from [AppTokens.categoryGradients].
 class CategoryTile extends StatelessWidget {
-  const CategoryTile({super.key, required this.label, required this.icon, this.gradient, this.onTap, this.index = 0});
+  const CategoryTile({super.key, required this.label, required this.icon, this.gradient, this.onTap, this.index = 0, this.imageUrl});
+
+  /// The category's own picture from the backend. When it is empty or fails to load, the default gradient + icon
+  /// look is shown instead.
+  final String? imageUrl;
 
   final String label;
   final IconData icon;
@@ -414,6 +418,28 @@ class CategoryTile extends StatelessWidget {
               gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: colors),
             ),
             child: ClipRRect(borderRadius: BorderRadius.circular(AppTokens.radiusCard - 8), child: Stack(children: [
+              if ((imageUrl ?? '').trim().isNotEmpty)
+                Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl!.trim(),
+                    fit: BoxFit.cover,
+                    // Keep the category colour on top so the white label stays readable on any picture.
+                    imageBuilder: (context, provider) => Stack(fit: StackFit.expand, children: [
+                      Image(image: provider, fit: BoxFit.cover),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [colors.last.withValues(alpha: 0.9), colors.first.withValues(alpha: 0.35)],
+                          ),
+                        ),
+                      ),
+                    ]),
+                    placeholder: (_, __) => const SizedBox.shrink(),
+                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+                ),
               Positioned(
                 right: -10,
                 bottom: -14,
