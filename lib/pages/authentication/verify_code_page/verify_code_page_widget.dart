@@ -62,7 +62,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AuthHeader(
-                title: 'Thibitisha Msimbo',
+                title: trs('verify_title'),
                 subtitle: null,
                 onBack: () => context.safePop(),
               ),
@@ -224,7 +224,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: AppButton(
- label: 'Endelea',
+ label: trs('viv75x51'),
  icon: Icons.arrow_forward_rounded,
  trailingIcon: true,
  onPressed: () async {

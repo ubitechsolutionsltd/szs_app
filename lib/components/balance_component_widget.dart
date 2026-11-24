@@ -86,7 +86,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Kuna tatizo la kiufundi. Jaribu tena baadae.',
+                          trs('tech_try_later'),
                           style: TextStyle(
                             fontFamily: 'SF Pro Display',
                             color: Colors.white,
@@ -103,7 +103,7 @@ class _BalanceComponentWidgetState extends State<BalanceComponentWidget> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Kuna tatizo la kiufundi. Jaribu tena baadae.',
+                        trs('tech_try_later'),
                         style: TextStyle(
                           fontFamily: 'SF Pro Display',
                           color: Colors.white,

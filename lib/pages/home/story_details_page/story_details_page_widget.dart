@@ -146,7 +146,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     final story = widget.story;
     if (story == null || _bookmarking) return;
     if (!isLoggedIn) {
-      promptLogin(context, 'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+      promptLogin(context, trs('login_to_save'));
       return;
     }
     setState(() => _bookmarking = true);
@@ -161,28 +161,28 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
       final now = !_bookmarked;
       story.isBookmark = now ? 1 : 0;
       setState(() => _bookmarked = now);
-      AppToast.success(context, now ? 'Imeongezwa kwenye Pendwa.' : 'Imeondolewa kwenye Pendwa.');
+      AppToast.success(context, now ? 'Imeongezwa kwenye Pendwa.' : trs('removed_fav'));
     } else {
-      AppToast.error(context, 'Imeshindikana. Jaribu tena.');
+      AppToast.error(context, trs('failed_retry'));
     }
   }
 
   Future<void> _downloadAll() async {
     if (kIsWeb) {
-      AppToast.info(context, 'Kupakua hakupatikani kwenye kivinjari. Tumia programu ya simu.');
+      AppToast.info(context, trs('dl_web'));
       return;
     }
     final list = widget.episodes;
     final queued = <dynamic>[if (list is List) ...list.whereType<Map>()];
     if (queued.isEmpty) {
-      AppToast.info(context, 'Hakuna cha kupakua kwa sasa.');
+      AppToast.info(context, trs('nothing_to_download'));
       return;
     }
     for (final ep in queued) {
       await actions.downloadEpisode(ep);
     }
     if (!mounted) return;
-    AppToast.success(context, queued.length == 1 ? 'Kupakua kumeanza.' : 'Kupakua kwa vipindi ${queued.length} kumeanza.');
+    AppToast.success(context, queued.length == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${queued.length}'}));
   }
 
   /// Makes sure something from this story is loaded, then opens the full-screen player.
@@ -273,7 +273,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
           padding: EdgeInsets.fromLTRB(12, top + 8, 12, 28),
           child: Column(children: [
             Row(children: [
-              _roundButton(Icons.arrow_back_rounded, 'Rudi nyuma', () => context.safePop()),
+              _roundButton(Icons.arrow_back_rounded, trs('back'), () => context.safePop()),
               const Spacer(),
               _roundButton(Icons.more_horiz_rounded, 'Zaidi', _openMore),
             ]),
@@ -330,12 +330,12 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
             ExpandableText(text: story!.description),
           ],
           const SizedBox(height: 22),
-          AppButton(label: 'Sikiliza Sasa', icon: Icons.play_arrow_rounded, onPressed: _listenNow),
+          AppButton(label: trs('listen_now'), icon: Icons.play_arrow_rounded, onPressed: _listenNow),
           const SizedBox(height: 12),
           Row(children: [
             Expanded(
               child: AppButton(
-                label: _bookmarked ? 'Imehifadhiwa' : 'Hifadhi',
+                label: _bookmarked ? 'Imehifadhiwa' : trs('save_story'),
                 icon: _bookmarked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                 kind: AppButtonKind.secondary,
                 loading: _bookmarking,
@@ -345,7 +345,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
             const SizedBox(width: 12),
             Expanded(
               child: AppButton(
-                label: 'Pakua',
+                label: trs('odgxauyg'),
                 icon: Icons.download_rounded,
                 kind: AppButtonKind.secondary,
                 onPressed: _downloadAll,
@@ -382,17 +382,17 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
           child: Padding(
             padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding, 4, AppTokens.screenPadding, 8),
             child: Text(
-              episodes.isEmpty ? 'Vipindi' : 'Vipindi (${episodes.length})',
+              episodes.isEmpty ? trs('episodes') : '${trs('episodes')} (${episodes.length})',
               style: TextStyle(fontFamily: AppTokens.fontFamily, color: palette.text, fontSize: 22.0, fontWeight: FontWeight.w800),
             ),
           ),
         ),
         if (episodes.isEmpty)
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: EmptyState(
               icon: Icons.headphones_rounded,
-              title: 'Hakuna vipindi bado',
-              message: 'Vipindi vya simulizi hii vitaonekana hapa.',
+              title: trs('no_episodes'),
+              message: trs('no_episodes_sub'),
             ),
           )
         else

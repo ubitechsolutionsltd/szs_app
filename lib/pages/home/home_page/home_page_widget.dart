@@ -203,7 +203,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       },
                       child: Semantics(
                         button: true,
-                        label: 'Tafuta simulizi au mwandishi',
+                        label: trs('search_a11y'),
                         child: Container(
                           width: double.infinity,
                           constraints: const BoxConstraints(minHeight: AppTokens.minTouch + 4),
@@ -220,7 +220,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                               const SizedBox(width: 12.0),
                               Expanded(
                                 child: Text(
-                                  'Tafuta simulizi, mwandishi…',
+                                  trs('search_hint_home'),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

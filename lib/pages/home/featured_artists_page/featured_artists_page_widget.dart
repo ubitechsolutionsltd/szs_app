@@ -79,7 +79,7 @@ class _FeaturedArtistsPageWidgetState extends State<FeaturedArtistsPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Waandishi',
+                  title: trs('kwqsy6cx'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

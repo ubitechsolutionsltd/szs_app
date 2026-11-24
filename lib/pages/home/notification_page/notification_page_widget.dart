@@ -80,7 +80,7 @@ class _NotificationPageWidgetState extends State<NotificationPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Taarifa',
+                  title: trs('notifications'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

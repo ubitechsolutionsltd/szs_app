@@ -95,7 +95,7 @@ class SettingsHeader extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 16),
-          Text('Mandhari',
+          Text(trs('theme'),
               style: theme.bodyMedium.override(
                   fontFamily: 'SF Pro Display',
                   color: palette.text,

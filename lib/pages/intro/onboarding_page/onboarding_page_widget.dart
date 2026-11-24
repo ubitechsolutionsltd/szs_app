@@ -62,14 +62,14 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
               GeneralGroup.loginCall.message(
                     (_model.autologinresponse?.jsonBody ?? ''),
                   ) ??
-                  'Imeshindikana kuingia.',
+                  trs('login_failed'),
             );
             return;
           }
         } else {
           AppToast.error(
             context,
-            'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
+            trs('connect_failed'),
           );
         }
 
@@ -96,6 +96,15 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
     FFAppState().skipUser = true;
     FFAppState().update(() {});
     context.goNamed(HomePageWidget.routeName);
+  }
+
+  /// Onboarding text comes from the translation table (so it follows the app language); the values
+  /// stored with the slide are the fallback for slides the table does not know.
+  String _t(OnboardMStruct item, String part) {
+    final key = 'onboard_${item.id}_$part';
+    final text = trs(key);
+    if (text.isNotEmpty) return text;
+    return part == 'title' ? item.title : item.subTitle;
   }
 
   /// One onboarding slide: artwork on a soft blue shape (the brand logo when the picture cannot load), then text.
@@ -138,7 +147,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
           ),
           const SizedBox(height: 28.0),
           Text(
-            item.title,
+            _t(item, 'title'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: AppTokens.fontFamily,
@@ -151,7 +160,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
           ),
           const SizedBox(height: 10.0),
           Text(
-            item.subTitle,
+            _t(item, 'sub'),
             textAlign: TextAlign.center,
             maxLines: 4,
             overflow: TextOverflow.ellipsis,
@@ -246,7 +255,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
         Padding(
           padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 22.0, AppTokens.screenPadding + 4, 24.0),
           child: AppButton(
-            label: isLast ? 'Anza' : 'Endelea',
+            label: isLast ? 'Anza' : trs('viv75x51'),
             icon: Icons.arrow_forward_rounded,
             trailingIcon: true,
             onPressed: () async {

@@ -102,7 +102,7 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    '$coins sarafu',
+                    trs('coins_n', args: {'n': '$coins'}),
                     style: theme.bodyMedium.override(
                       fontFamily: 'SF Pro Display',
                       color: palette.warning,
@@ -113,7 +113,7 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                   ),
                   if (perCoin > 0)
                     Text(
-                      'TZS ${perCoin.toStringAsFixed(perCoin >= 100 ? 0 : 1)} kwa sarafu',
+                      trs('per_coin', args: {'price': perCoin.toStringAsFixed(perCoin >= 100 ? 0 : 1)}),
                       style: theme.bodySmall.override(
                         fontFamily: 'SF Pro Display',
                         color: palette.muted,

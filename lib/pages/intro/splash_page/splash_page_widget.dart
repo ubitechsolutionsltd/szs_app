@@ -136,7 +136,7 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
                   ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation']!),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Maisha ni Hadithi',
+                    trs('about_tagline'),
                     style: TextStyle(
                       fontFamily: AppTokens.fontFamily,
                       color: Colors.white.withValues(alpha: 0.9),

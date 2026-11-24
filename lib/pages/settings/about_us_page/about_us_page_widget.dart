@@ -85,7 +85,7 @@ class _AboutUsPageWidgetState extends State<AboutUsPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Kuhusu sisi',
+                  title: trs('4l2dbb28'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},
@@ -108,7 +108,7 @@ class _AboutUsPageWidgetState extends State<AboutUsPageWidget>
                           ),
                     ),
                     Text(
-                      'Maisha ni Hadithi',
+                      trs('about_tagline'),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'SF Pro Display',
                             color: FlutterFlowTheme.of(context).primary,

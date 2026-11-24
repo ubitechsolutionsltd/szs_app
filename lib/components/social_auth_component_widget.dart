@@ -122,7 +122,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                     context.pushNamedAuth(
                         HomePageWidget.routeName, context.mounted);
 
-                    AppToast.success(context, 'Umeingia kikamilifu.');
+                    AppToast.success(context, trs('login_ok'));
                     if (_shouldSetState) safeSetState(() {});
                     return;
                   } else {
@@ -131,7 +131,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                       GeneralGroup.loginCall.message(
                             (_model.googleAuthResp?.jsonBody ?? ''),
                           ) ??
-                          'Imeshindikana kuingia.',
+                          trs('login_failed'),
                     );
                     if (_shouldSetState) safeSetState(() {});
                     return;
@@ -139,7 +139,7 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                 } else {
                   AppToast.error(
                     context,
-                    'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
+                    trs('connect_failed'),
                   );
                   if (_shouldSetState) safeSetState(() {});
                   return;

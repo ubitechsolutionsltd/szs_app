@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'app_logo.dart';
 import 'app_tokens.dart';
 import 'wave_background.dart';
+import '/flutter_flow/internationalization.dart' show trs;
 
 bool _isDark(BuildContext c) => Theme.of(c).brightness == Brightness.dark;
 Color _accent(BuildContext c) => _isDark(c) ? AppTokens.darkAccent : AppTokens.brandPrimary;
@@ -190,7 +191,7 @@ class _AppTextFieldState extends State<AppTextField> {
         prefixIcon: widget.icon == null ? null : Icon(widget.icon, color: muted, size: 22),
         suffixIcon: widget.obscure
             ? IconButton(
-                tooltip: _hidden ? 'Onyesha' : 'Ficha',
+                tooltip: _hidden ? 'Onyesha' : trs('hide'),
                 icon: Icon(_hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: muted, size: 22),
                 onPressed: () => setState(() => _hidden = !_hidden),
               )
@@ -480,17 +481,18 @@ class EmptyState extends StatelessWidget {
 
 /// Error state with retry; same layout as [EmptyState] but with a warning icon and a "try again" action.
 class ErrorState extends StatelessWidget {
-  const ErrorState({super.key, this.message = 'Imeshindikana kupakia. Angalia mtandao wako.', required this.onRetry});
+  const ErrorState({super.key, this.message, required this.onRetry});
 
-  final String message;
+  /// Defaults to the translated "could not load" text.
+  final String? message;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) => EmptyState(
         icon: Icons.wifi_off_rounded,
-        title: 'Kuna tatizo',
-        message: message,
-        actionLabel: 'Jaribu tena',
+        title: trs('error_title'),
+        message: message ?? trs('error_load'),
+        actionLabel: trs('retry'),
         onAction: onRetry,
       );
 }
@@ -696,7 +698,7 @@ class AuthHeader extends StatelessWidget {
               elevation: 2,
               shadowColor: const Color(0x330B3A66),
               child: IconButton(
-                tooltip: 'Rudi nyuma',
+                tooltip: trs('back'),
                 constraints: const BoxConstraints(minWidth: AppTokens.minTouch, minHeight: AppTokens.minTouch),
                 icon: Icon(Icons.arrow_back_rounded, color: _text(context)),
                 onPressed: onBack ?? () => Navigator.of(context).maybePop(),

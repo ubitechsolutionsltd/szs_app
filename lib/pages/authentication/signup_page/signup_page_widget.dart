@@ -106,7 +106,7 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                     children: [
                       AuthHeader(
                         title: FFLocalizations.of(context).getText('ulmedo12' /* Jisajili */),
-                        subtitle: 'Fungua akaunti yako ili usikilize simulizi za Kiswahili.',
+                        subtitle: trs('signup_sub'),
                         onBack: () => context.safePop(),
                       ),
                       const SizedBox(height: 16.0),

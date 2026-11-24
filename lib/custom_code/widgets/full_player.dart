@@ -95,7 +95,7 @@ class FullPlayer extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(children: [
         IconButton(
-          tooltip: 'Funga',
+          tooltip: trs('close'),
           iconSize: 30,
           constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
           icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white),
@@ -111,13 +111,13 @@ class FullPlayer extends StatelessWidget {
         ),
         if (showTools) ...[
           IconButton(
-            tooltip: 'Changanya',
+            tooltip: trs('shuffle'),
             constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
             icon: Icon(Icons.shuffle_rounded, color: snap.shuffle ? _glow : Colors.white70),
             onPressed: () => service.setShuffle(!snap.shuffle),
           ),
           IconButton(
-            tooltip: 'Rudia',
+            tooltip: trs('repeat'),
             constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
             icon: Icon(snap.repeat == QueueRepeat.one ? Icons.repeat_one_rounded : Icons.repeat_rounded,
                 color: snap.repeat == QueueRepeat.off ? Colors.white70 : _glow),
@@ -132,7 +132,7 @@ class FullPlayer extends StatelessWidget {
   Widget _empty(BuildContext context) {
     return Column(children: [
       _topBar(context, PlayerService.instance, const PlayerSnapshot(), showTools: false),
-      const Expanded(
+      Expanded(
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(32),
@@ -221,7 +221,7 @@ class _Transport extends StatelessWidget {
       children: [
         IconButton(
           iconSize: 36,
-          tooltip: 'Iliyopita',
+          tooltip: trs('previous'),
           constraints: const BoxConstraints(minWidth: 48, minHeight: 56),
           icon: const Icon(Icons.skip_previous_rounded, color: Colors.white),
           onPressed: service.previous,
@@ -239,7 +239,7 @@ class _Transport extends StatelessWidget {
         _SkipButton(forward: true, onTap: () => service.seekRelative(const Duration(seconds: 15))),
         IconButton(
           iconSize: 36,
-          tooltip: 'Inayofuata',
+          tooltip: trs('next'),
           constraints: const BoxConstraints(minWidth: 48, minHeight: 56),
           icon: const Icon(Icons.skip_next_rounded, color: Colors.white),
           onPressed: service.next,
@@ -260,7 +260,7 @@ class _SkipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: forward ? 'Ruka sekunde 15' : 'Rudi sekunde 15',
+      label: forward ? 'Ruka sekunde 15' : trs('back15'),
       child: InkResponse(
         radius: 30,
         onTap: onTap,
@@ -349,13 +349,13 @@ class _ActionRow extends StatelessWidget {
           onTap: () => PlayerSheets.queue(context, service),
         ),
         _Action(
-          label: snap.sleepRemaining != null ? formatDuration(snap.sleepRemaining!) : 'Muda',
+          label: snap.sleepRemaining != null ? formatDuration(snap.sleepRemaining!) : trs('timer_short'),
           icon: Icons.timer_outlined,
           active: snap.sleepActive,
           onTap: () => PlayerSheets.sleepTimer(context, service),
         ),
         _Action(
-          label: 'Orodha',
+          label: trs('playlist'),
           icon: Icons.playlist_add_rounded,
           onTap: () => PlayerSheets.addToPlaylist(context, item),
         ),
@@ -379,11 +379,11 @@ class _DownloadAction extends StatelessWidget {
         final state = manager.stateOf(item.id);
         switch (state.status) {
           case DownloadStatus.completed:
-            return _Action(label: 'Imepakuliwa', icon: Icons.download_done_rounded, active: true, onTap: () => manager.remove(item.id));
+            return _Action(label: trs('downloaded'), icon: Icons.download_done_rounded, active: true, onTap: () => manager.remove(item.id));
           case DownloadStatus.waiting:
           case DownloadStatus.downloading:
             return _Action(
-              label: 'Inapakua',
+              label: trs('downloading'),
               leading: SizedBox(
                 width: 24,
                 height: 24,
@@ -397,7 +397,7 @@ class _DownloadAction extends StatelessWidget {
                 icon: Icons.refresh_rounded,
                 onTap: () => manager.download(item));
           case DownloadStatus.none:
-            return _Action(label: 'Chini', icon: Icons.download_rounded, onTap: () => manager.download(item));
+            return _Action(label: trs('download_short'), icon: Icons.download_rounded, onTap: () => manager.download(item));
         }
       },
     );
@@ -433,7 +433,7 @@ class _PlayButtonState extends State<_PlayButton> with SingleTickerProviderState
     const size = 76.0;
     return Semantics(
       button: true,
-      label: widget.playing ? 'Simamisha' : 'Cheza',
+      label: widget.playing ? 'Simamisha' : trs('play'),
       child: GestureDetector(
         onTapDown: (_) => setState(() => _pressed = true),
         onTapUp: (_) => setState(() => _pressed = false),

@@ -86,7 +86,7 @@ class _PackageListsComponentWidgetState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Jaza kibubu',
+                            trs('top_up'),
                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                   fontFamily: 'SF Pro Display',
                                   color: AppPalette.of(context).text,
@@ -97,7 +97,7 @@ class _PackageListsComponentWidgetState
                           ),
                           SizedBox(height: 2.0),
                           Text(
-                            'Chagua kifurushi cha sarafu',
+                            trs('choose_package'),
                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                   fontFamily: 'SF Pro Display',
                                   color: AppPalette.of(context).muted,
@@ -278,7 +278,7 @@ class _PackageListsComponentWidgetState
                                             return WebViewAware(
                                               child: AlertDialog(
                                                 title:
-                                                    Text('Tatizo la Kiufundi'),
+                                                    Text(trs('tech_problem')),
                                                 content: Text(
                                                     'Imeshindwa Kupata Link ya Malipo'),
                                                 actions: [
@@ -286,7 +286,7 @@ class _PackageListsComponentWidgetState
                                                     onPressed: () =>
                                                         Navigator.pop(
                                                             alertDialogContext),
-                                                    child: Text('Sawa'),
+                                                    child: Text(trs('5pfvtb4m')),
                                                   ),
                                                 ],
                                               ),
@@ -303,15 +303,15 @@ class _PackageListsComponentWidgetState
                                         builder: (alertDialogContext) {
                                           return WebViewAware(
                                             child: AlertDialog(
-                                              title: Text('Tatizo la Kiufundi'),
+                                              title: Text(trs('tech_problem')),
                                               content: Text(
-                                                  'Imeshindwa Kupata Taarifa za Malipo'),
+                                                  trs('payment_info_fail')),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () =>
                                                       Navigator.pop(
                                                           alertDialogContext),
-                                                  child: Text('Sawa'),
+                                                  child: Text(trs('5pfvtb4m')),
                                                 ),
                                               ],
                                             ),

@@ -79,7 +79,7 @@ class _PlayListPageWidgetState extends State<PlayListPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Uzipendazo',
+                  title: trs('favourites_tab'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

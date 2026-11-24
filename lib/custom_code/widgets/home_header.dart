@@ -23,9 +23,9 @@ class HomeHeader extends StatelessWidget {
 
   static String _greeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Habari za asubuhi';
-    if (hour < 17) return 'Habari za mchana';
-    return 'Habari za jioni';
+    if (hour < 12) return trs('greet_morning');
+    if (hour < 17) return trs('greet_afternoon');
+    return trs('greet_evening');
   }
 
   @override

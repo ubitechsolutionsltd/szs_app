@@ -26,7 +26,7 @@ export 'dart:convert' show jsonEncode, jsonDecode;
 export 'package:intl/intl.dart';
 export 'package:page_transition/page_transition.dart';
 export 'custom_icons.dart' show FFIcons;
-export 'internationalization.dart' show FFLocalizations;
+export 'internationalization.dart' show FFLocalizations, trs, TranslateContext;
 export 'nav/nav.dart';
 
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();

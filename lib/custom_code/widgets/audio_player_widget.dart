@@ -169,7 +169,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                       style: theme.titleMedium.copyWith(color: pal.text, fontWeight: FontWeight.w700)),
                 ),
                 IconButton(
-                  tooltip: 'Fungua kicheza kikuu',
+                  tooltip: trs('open_player'),
                   visualDensity: VisualDensity.compact,
                   icon: Icon(Icons.open_in_full_rounded, color: pal.muted, size: 20),
                   onPressed: () => showModalBottomSheet<void>(

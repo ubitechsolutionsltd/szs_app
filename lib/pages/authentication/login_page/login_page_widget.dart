@@ -96,7 +96,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                     children: [
                       AuthHeader(
                         title: FFLocalizations.of(context).getText('gdn2b1x7' /* Ingia */),
-                        subtitle: 'Karibu tena. Ingia ili uendelee kusikiliza simulizi zako.',
+                        subtitle: trs('login_sub'),
                         onBack: () => context.safePop(),
                       ),
                       const SizedBox(height: 16.0),
@@ -252,7 +252,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
 
                                 context.pushNamed(HomePageWidget.routeName);
 
-                                AppToast.success(context, 'Umeingia kikamilifu.');
+                                AppToast.success(context, trs('login_ok'));
                                 if (_shouldSetState) safeSetState(() {});
                                 return;
                               } else {
@@ -264,7 +264,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                               ?.jsonBody ??
                                           ''),
                                     ),
-                                    'Imeshindikana kuingia.',
+                                    trs('login_failed'),
                                   ),
                                 );
                                 if (_shouldSetState) safeSetState(() {});
@@ -273,7 +273,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                             } else {
                               AppToast.error(
                                 context,
-                                'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
+                                trs('connect_failed'),
                               );
                               if (_shouldSetState) safeSetState(() {});
                               return;

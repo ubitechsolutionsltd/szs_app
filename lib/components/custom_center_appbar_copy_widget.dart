@@ -6,13 +6,13 @@ import 'custom_center_appbar_copy_model.dart';
 export 'custom_center_appbar_copy_model.dart';
 
 class CustomCenterAppbarCopyWidget extends StatefulWidget {
-  const CustomCenterAppbarCopyWidget({
+  CustomCenterAppbarCopyWidget({
     super.key,
     String? title,
     required this.backIcon,
     required this.addIcon,
     required this.onTapAdd,
-  }) : this.title = title ?? 'Bila jina';
+  }) : this.title = title ?? trs('no_name');
 
   final String title;
   final bool? backIcon;
@@ -117,7 +117,7 @@ class _CustomCenterAppbarCopyWidgetState
               child: Text(
                 valueOrDefault<String>(
                   widget.title,
-                  'Bila jina',
+                  trs('no_name'),
                 ),
                 maxLines: 1,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(

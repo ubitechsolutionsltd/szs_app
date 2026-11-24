@@ -10,32 +10,33 @@ import 'download_manager.dart';
 import 'player_core.dart';
 import 'player_service.dart';
 import 'playlist_store.dart';
+import '/flutter_flow/internationalization.dart' show trs;
 
 class PlayerStrings {
-  static const nowPlaying = 'Unasikiliza';
-  static const queue = 'Foleni';
-  static const queueEmpty = 'Foleni ni tupu';
-  static const speed = 'Kasi';
-  static const sleepTimer = 'Kipima muda';
-  static const endOfEpisode = 'Mwisho wa kipindi';
-  static const turnOff = 'Zima';
-  static const download = 'Pakua';
-  static const downloaded = 'Imepakuliwa';
-  static const downloading = 'Inapakua';
-  static const retry = 'Jaribu tena';
-  static const addToPlaylist = 'Ongeza kwenye orodha';
-  static const newPlaylist = 'Orodha mpya';
-  static const playlistName = 'Jina la orodha';
-  static const create = 'Unda';
-  static const cancel = 'Ghairi';
-  static const remove = 'Ondoa';
-  static const added = 'Imeongezwa kwenye orodha';
-  static const nothingPlaying = 'Bado hakuna kinachocheza';
-  static const locked = 'Simulizi hii imefungwa. Ifungue kwanza ili kuisikiliza.';
-  static const nextLocked = 'Sehemu zinazofuata zimefungwa. Zifungue ili kuendelea.';
-  static const offline = 'Hakuna mtandao. Pakua simulizi ili kusikiliza bila mtandao.';
-  static const failed = 'Imeshindikana kucheza. Jaribu tena.';
-  static String minutes(int m) => 'Dakika $m';
+  static String get nowPlaying => trs('now_playing');
+  static String get queue => trs('queue');
+  static String get queueEmpty => trs('queue_empty');
+  static String get speed => trs('speed');
+  static String get sleepTimer => trs('sleep_timer');
+  static String get endOfEpisode => trs('end_of_episode');
+  static String get turnOff => trs('turn_off');
+  static String get download => trs('odgxauyg');
+  static String get downloaded => trs('downloaded');
+  static String get downloading => trs('downloading');
+  static String get retry => trs('retry');
+  static String get addToPlaylist => trs('add_to_playlist');
+  static String get newPlaylist => trs('new_playlist');
+  static String get playlistName => trs('playlist_name');
+  static String get create => trs('create');
+  static String get cancel => trs('cancel');
+  static String get remove => trs('remove');
+  static String get added => trs('added_to_playlist');
+  static String get nothingPlaying => trs('nothing_playing');
+  static String get locked => trs('err_locked');
+  static String get nextLocked => trs('err_next_locked');
+  static String get offline => trs('err_offline');
+  static String get failed => trs('err_failed');
+  static String minutes(int m) => trs('minutes_n', args: {'n': '$m'});
 
   static String? errorText(PlayerErrorCode code) {
     switch (code) {
@@ -461,7 +462,7 @@ class PlayerSheets {
           await store.addItem(playlistId, item);
           if (sheetContext.mounted) {
             Navigator.of(sheetContext).pop();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(PlayerStrings.added)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(PlayerStrings.added)));
           }
         }
 
@@ -470,17 +471,17 @@ class PlayerSheets {
           final name = await showDialog<String>(
             context: sheetContext,
             builder: (dialogContext) => AlertDialog(
-              title: const Text(PlayerStrings.newPlaylist),
+              title: Text(PlayerStrings.newPlaylist),
               content: TextField(
                 controller: controller,
                 autofocus: true,
-                decoration: const InputDecoration(hintText: PlayerStrings.playlistName),
+                decoration: InputDecoration(hintText: PlayerStrings.playlistName),
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text(PlayerStrings.cancel)),
+                TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(PlayerStrings.cancel)),
                 TextButton(
                     onPressed: () => Navigator.of(dialogContext).pop(controller.text),
-                    child: const Text(PlayerStrings.create)),
+                    child: Text(PlayerStrings.create)),
               ],
             ),
           );

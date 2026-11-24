@@ -6,13 +6,13 @@ import 'custom_center_app_bar_model.dart';
 export 'custom_center_app_bar_model.dart';
 
 class CustomCenterAppBarWidget extends StatefulWidget {
-  const CustomCenterAppBarWidget({
+  CustomCenterAppBarWidget({
     super.key,
     String? title,
     required this.backIcon,
     required this.addIcon,
     required this.onTapAdd,
-  }) : this.title = title ?? 'Bila jina';
+  }) : this.title = title ?? trs('no_name');
 
   final String title;
   final bool? backIcon;
@@ -118,7 +118,7 @@ class _CustomCenterAppBarWidgetState extends State<CustomCenterAppBarWidget> {
               child: Text(
                 valueOrDefault<String>(
                   widget.title,
-                  'Bila jina',
+                  trs('no_name'),
                 ),
                 maxLines: 1,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(

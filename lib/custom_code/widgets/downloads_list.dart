@@ -18,7 +18,7 @@ import '/custom_code/ui/app_widgets.dart';
 
 /// "Downloaded" screen content: episodes saved for offline listening, with progress, play and delete.
 class DownloadsList extends StatelessWidget {
-  const DownloadsList({super.key, this.width, this.height});
+  DownloadsList({super.key, this.width, this.height});
 
   final double? width;
   final double? height;
@@ -32,11 +32,11 @@ class DownloadsList extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Futa zote?'),
-        content: const Text('Simulizi zote ulizopakua zitafutwa kwenye simu hii.'),
+        title: Text(trs('delete_all_q')),
+        content: Text(trs('delete_all_msg')),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Ghairi')),
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Futa zote')),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(trs('cancel'))),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(trs('delete_all'))),
         ],
       ),
     );
@@ -50,10 +50,10 @@ class DownloadsList extends StatelessWidget {
     final manager = DownloadManager.instance;
 
     if (!manager.supported) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.cloud_off_rounded,
-        title: 'Kupakua hakupatikani',
-        message: 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.',
+        title: trs('dl_unavail'),
+        message: trs('dl_web2'),
       );
     }
 
@@ -67,10 +67,10 @@ class DownloadsList extends StatelessWidget {
           final active = manager.activeDownloads;
 
           if (done.isEmpty && active.isEmpty) {
-            return const EmptyState(
+            return EmptyState(
               icon: Icons.download_for_offline_outlined,
-              title: 'Hujapakua simulizi bado',
-              message: 'Gusa "Pakua" kwenye simulizi ili kusikiliza bila mtandao.',
+              title: trs('no_downloads'),
+              message: trs('dl_hint'),
             );
           }
 
@@ -90,7 +90,7 @@ class DownloadsList extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () => _confirmClear(context),
-                      child: Text('Futa zote', style: TextStyle(color: palette.error, fontWeight: FontWeight.w700)),
+                      child: Text(trs('delete_all'), style: TextStyle(color: palette.error, fontWeight: FontWeight.w700)),
                     ),
                   ]),
                 ),
@@ -159,12 +159,12 @@ class _DownloadedRow extends StatelessWidget {
             ]),
           ),
           IconButton(
-            tooltip: 'Cheza',
+            tooltip: trs('play'),
             icon: Icon(Icons.play_circle_fill_rounded, color: palette.accent, size: 34),
             onPressed: onPlay,
           ),
           IconButton(
-            tooltip: 'Futa',
+            tooltip: trs('delete'),
             icon: Icon(Icons.delete_outline_rounded, color: palette.muted),
             onPressed: () => DownloadManager.instance.remove(item.id),
           ),
@@ -212,7 +212,7 @@ class _ActiveRow extends StatelessWidget {
                     letterSpacing: 0)),
             const SizedBox(height: 8),
             if (failed)
-              Text(state.locked ? 'Fungua kwanza ili upakue.' : 'Imeshindikana. Gusa kujaribu tena.',
+              Text(state.locked ? 'Fungua kwanza ili upakue.' : trs('dl_failed_tap'),
                   style: theme.bodySmall
                       .override(fontFamily: 'SF Pro Display', color: palette.error, fontSize: 13, letterSpacing: 0))
             else
@@ -228,7 +228,7 @@ class _ActiveRow extends StatelessWidget {
           ]),
         ),
         IconButton(
-          tooltip: failed ? 'Jaribu tena' : 'Ghairi',
+          tooltip: failed ? 'Jaribu tena' : trs('cancel'),
           icon: Icon(failed ? Icons.refresh_rounded : Icons.close_rounded, color: palette.muted),
           onPressed: () => failed ? manager.download(item) : manager.cancel(item.id),
         ),

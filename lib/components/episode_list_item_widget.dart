@@ -198,7 +198,7 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
             return;
           } else {
             if (!isLoggedIn) {
-              promptLogin(context, 'Tafadhali ingia kwanza ili kununua kipindi hiki.');
+              promptLogin(context, trs('login_to_buy'));
               return;
             }
             if (FFAppState().walletcoin >=
@@ -279,7 +279,7 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Imeshindwa kununua. Jaribu tena baadae.',
+                      trs('buy_failed'),
                       style: TextStyle(
                         fontFamily: 'SF Pro Display',
                         color: Colors.white,

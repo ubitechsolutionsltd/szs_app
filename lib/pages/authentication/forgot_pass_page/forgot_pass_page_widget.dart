@@ -53,7 +53,7 @@ class _ForgotPassPageWidgetState extends State<ForgotPassPageWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AuthHeader(
-                title: 'Rejesha Nywila',
+                title: trs('reset_title'),
                 subtitle: FFLocalizations.of(context).getText('bcrgr35y' /* Andikwa barua pepe utakayotumi... */),
                 onBack: () => context.safePop(),
               ),

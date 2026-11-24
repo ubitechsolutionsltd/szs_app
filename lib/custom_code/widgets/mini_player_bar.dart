@@ -55,7 +55,7 @@ class MiniPlayerBar extends StatelessWidget {
         final hasError = snap.error != PlayerErrorCode.none;
         return Semantics(
           container: true,
-          label: 'Kinachocheza sasa: ${item.title}',
+          label: trs('sem_now_playing', args: {'title': item.title}),
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
@@ -118,7 +118,7 @@ class MiniPlayerBar extends StatelessWidget {
                                     child: Padding(padding: EdgeInsets.all(13), child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white)))
                               else
                                 IconButton(
-                                  tooltip: snap.playing ? 'Simamisha' : 'Cheza',
+                                  tooltip: snap.playing ? 'Simamisha' : trs('play'),
                                   constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                                   icon: Container(
                                     width: 40,
@@ -130,7 +130,7 @@ class MiniPlayerBar extends StatelessWidget {
                                   onPressed: service.toggle,
                                 ),
                               IconButton(
-                                tooltip: 'Inayofuata',
+                                tooltip: trs('next'),
                                 constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
                                 icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 28),
                                 onPressed: service.next,

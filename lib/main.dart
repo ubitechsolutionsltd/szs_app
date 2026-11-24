@@ -49,7 +49,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale = FFLocalizations.getStoredLocale();
+  // Swahili is the app's default; the language the user picked in Settings wins once stored.
+  Locale? _locale = FFLocalizations.getStoredLocale() ?? const Locale('sw');
 
   ThemeMode _themeMode = ThemeModeStore.current;
 
@@ -110,7 +111,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Simulizi',
+      title: trs('stories_label'),
       localizationsDelegates: [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

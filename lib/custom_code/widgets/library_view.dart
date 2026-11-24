@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:provider/provider.dart';
+import 'package:webviewx_plus/webviewx_plus.dart';
 
 import '/app_state.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -87,7 +88,7 @@ class _LibraryViewState extends State<LibraryView> {
     final coins = context.watch<FFAppState>().walletcoin;
     return Semantics(
       button: true,
-      label: 'Salio lako: $coins. Jaza kibubu',
+      label: trs('sem_balance', args: {'n': '$coins'}),
       child: Material(
         color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppTokens.radiusPill),
@@ -99,7 +100,7 @@ class _LibraryViewState extends State<LibraryView> {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               const Icon(Icons.toll_rounded, color: Colors.white, size: 20),
               const SizedBox(width: 6),
-              Text(isLoggedIn ? '$coins' : 'Ingia',
+              Text(isLoggedIn ? '$coins' : trs('gdn2b1x7'),
                   style: const TextStyle(
                       fontFamily: AppTokens.fontFamily, color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800)),
               if (isLoggedIn) ...[
@@ -124,9 +125,9 @@ class _LibraryViewState extends State<LibraryView> {
       case _SavedPhase.guest:
         return EmptyState(
           icon: Icons.lock_outline_rounded,
-          title: 'Ingia ili kuona maktaba yako',
-          message: 'Hifadhi simulizi unazozipenda na zitaonekana hapa.',
-          actionLabel: 'Ingia',
+          title: trs('login_to_see'),
+          message: trs('saved_hint'),
+          actionLabel: trs('gdn2b1x7'),
           onAction: () => context.pushNamed(LoginPageWidget.routeName),
         );
       case _SavedPhase.error:
@@ -139,9 +140,9 @@ class _LibraryViewState extends State<LibraryView> {
               height: MediaQuery.sizeOf(context).height * 0.5,
               child: EmptyState(
                 icon: Icons.favorite_border_rounded,
-                title: 'Hakuna ulizohifadhi',
-                message: 'Tafuta na hifadhi simulizi pendwa ili uzipate hapa kwa haraka.',
-                actionLabel: 'Tafuta simulizi',
+                title: trs('no_saved_title'),
+                message: trs('saved_empty_hint'),
+                actionLabel: trs('search_stories'),
                 onAction: () => context.pushNamed(HomeSearchPageWidget.routeName),
               ),
             ),
@@ -168,10 +169,10 @@ class _LibraryViewState extends State<LibraryView> {
   Widget build(BuildContext context) {
     return Column(children: [
       GradientHeader(
-        title: 'Maktaba',
+        title: trs('ztt7zgno'),
         trailing: _coinPill(),
         bottom: PillTabs(
-          labels: const ['Ulizohifadhi', 'Ulizopakua'],
+          labels: [trs('saved_tab'), trs('downloads_tab')],
           selected: _tab,
           onGradient: true,
           onChanged: (i) => setState(() => _tab = i),
@@ -182,7 +183,7 @@ class _LibraryViewState extends State<LibraryView> {
           duration: AppTokens.fast,
           child: KeyedSubtree(
             key: ValueKey(_tab),
-            child: _tab == 0 ? _savedBody() : const DownloadsList(),
+            child: _tab == 0 ? _savedBody() : DownloadsList(),
           ),
         ),
       ),

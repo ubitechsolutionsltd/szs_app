@@ -49,7 +49,7 @@ class HomeCategories extends StatelessWidget {
           itemCount: 4,
           itemBuilder: (_, __) => const SkeletonBox(radius: 22),
         ),
-        empty: const StateMessage(icon: Icons.category_outlined, message: 'Makundi bado hayapatikani.'),
+        empty: StateMessage(icon: Icons.category_outlined, message: trs('no_categories')),
         builder: (context, categories) {
           final visible = categories.take(4).toList();
           return GridView.builder(

@@ -73,7 +73,7 @@ class _AllCategoriesPageWidgetState extends State<AllCategoriesPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Makundi',
+                  title: trs('tuwluj0n'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

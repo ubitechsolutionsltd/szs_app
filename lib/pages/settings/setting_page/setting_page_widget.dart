@@ -155,7 +155,7 @@ class _SettingPageWidgetState extends State<SettingPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Mipangilio',
+                  title: trs('e46mrzzy'),
                   backIcon: true,
                   addIcon: false,
                   onTapAdd: () async {},

@@ -61,8 +61,8 @@ class _ResetPassPageWidgetState extends State<ResetPassPageWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AuthHeader(
-                title: 'Nywila Mpya',
-                subtitle: 'Weka nywila mpya ili uendelee kusikiliza simulizi zako.',
+                title: trs('new_password_title'),
+                subtitle: trs('reset_sub'),
                 onBack: () => context.safePop(),
               ),
               Expanded(

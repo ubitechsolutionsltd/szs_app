@@ -178,7 +178,7 @@ class _HelpPageWidgetState extends State<HelpPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Msaada',
+                  title: trs('adni9znu'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

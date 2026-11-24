@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'app_palette.dart';
+import '/flutter_flow/internationalization.dart' show trs;
 
 /// Section title with an optional "see more" action.
 class SectionHeader extends StatelessWidget {
@@ -102,12 +103,13 @@ class _SkeletonBoxState extends State<SkeletonBox> with SingleTickerProviderStat
 
 /// Friendly empty / error message with an optional retry button.
 class StateMessage extends StatelessWidget {
-  const StateMessage({super.key, required this.icon, required this.message, this.onRetry, this.retryLabel = 'Jaribu tena'});
+  const StateMessage({super.key, required this.icon, required this.message, this.onRetry, this.retryLabel});
 
   final IconData icon;
   final String message;
   final VoidCallback? onRetry;
-  final String retryLabel;
+  /// Defaults to the translated "try again".
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +136,7 @@ class StateMessage extends StatelessWidget {
           if (onRetry != null)
             TextButton(
               onPressed: onRetry,
-              child: Text(retryLabel, style: TextStyle(color: palette.accent, fontWeight: FontWeight.w700)),
+              child: Text(retryLabel ?? trs('retry'), style: TextStyle(color: palette.accent, fontWeight: FontWeight.w700)),
             ),
         ]),
       ),
@@ -151,7 +153,7 @@ class AsyncSection extends StatefulWidget {
     required this.builder,
     required this.loading,
     this.empty,
-    this.errorMessage = 'Imeshindikana kupakia. Angalia mtandao wako.',
+    this.errorMessage,
   });
 
   final Future<List<dynamic>> Function() load;
@@ -160,7 +162,8 @@ class AsyncSection extends StatefulWidget {
 
   /// Shown when the request succeeds but returns nothing (nothing is shown if null).
   final Widget? empty;
-  final String errorMessage;
+  /// Defaults to the translated "could not load" text.
+  final String? errorMessage;
 
   @override
   State<AsyncSection> createState() => _AsyncSectionState();
@@ -178,7 +181,7 @@ class _AsyncSectionState extends State<AsyncSection> {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) return widget.loading;
         if (snapshot.hasError) {
-          return StateMessage(icon: Icons.wifi_off_rounded, message: widget.errorMessage, onRetry: _retry);
+          return StateMessage(icon: Icons.wifi_off_rounded, message: widget.errorMessage ?? trs('error_load'), onRetry: _retry);
         }
         final items = snapshot.data ?? const [];
         if (items.isEmpty) return widget.empty ?? const SizedBox.shrink();

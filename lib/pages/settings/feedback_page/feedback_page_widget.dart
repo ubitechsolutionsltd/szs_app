@@ -58,7 +58,7 @@ class _FeedbackPageWidgetState extends State<FeedbackPageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Maoni',
+                  title: trs('feedback_title'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

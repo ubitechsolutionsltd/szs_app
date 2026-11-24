@@ -37,7 +37,7 @@ class SearchSuggestions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Makundi maarufu'),
+        SectionHeader(title: trs('popular_cats')),
         const SizedBox(height: 14),
         AsyncSection(
           load: _categories,
@@ -80,7 +80,7 @@ class SearchSuggestions extends StatelessWidget {
           },
         ),
         const SizedBox(height: 28),
-        const SectionHeader(title: 'Zinazopendwa'),
+        SectionHeader(title: trs('popular')),
         const SizedBox(height: 14),
         AsyncSection(
           load: HomeData.trending,

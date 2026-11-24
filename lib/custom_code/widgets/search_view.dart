@@ -118,11 +118,11 @@ class _SearchViewState extends State<SearchView> {
         },
         style: const TextStyle(fontFamily: AppTokens.fontFamily, fontSize: 16, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
-          hintText: 'Unatafuta simulizi gani?',
+          hintText: trs('search_prompt'),
           prefixIcon: const Icon(Icons.search_rounded),
           suffixIcon: _controller.text.isEmpty
               ? null
-              : IconButton(tooltip: 'Futa', icon: const Icon(Icons.close_rounded), onPressed: _clear),
+              : IconButton(tooltip: trs('delete'), icon: const Icon(Icons.close_rounded), onPressed: _clear),
         ),
       ),
     );
@@ -150,7 +150,7 @@ class _SearchViewState extends State<SearchView> {
           child: Column(children: [
             const SearchEmptyIllustration(),
             const SizedBox(height: 20),
-            Text('Hakuna Matokeo',
+            Text(trs('q5aoajhk'),
                 style: TextStyle(
                     fontFamily: AppTokens.fontFamily,
                     fontSize: 22,
@@ -159,7 +159,7 @@ class _SearchViewState extends State<SearchView> {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Text('Hatukupata simulizi inayolingana na “$_query”.',
+              child: Text(trs('no_results_for', args: {'q': _query}),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: AppTokens.fontFamily,
@@ -170,7 +170,7 @@ class _SearchViewState extends State<SearchView> {
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppTokens.screenPadding),
-              child: AppButton(label: 'Jaribu maneno mengine', onPressed: _clear),
+              child: AppButton(label: trs('try_other'), onPressed: _clear),
             ),
           ]),
         );
@@ -178,7 +178,7 @@ class _SearchViewState extends State<SearchView> {
         return Padding(
           padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding, 24, AppTokens.screenPadding, 0),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Matokeo (${_results.length})',
+            Text('${trs('results')} (${_results.length})',
                 style: TextStyle(
                     fontFamily: AppTokens.fontFamily,
                     fontSize: 20,
@@ -205,7 +205,7 @@ class _SearchViewState extends State<SearchView> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Column(children: [
         GradientHeader(
-          title: 'Tafuta',
+          title: trs('1izax02y'),
           trailing: null,
           bottom: Row(children: [
             if (widget.showBack) ...[
@@ -213,7 +213,7 @@ class _SearchViewState extends State<SearchView> {
                 color: Colors.white.withValues(alpha: 0.2),
                 shape: const CircleBorder(),
                 child: IconButton(
-                  tooltip: 'Rudi nyuma',
+                  tooltip: trs('back'),
                   icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
                   onPressed: () => context.safePop(),
                 ),

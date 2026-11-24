@@ -7,14 +7,14 @@ import 'prof_container_model.dart';
 export 'prof_container_model.dart';
 
 class ProfContainerWidget extends StatefulWidget {
-  const ProfContainerWidget({
+  ProfContainerWidget({
     super.key,
     String? opImg,
     String? opName,
     this.onTap,
   })  : this.opImg = opImg ??
             'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/tune-track-music-app-omyrkn/assets/2cvg3kv46zn2/pr_ic.svg',
-        this.opName = opName ?? 'Wasifu wangu';
+        this.opName = opName ?? trs('my_profile');
 
   final String opImg;
   final String opName;
@@ -100,7 +100,7 @@ class _ProfContainerWidgetState extends State<ProfContainerWidget> {
                       child: Text(
                         valueOrDefault<String>(
                           widget.opName,
-                          'Wasifu wangu',
+                          trs('my_profile'),
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
