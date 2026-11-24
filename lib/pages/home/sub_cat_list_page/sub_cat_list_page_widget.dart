@@ -102,10 +102,6 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
                       onTapAdd: () async {},
                     ),
                   ),
-              custom_widgets.CategoryHero(
-                title: widget.title,
-                categoryId: widget.index,
-              ),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.zero,

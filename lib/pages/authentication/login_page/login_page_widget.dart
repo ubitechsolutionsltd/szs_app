@@ -258,7 +258,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                               } else {
                                 AppToast.error(
                                   context,
-                                  valueOrDefault<String>(
+                                  GeneralGroup.loginCall.statusCode(
+                                              (_model.appleAuthlLoginResponse?.jsonBody ?? '')) ==
+                                          500
+                                      // The server failed after the password was accepted; show it in the app language.
+                                      ? '${trs('tech_try_later')} (500)'
+                                      : valueOrDefault<String>(
                                     GeneralGroup.loginCall.message(
                                       (_model.appleAuthlLoginResponse
                                               ?.jsonBody ??
@@ -276,9 +281,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                               final status = _model.appleAuthlLoginResponse?.statusCode;
                               final bodyMsg = GeneralGroup.loginCall.message(
                                   (_model.appleAuthlLoginResponse?.jsonBody ?? ''));
+                              final serverStatus = GeneralGroup.loginCall.statusCode(
+                                  (_model.appleAuthlLoginResponse?.jsonBody ?? ''));
                               AppToast.error(
                                 context,
-                                (bodyMsg != null && bodyMsg.isNotEmpty)
+                                serverStatus == 500
+                                    ? '${trs('tech_try_later')} (500)'
+                                    : (bodyMsg != null && bodyMsg.isNotEmpty)
                                     ? bodyMsg
                                     : '${trs('connect_failed')} (${status == null || status < 0 ? 'no response' : 'HTTP $status'})',
                               );
