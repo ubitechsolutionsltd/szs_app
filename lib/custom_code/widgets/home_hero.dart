@@ -57,6 +57,7 @@ class _HomeHeroState extends State<HomeHero> {
     return SizedBox(
       width: widget.width,
       child: AsyncSection(
+        cacheKey: 'trending',
         load: HomeData.trending,
         loading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

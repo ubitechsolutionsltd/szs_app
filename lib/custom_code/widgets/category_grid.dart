@@ -46,6 +46,7 @@ class CategoryGrid extends StatelessWidget {
     return SizedBox(
       width: width,
       child: AsyncSection(
+        cacheKey: 'categories',
         load: _load,
         loading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -38,6 +38,7 @@ class HomeAuthors extends StatelessWidget {
       width: width,
       height: height ?? 128,
       child: AsyncSection(
+        cacheKey: 'authors',
         load: _load,
         empty: StateMessage(icon: Icons.person_outline_rounded, message: trs('no_authors')),
         loading: ListView.separated(

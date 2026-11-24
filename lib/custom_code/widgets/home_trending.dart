@@ -29,6 +29,7 @@ class HomeTrending extends StatelessWidget {
       width: width,
       height: height ?? 274,
       child: AsyncSection(
+        cacheKey: 'trending',
         load: _load,
         empty: StateMessage(icon: Icons.headphones_rounded, message: trs('no_stories_now')),
         loading: ListView.separated(

@@ -40,6 +40,7 @@ class HomeCategories extends StatelessWidget {
     return SizedBox(
       width: width,
       child: AsyncSection(
+        cacheKey: 'categories',
         load: _load,
         loading: GridView.builder(
           shrinkWrap: true,

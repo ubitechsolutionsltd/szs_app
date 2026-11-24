@@ -425,6 +425,8 @@ final kTranslationsMap = <String, Map<String, String>>{
   'nothing_to_download': {'sw': 'Hakuna cha kupakua kwa sasa.', 'en': 'Nothing to download right now.'},
   'notifications': {'sw': 'Taarifa', 'en': 'Notifications'},
   'now_playing': {'sw': 'Unasikiliza', 'en': 'Now playing'},
+  'offline_sub': {'sw': 'Angalia mtandao wako kisha ujaribu tena. Simulizi ulizopakua bado zinapatikana.', 'en': 'Check your connection and try again. Your downloaded stories still work.'},
+  'offline_title': {'sw': 'Hatuna mtandao kwa sasa', 'en': 'You\'re offline right now'},
   'onboard_0_sub': {'sw': 'Sikiliza simulizi za mapenzi, uchawi, siasa na uchumi popote ulipo, hata ukiwa offline.', 'en': 'Listen to stories about love, magic, politics and the economy wherever you are, even offline.'},
   'onboard_0_title': {'sw': 'Simulizi za kila aina', 'en': 'Stories of every kind'},
   'onboard_1_sub': {'sw': 'Pata hadithi mpya kila wiki katika makundi mbalimbali unayopenda.', 'en': 'Find new stories every week in the categories you love.'},

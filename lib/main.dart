@@ -9,6 +9,7 @@ import 'auth/firebase_auth/auth_util.dart';
 import 'backend/firebase/firebase_config.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/api_cache.dart';
 import '/custom_code/ui/app_theme.dart';
 import '/custom_code/ui/glass.dart';
 import '/custom_code/ui/theme_mode_store.dart';
@@ -30,6 +31,7 @@ void main() async {
   await appState.initializePersistedState();
 
   await ThemeModeStore.init();
+  await ApiCache.init();
 
   await actions.initPlayer();
 

@@ -40,6 +40,7 @@ class SearchSuggestions extends StatelessWidget {
         SectionHeader(title: trs('popular_cats')),
         const SizedBox(height: 14),
         AsyncSection(
+          cacheKey: 'categories',
           load: _categories,
           loading: GridView.builder(
             shrinkWrap: true,
@@ -84,6 +85,7 @@ class SearchSuggestions extends StatelessWidget {
         SectionHeader(title: trs('popular')),
         const SizedBox(height: 14),
         AsyncSection(
+          cacheKey: 'trending',
           load: HomeData.trending,
           loading: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
