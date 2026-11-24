@@ -90,7 +90,7 @@ class _ViewAlbumPageWidgetState extends State<ViewAlbumPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Stack(
             children: [
               Column(

@@ -180,7 +180,7 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

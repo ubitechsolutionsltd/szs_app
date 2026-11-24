@@ -65,7 +65,7 @@ class _AllCategoriesPageWidgetState extends State<AllCategoriesPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

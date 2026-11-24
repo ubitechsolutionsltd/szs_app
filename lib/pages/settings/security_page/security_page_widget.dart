@@ -49,7 +49,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -57,18 +57,7 @@ class _SecurityPageWidgetState extends State<SecurityPageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Security';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'सुरक्षा';
-                      } else {
-                        return 'حماية';
-                      }
-                    }(),
-                    'Security',
-                  ),
+                  title: trs('f3kfj34i'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

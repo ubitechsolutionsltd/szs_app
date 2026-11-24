@@ -71,7 +71,7 @@ class _QuickPicksPageWidgetState extends State<QuickPicksPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Stack(
             children: [
               Column(

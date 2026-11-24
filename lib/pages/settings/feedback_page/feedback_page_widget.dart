@@ -50,7 +50,7 @@ class _FeedbackPageWidgetState extends State<FeedbackPageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

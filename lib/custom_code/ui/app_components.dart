@@ -826,3 +826,142 @@ class SearchEmptyIllustration extends StatelessWidget {
     );
   }
 }
+
+/// Rounded card used by confirmation and success dialogs: artwork (asset image or icon badge), title,
+/// message and a column of buttons. Callers wrap it in a `Dialog`.
+class AppDialogCard extends StatelessWidget {
+  const AppDialogCard({
+    super.key,
+    required this.title,
+    this.message,
+    this.imageAsset,
+    this.icon,
+    required this.actions,
+    this.danger = false,
+  });
+
+  final String title;
+  final String? message;
+  final String? imageAsset;
+  final IconData? icon;
+  final List<Widget> actions;
+
+  /// Tints the icon badge red (e.g. log out confirmation).
+  final bool danger;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = _isDark(context);
+    final tint = danger ? AppTokens.error : _accent(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+              decoration: BoxDecoration(
+                color: _surface(context),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: _border(context)),
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.5 : 0.18), blurRadius: 40, offset: const Offset(0, 16))],
+              ),
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  if (imageAsset != null)
+                    Image.asset(imageAsset!, height: 130, fit: BoxFit.contain, errorBuilder: (_, __, ___) => const SizedBox(height: 8))
+                  else if (icon != null)
+                    Container(
+                      width: 88,
+                      height: 88,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: tint.withValues(alpha: 0.12)),
+                      child: Icon(icon, size: 42, color: tint),
+                    ),
+                  const SizedBox(height: 20),
+                  Text(title, textAlign: TextAlign.center, style: _style(context, 22, FontWeight.w800, height: 1.2)),
+                  if (message != null) ...[
+                    const SizedBox(height: 10),
+                    Text(message!,
+                        textAlign: TextAlign.center,
+                        style: _style(context, 15, FontWeight.w400, color: _muted(context), height: 1.5)),
+                  ],
+                  const SizedBox(height: 24),
+                  for (var i = 0; i < actions.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    actions[i],
+                  ],
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Expandable question/answer card (FAQ). Tapping the header opens or closes the answer.
+class FaqCard extends StatefulWidget {
+  const FaqCard({super.key, required this.question, required this.answer, this.initiallyOpen = false});
+
+  final String question;
+  final String answer;
+  final bool initiallyOpen;
+
+  @override
+  State<FaqCard> createState() => _FaqCardState();
+}
+
+class _FaqCardState extends State<FaqCard> {
+  late bool _open = widget.initiallyOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = _isDark(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: _surface(context),
+        borderRadius: BorderRadius.circular(AppTokens.radiusInput + 2),
+        border: Border.all(color: _open ? _accent(context).withValues(alpha: 0.5) : _border(context)),
+        boxShadow: AppTokens.cardShadow(dark),
+      ),
+      child: Column(children: [
+        Semantics(
+          button: true,
+          expanded: _open,
+          label: widget.question,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppTokens.radiusInput + 2),
+            onTap: () => setState(() => _open = !_open),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+              child: Row(children: [
+                Expanded(child: Text(widget.question, style: _style(context, 16, FontWeight.w700, height: 1.3))),
+                AnimatedRotation(
+                  turns: _open ? 0.5 : 0,
+                  duration: AppTokens.fast,
+                  child: Icon(Icons.keyboard_arrow_down_rounded, color: _accent(context), size: 28),
+                ),
+              ]),
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          duration: AppTokens.fast,
+          crossFadeState: _open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: const SizedBox(width: double.infinity),
+          secondChild: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(widget.answer, style: _style(context, 15, FontWeight.w400, color: _muted(context), height: 1.55)),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+}

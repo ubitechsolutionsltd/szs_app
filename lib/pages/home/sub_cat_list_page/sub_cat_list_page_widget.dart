@@ -83,7 +83,7 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Stack(
             children: [
               Column(

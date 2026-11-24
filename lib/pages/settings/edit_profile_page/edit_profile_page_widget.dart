@@ -73,7 +73,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -81,18 +81,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Edit profile';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'प्रोफ़ाइल संपादित करें';
-                      } else {
-                        return 'تعديل الملف الشخصي';
-                      }
-                    }(),
-                    'Edit profile',
-                  ),
+                  title: trs('edit_profile'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

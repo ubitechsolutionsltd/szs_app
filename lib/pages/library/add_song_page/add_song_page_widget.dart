@@ -50,7 +50,7 @@ class _AddSongPageWidgetState extends State<AddSongPageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -58,18 +58,7 @@ class _AddSongPageWidgetState extends State<AddSongPageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Add song';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'गाना जोड़ें';
-                      } else {
-                        return 'أضف أغنية';
-                      }
-                    }(),
-                    'Add song',
-                  ),
+                  title: trs('add_story'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

@@ -56,7 +56,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -64,18 +64,7 @@ class _ChangePassPageWidgetState extends State<ChangePassPageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Change password';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'पासवर्ड बदलें';
-                      } else {
-                        return 'تغيير كلمة المرور';
-                      }
-                    }(),
-                    'Change password',
-                  ),
+                  title: trs('77r7vwy9'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

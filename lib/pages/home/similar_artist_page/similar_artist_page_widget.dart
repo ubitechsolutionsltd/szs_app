@@ -68,7 +68,7 @@ class _SimilarArtistPageWidgetState extends State<SimilarArtistPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -76,18 +76,7 @@ class _SimilarArtistPageWidgetState extends State<SimilarArtistPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Similar artist';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'समान कलाकार';
-                      } else {
-                        return 'فنان مماثل';
-                      }
-                    }(),
-                    'Similar artist',
-                  ),
+                  title: trs('similar_authors'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},
