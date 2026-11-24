@@ -64,10 +64,13 @@ String formatDuration(Duration d) {
 /// crossfades when the track changes — gives the player a sense of life
 /// instead of a static image.
 class PlayerArtwork extends StatefulWidget {
-  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16, this.playing = false});
+  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16, this.playing = false, this.aspect = 1.0});
 
   final String url;
   final double size;
+
+  /// Height / width (1 = square).
+  final double aspect;
   final double radius;
   final bool playing;
 
@@ -104,9 +107,10 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final pal = AppPalette.of(context);
+    final h = widget.size * widget.aspect;
     final placeholder = Container(
       width: widget.size,
-      height: widget.size,
+      height: h,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -135,7 +139,7 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
         : CachedNetworkImage(
             imageUrl: widget.url,
             width: widget.size,
-            height: widget.size,
+            height: h,
             fit: BoxFit.cover,
             placeholder: (_, __) => placeholder,
             errorWidget: (_, __, ___) => placeholder,
@@ -179,9 +183,12 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
 
 /// Seek bar with buffered progress and a drag that only seeks when released.
 class SeekBar extends StatefulWidget {
-  const SeekBar({super.key, required this.service});
+  const SeekBar({super.key, required this.service, this.onDark = false});
 
   final PlayerService service;
+
+  /// White-on-dark styling with a "-remaining" label (the full-screen player); default is the themed look.
+  final bool onDark;
 
   @override
   State<SeekBar> createState() => _SeekBarState();
@@ -212,10 +219,10 @@ class _SeekBarState extends State<SeekBar> {
                 trackHeight: 4,
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-                activeTrackColor: pal.accent,
-                inactiveTrackColor: pal.outline,
-                thumbColor: pal.accent,
-                secondaryActiveTrackColor: pal.accent.withValues(alpha: 0.3),
+                activeTrackColor: widget.onDark ? const Color(0xFF3FB4FF) : pal.accent,
+                inactiveTrackColor: widget.onDark ? Colors.white24 : pal.outline,
+                thumbColor: widget.onDark ? Colors.white : pal.accent,
+                secondaryActiveTrackColor: (widget.onDark ? Colors.white : pal.accent).withValues(alpha: 0.28),
               ),
               child: Slider(
                 value: valueMs,
@@ -235,9 +242,12 @@ class _SeekBarState extends State<SeekBar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(formatDuration(Duration(milliseconds: valueMs.toInt())),
-                      style: theme.labelSmall.copyWith(color: pal.muted)),
-                  Text(formatDuration(duration),
-                      style: theme.labelSmall.copyWith(color: pal.muted)),
+                      style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
+                  Text(
+                      widget.onDark
+                          ? '-${formatDuration(Duration(milliseconds: (maxMs - valueMs).clamp(0.0, maxMs).toInt()))}'
+                          : formatDuration(duration),
+                      style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),

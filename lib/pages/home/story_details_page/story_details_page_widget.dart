@@ -16,6 +16,7 @@ import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/custom_functions.dart' as functions;
+import 'dart:async' show unawaited;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -191,16 +192,18 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     if (service.snapshot.value.item == null) {
       final now = FFAppState().nowPlaying;
       if (now is Map) {
-        await service.playEpisodeMap(now, within: widget.episodes);
+        unawaited(service.playEpisodeMap(now, within: widget.episodes, subtitle: widget.story?.artistName ?? ''));
       }
     } else if (!service.snapshot.value.playing) {
-      await service.play();
+      // Not awaited: just_audio's play() only completes when playback ends.
+      unawaited(service.play());
     }
     if (!mounted) return;
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      showDragHandle: false,
       backgroundColor: Colors.transparent,
       builder: (_) => const custom_widgets.FullPlayer(),
     );
@@ -371,6 +374,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
               command: FFAppState().playercommand,
               episode: FFAppState().nowPlaying,
               episodes: widget.episodes,
+              subtitle: widget.story?.artistName ?? '',
             ),
           ),
         ),

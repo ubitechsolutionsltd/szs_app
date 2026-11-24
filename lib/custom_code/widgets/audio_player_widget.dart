@@ -30,6 +30,7 @@ class AudioPlayerWidget extends StatefulWidget {
     this.episodes,
     this.command,
     this.onFinished,
+    this.subtitle = '',
   });
 
   final double? width;
@@ -46,6 +47,9 @@ class AudioPlayerWidget extends StatefulWidget {
 
   /// Called when an episode finishes (kept so existing pages can update what they show).
   final Future<void> Function(Map<String, dynamic>)? onFinished;
+
+  /// Shown under the title in the players (usually the story's author).
+  final String subtitle;
 
   @override
   State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();
@@ -99,7 +103,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     if (episode == null) return;
     // Already the current item (for example coming back to the page): keep playing, do not restart.
     if (_service.currentItemId == _idOf(episode)) return;
-    await _service.playEpisodeMap(episode, within: widget.episodes);
+    await _service.playEpisodeMap(episode, within: widget.episodes, subtitle: widget.subtitle);
   }
 
   void _handleCommand(String? command) {
@@ -172,6 +176,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                     context: context,
                     isScrollControlled: true,
                     useSafeArea: true,
+      showDragHandle: false,
                     backgroundColor: Colors.transparent,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
                     builder: (_) => const FullPlayer(),
