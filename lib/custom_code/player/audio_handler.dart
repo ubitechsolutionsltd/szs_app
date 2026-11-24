@@ -90,7 +90,7 @@ class SzsAudioHandler extends BaseAudioHandler with SeekHandler {
   Future<void> skipToPrevious() => _service.previous();
 
   @override
-  Future<void> fastForward() => _service.seekRelative(const Duration(seconds: 30));
+  Future<void> fastForward() => _service.seekRelative(const Duration(seconds: 15));
 
   @override
   Future<void> rewind() => _service.seekRelative(const Duration(seconds: -15));
@@ -103,6 +103,9 @@ class BackgroundAudio {
   static SzsAudioHandler? _handler;
 
   static bool get isActive => _handler != null;
+
+  /// Why the notification / lock-screen integration could not start (null when it is running or not tried yet).
+  static String? lastError;
 
   /// Starts the notification / lock-screen integration. Returns false if the native setup is missing.
   static Future<bool> start(PlayerService service) async {
@@ -120,8 +123,10 @@ class BackgroundAudio {
           rewindInterval: Duration(seconds: 15),
         ),
       );
+      lastError = null;
       return true;
     } catch (e) {
+      lastError = '$e';
       debugPrint('Background playback is not available: $e');
       return false;
     }

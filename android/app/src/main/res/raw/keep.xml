@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The notification icon is looked up by name at run time, so resource shrinking must not remove it. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_szs,@mipmap/ic_launcher,@mipmap/launcher_icon"
+    tools:shrinkMode="strict" />

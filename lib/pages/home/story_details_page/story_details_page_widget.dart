@@ -1,6 +1,7 @@
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/player/player_service.dart';
 import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/episode_unlock.dart';
 import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_toast.dart';
 import '/custom_code/ui/wave_background.dart';
@@ -67,10 +68,13 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
       );
       FFAppState().nowPlaying = playable;
       FFAppState().update(() {});
-      FFAppState().playercommand = 'play';
-      FFAppState().update(() {});
-      FFAppState().playerisplaying = true;
-      FFAppState().update(() {});
+      // A locked episode is never started by itself: the unlock card explains the price instead.
+      if (!EpisodeUnlock.isLocked(playable)) {
+        FFAppState().playercommand = 'play';
+        FFAppState().update(() {});
+        FFAppState().playerisplaying = true;
+        FFAppState().update(() {});
+      }
     });
 
     animationsMap.addAll({
@@ -185,14 +189,35 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     AppToast.success(context, queued.length == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${queued.length}'}));
   }
 
-  /// Makes sure something from this story is loaded, then opens the full-screen player.
+  /// The episode "Listen now" should play: the selected one if it is playable, otherwise the first playable one,
+  /// otherwise the first episode (which is locked and will be unlocked).
+  dynamic _targetEpisode() {
+    final list = widget.episodes is List ? widget.episodes as List : const [];
+    final now = FFAppState().nowPlaying;
+    if (now != null && !EpisodeUnlock.isLocked(now)) return now;
+    for (final e in list) {
+      if (!EpisodeUnlock.isLocked(e)) return e;
+    }
+    return list.isNotEmpty ? list.first : now;
+  }
+
+  /// Unlocks the episode when needed (automatically if the balance allows), then opens the full-screen player.
   Future<void> _listenNow() async {
+    final target = _targetEpisode();
+    if (target == null) return;
+    if (EpisodeUnlock.isLocked(target)) {
+      final unlocked = await EpisodeUnlock.run(context, episode: target);
+      if (!unlocked || !mounted) return;
+    } else if (!identical(FFAppState().nowPlaying, target)) {
+      FFAppState().nowPlaying = target;
+      FFAppState().update(() {});
+    }
+
     final service = PlayerService.instance;
     await service.init();
-    if (service.snapshot.value.item == null) {
-      final now = FFAppState().nowPlaying;
-      if (now is Map) {
-        unawaited(service.playEpisodeMap(now, within: widget.episodes, subtitle: widget.story?.artistName ?? ''));
+    if (service.currentItemId != (target is Map ? int.tryParse('${target['id']}') : null)) {
+      if (target is Map) {
+        unawaited(service.playEpisodeMap(target, within: widget.episodes, subtitle: widget.story?.artistName ?? ''));
       }
     } else if (!service.snapshot.value.playing) {
       // Not awaited: just_audio's play() only completes when playback ends.
@@ -330,7 +355,15 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
             ExpandableText(text: story!.description),
           ],
           const SizedBox(height: 22),
-          AppButton(label: trs('listen_now'), icon: Icons.play_arrow_rounded, onPressed: _listenNow),
+          Builder(builder: (context) {
+            final target = _targetEpisode();
+            final needsUnlock = target != null && EpisodeUnlock.isLocked(target);
+            return AppButton(
+              label: needsUnlock ? trs('unlock_listen', args: {'n': '${EpisodeUnlock.price(target)}'}) : trs('listen_now'),
+              icon: needsUnlock ? Icons.lock_open_rounded : Icons.play_arrow_rounded,
+              onPressed: _listenNow,
+            );
+          }),
           const SizedBox(height: 12),
           Row(children: [
             Expanded(
@@ -369,13 +402,15 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: custom_widgets.AudioPlayerWidget(
-              width: double.infinity,
-              command: FFAppState().playercommand,
-              episode: FFAppState().nowPlaying,
-              episodes: widget.episodes,
-              subtitle: widget.story?.artistName ?? '',
-            ),
+            child: EpisodeUnlock.isLocked(FFAppState().nowPlaying)
+                ? LockedEpisodeCard(episode: FFAppState().nowPlaying)
+                : custom_widgets.AudioPlayerWidget(
+                    width: double.infinity,
+                    command: FFAppState().playercommand,
+                    episode: FFAppState().nowPlaying,
+                    episodes: widget.episodes,
+                    subtitle: widget.story?.artistName ?? '',
+                  ),
           ),
         ),
         SliverToBoxAdapter(

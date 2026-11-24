@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:simulizi/app_state.dart';
 import 'package:simulizi/components/language_select_a_lrt_dialog_widget.dart';
 import 'package:simulizi/components/logout_alrt_dialog_widget.dart';
+import 'package:simulizi/components/package_payment_success_widget.dart';
 import 'package:simulizi/custom_code/ui/app_components.dart';
+import 'package:simulizi/custom_code/ui/episode_unlock.dart';
 import 'package:simulizi/custom_code/ui/app_theme.dart';
 import 'package:simulizi/custom_code/widgets/library_view.dart';
 import 'package:simulizi/custom_code/widgets/settings_view.dart';
@@ -35,6 +37,11 @@ void main() {
     'library (guest)': () => const LibraryView(),
     'logout dialog': () => const LogoutAlrtDialogWidget(onTapLogout: null),
     'language dialog': () => const LanguageSelectALrtDialogWidget(),
+    'locked episode card': () => SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: LockedEpisodeCard(episode: {'id': 1, 'is_audio_coin': 300, 'is_buy': 0}),
+        ),
+    'payment card': () => const PackagePaymentSuccessWidget(amount: '200.0', lipanumber: '83816242', paymentlink: 'https://example.com/pay'),
     'empty state': () => const EmptyState(
           icon: Icons.favorite_border_rounded,
           title: 'Hakuna ulizohifadhi',

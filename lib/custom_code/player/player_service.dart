@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'download_manager.dart';
 import 'media_access.dart';
+import 'audio_handler.dart';
 import 'notification_permission.dart';
 import 'player_core.dart';
 
@@ -123,6 +124,7 @@ class PlayerService {
   Future<void> playQueue(List<PlayableItem> items, {int startIndex = 0}) async {
     await init();
     unawaited(NotificationPermission.ensure());
+    if (!BackgroundAudio.isActive) unawaited(BackgroundAudio.start(this));
     _queue.setItems(items, startIndex: startIndex);
     await _loadCurrent();
   }

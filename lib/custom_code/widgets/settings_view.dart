@@ -15,6 +15,7 @@ import 'package:webviewx_plus/webviewx_plus.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/language_select_a_lrt_dialog_widget.dart';
 import '/components/logout_alrt_dialog_widget.dart';
+import '/custom_code/player/audio_handler.dart';
 import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/theme_mode_store.dart';
@@ -115,6 +116,14 @@ class SettingsView extends StatelessWidget {
             else
               AppButton(label: trs('gdn2b1x7'), icon: Icons.login_rounded, onPressed: () => context.pushNamed(LoginPageWidget.routeName)),
             const SizedBox(height: 16),
+            if (BackgroundAudio.lastError != null) ...[
+              // Shown only when the lock-screen / notification player could not start, so it can be reported.
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text('Media controls: ${BackgroundAudio.lastError}',
+                    textAlign: TextAlign.center, maxLines: 4, overflow: TextOverflow.ellipsis, style: TextStyle(fontFamily: AppTokens.fontFamily, color: muted, fontSize: 11)),
+              ),
+            ],
             Center(
               child: Text('Simulizi za Sauti · ${trs('about_tagline')}',
                   textAlign: TextAlign.center,
