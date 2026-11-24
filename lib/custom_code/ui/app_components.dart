@@ -453,27 +453,37 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = _accent(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            width: 112,
-            height: 112,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: accent.withValues(alpha: 0.10)),
-            child: Icon(icon, size: 52, color: accent),
+    // Scrolls when the screen is short or the text is large, instead of overflowing.
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.hasBoundedHeight ? constraints.maxHeight : 0),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                  width: 112,
+                  height: 112,
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: accent.withValues(alpha: 0.10)),
+                  child: Icon(icon, size: 52, color: accent),
+                ),
+                const SizedBox(height: 20),
+                Text(title, textAlign: TextAlign.center, style: _style(context, 20, FontWeight.w800)),
+                if (message != null) ...[
+                  const SizedBox(height: 8),
+                  Text(message!,
+                      textAlign: TextAlign.center,
+                      style: _style(context, AppTokens.fsBody, FontWeight.w400, color: _muted(context), height: 1.5)),
+                ],
+                if (actionLabel != null && onAction != null) ...[
+                  const SizedBox(height: 20),
+                  AppButton(label: actionLabel!, onPressed: onAction, expand: false),
+                ],
+              ]),
+            ),
           ),
-          const SizedBox(height: 20),
-          Text(title, textAlign: TextAlign.center, style: _style(context, 20, FontWeight.w800)),
-          if (message != null) ...[
-            const SizedBox(height: 8),
-            Text(message!, textAlign: TextAlign.center, style: _style(context, AppTokens.fsBody, FontWeight.w400, color: _muted(context), height: 1.5)),
-          ],
-          if (actionLabel != null && onAction != null) ...[
-            const SizedBox(height: 20),
-            AppButton(label: actionLabel!, onPressed: onAction, expand: false),
-          ],
-        ]),
+        ),
       ),
     );
   }
