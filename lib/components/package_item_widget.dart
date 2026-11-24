@@ -89,7 +89,7 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    valueOrDefault<String>(package?.name, 'Kifurushi'),
+                    valueOrDefault<String>(package?.name, trs('package_word')),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.bodyLarge.override(

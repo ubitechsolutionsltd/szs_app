@@ -80,7 +80,7 @@ class HomeHeader extends StatelessWidget {
                       fontFamily: 'SF Pro Display', color: palette.muted, fontSize: 13, letterSpacing: 0),
                 ),
                 Text(
-                  firstName.isEmpty ? 'Karibu' : firstName,
+                  firstName.isEmpty ? trs('welcome') : firstName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.bodyMedium.override(

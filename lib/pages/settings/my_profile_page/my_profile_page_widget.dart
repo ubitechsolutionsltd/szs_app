@@ -157,7 +157,7 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
           child: Column(children: [
             _infoRow(context, Icons.person_outline_rounded, trs('qtk3q5ro'), state.fullname),
             _infoRow(context, Icons.mail_outline_rounded, trs('4gly7jca'), state.email),
-            _infoRow(context, Icons.phone_outlined, 'Simu', state.phonenumber),
+            _infoRow(context, Icons.phone_outlined, trs('phone_label'), state.phonenumber),
             _infoRow(context, Icons.info_outline_rounded, trs('about_me'), state.bio),
             _infoRow(context, Icons.calendar_today_outlined, 'Alijiunga', state.joinedat),
           ]),

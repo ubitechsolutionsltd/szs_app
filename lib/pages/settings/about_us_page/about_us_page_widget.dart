@@ -1,10 +1,9 @@
-import '/custom_code/ui/app_logo.dart';
-import '/components/custom_center_app_bar_widget.dart';
-import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/app_logo.dart';
+import '/custom_code/ui/app_tokens.dart';
+import '/custom_code/ui/wave_background.dart';
 import 'about_us_page_model.dart';
 export 'about_us_page_model.dart';
 
@@ -18,152 +17,90 @@ class AboutUsPageWidget extends StatefulWidget {
   State<AboutUsPageWidget> createState() => _AboutUsPageWidgetState();
 }
 
-class _AboutUsPageWidgetState extends State<AboutUsPageWidget>
-    with TickerProviderStateMixin {
+class _AboutUsPageWidgetState extends State<AboutUsPageWidget> {
   late AboutUsPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final animationsMap = <String, AnimationInfo>{};
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => AboutUsPageModel());
-
-    animationsMap.addAll({
-      'imageOnPageLoadAnimation': AnimationInfo(
-        trigger: AnimationTrigger.onPageLoad,
-        effectsBuilder: () => [
-          FadeEffect(
-            curve: Curves.easeInOut,
-            delay: 50.0.ms,
-            duration: 800.0.ms,
-            begin: 0.0,
-            end: 1.0,
-          ),
-        ],
-      ),
-      'textOnPageLoadAnimation': AnimationInfo(
-        trigger: AnimationTrigger.onPageLoad,
-        effectsBuilder: () => [
-          FadeEffect(
-            curve: Curves.easeInOut,
-            delay: 150.0.ms,
-            duration: 800.0.ms,
-            begin: 0.0,
-            end: 1.0,
-          ),
-        ],
-      ),
-    });
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              wrapWithModel(
-                model: _model.customCenterAppBarModel,
-                updateCallback: () => safeSetState(() {}),
-                child: CustomCenterAppBarWidget(
-                  title: trs('4l2dbb28'),
-                  backIcon: false,
-                  addIcon: false,
-                  onTapAdd: () async {},
-                ),
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final text = dark ? AppTokens.darkText : AppTokens.brandNavy;
+    final body = dark ? AppTokens.darkTextSecondary : AppTokens.textPrimary;
+    final accent = dark ? AppTokens.darkAccent : AppTokens.brandPrimary;
+
+    Widget point(String key) => Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: accent),
+              child: const Icon(Icons.check_rounded, color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: Text(trs(key),
+                    style: TextStyle(fontFamily: AppTokens.fontFamily, color: body, fontSize: 15.5, height: 1.45)),
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 8.0, 20.0, 8.0),
-                child: Column(
-                  children: [
-                    AppLogo(size: 96.0, radius: 26.0),
-                    SizedBox(height: 12.0),
-                    Text(
-                      'Simulizi za Sauti',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).tertiary,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.3,
-                          ),
+            ),
+          ]),
+        );
+
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: Colors.transparent,
+      body: Stack(children: [
+        const Align(alignment: Alignment.bottomCenter, child: FooterWave(height: 130)),
+        Column(children: [
+          GradientHeader(title: trs('4l2dbb28'), onBack: () => context.safePop()),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 28, AppTokens.screenPadding + 4, 150),
+              children: [
+                Center(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [BoxShadow(color: AppTokens.brandPrimary.withValues(alpha: 0.35), blurRadius: 28, offset: const Offset(0, 12))],
                     ),
-                    Text(
-                      trs('about_tagline'),
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'SF Pro Display',
-                            color: FlutterFlowTheme.of(context).primary,
-                            fontSize: 15.0,
-                            fontStyle: FontStyle.italic,
-                            letterSpacing: 0.3,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(
-                    0,
-                    16.0,
-                    0,
-                    24.0,
+                    child: const AppLogo(size: 104, radius: 28),
                   ),
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            FFLocalizations.of(context).getText(
-                              'utscy6vt' /* Simulizi za Sauti ni jukwaa la... */,
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                          ).animateOnPageLoad(
-                              animationsMap['textOnPageLoadAnimation']!),
-                        ]
-                            .divide(SizedBox(height: 8.0))
-                            .addToStart(SizedBox(height: 16.0)),
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Text('Simulizi za Sauti',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: AppTokens.fontFamily, color: text, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -0.4)),
+                const SizedBox(height: 4),
+                Text(trs('about_tagline'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: AppTokens.fontFamily, color: accent, fontSize: 18, fontStyle: FontStyle.italic, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 24),
+                Text(trs('utscy6vt'),
+                    style: TextStyle(fontFamily: AppTokens.fontFamily, color: body, fontSize: 16.5, height: 1.5)),
+                const SizedBox(height: 22),
+                point('about_point_1'),
+                point('about_point_2'),
+                point('about_point_3'),
+              ],
+            ),
           ),
-        ),
-      ),
+        ]),
+      ]),
     );
   }
 }

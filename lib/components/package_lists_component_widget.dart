@@ -280,7 +280,7 @@ class _PackageListsComponentWidgetState
                                                 title:
                                                     Text(trs('tech_problem')),
                                                 content: Text(
-                                                    'Imeshindwa Kupata Link ya Malipo'),
+                                                    trs('payment_link_fail')),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () =>
@@ -363,7 +363,7 @@ class _PackageListsComponentWidgetState
                     SizedBox(width: 6.0),
                     Flexible(
                       child: Text(
-                        'Malipo ni salama kupitia Selcom',
+                        trs('payment_secure'),
                         style: FlutterFlowTheme.of(context).bodySmall.override(
                               fontFamily: 'SF Pro Display',
                               color: AppPalette.of(context).muted,

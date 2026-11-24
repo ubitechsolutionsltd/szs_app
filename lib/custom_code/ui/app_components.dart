@@ -500,7 +500,10 @@ class ErrorState extends StatelessWidget {
 /// Blue gradient page header with a title (and optional trailing widget / bottom widget), used by tab pages such
 /// as Maktaba. Content below should overlap nothing: it is a normal box, not a flexible space.
 class GradientHeader extends StatelessWidget {
-  const GradientHeader({super.key, required this.title, this.subtitle, this.trailing, this.bottom});
+  const GradientHeader({super.key, required this.title, this.subtitle, this.trailing, this.bottom, this.onBack});
+
+  /// Shows a white back arrow before the title when set.
+  final VoidCallback? onBack;
 
   final String title;
   final String? subtitle;
@@ -529,6 +532,16 @@ class GradientHeader extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(AppTokens.screenPadding, top + 16, AppTokens.screenPadding, 22),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
             Row(children: [
+              if (onBack != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                    tooltip: trs('back'),
+                    constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                    onPressed: onBack,
+                  ),
+                ),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(title, style: _style(context, AppTokens.fsScreenTitle, FontWeight.w800, color: Colors.white)),
