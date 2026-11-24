@@ -402,6 +402,7 @@ final kTranslationsMap = <String, Map<String, String>>{
   'new_password_title': {'sw': 'Nywila Mpya', 'en': 'New password'},
   'new_playlist': {'sw': 'Orodha mpya', 'en': 'New playlist'},
   'next': {'sw': 'Inayofuata', 'en': 'Next'},
+  'no_authors': {'sw': 'Waandishi bado hawapatikani.', 'en': 'Authors are not available yet.'},
   'no_categories': {'sw': 'Makundi bado hayapatikani.', 'en': 'Categories are not available yet.'},
   'no_category': {'sw': 'Bila kundi', 'en': 'No category'},
   'no_downloads': {'sw': 'Hujapakua simulizi bado', 'en': 'No downloads yet'},

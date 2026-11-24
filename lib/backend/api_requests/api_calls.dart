@@ -268,6 +268,8 @@ class ArtistListCall {
     String? userId = '1',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -565,6 +567,8 @@ class AddOrRemoveBookmarkCall {
     String? contentId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -612,6 +616,8 @@ class GetBookMarksCall {
     String? userId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -703,6 +709,8 @@ class ReadNotificationCall {
     String? notificationId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -750,6 +758,8 @@ class PayForPackageCall {
     String? packageId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -814,6 +824,8 @@ class BuyEpisodeCall {
     String? coin = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -866,6 +878,8 @@ class ArtistDetailCall {
     String? userId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {
@@ -900,6 +914,8 @@ class FollowCall {
     String? artistId = '',
   }) async {
     final baseUrl = GeneralGroup.getBaseUrl();
+    // Guests have no user id and the server rejects an empty one ("User id is required"); it accepts 0.
+    if (userId == null || userId.trim().isEmpty) userId = '0';
 
     final ffApiRequestBody = '''
 {

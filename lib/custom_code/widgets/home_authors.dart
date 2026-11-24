@@ -39,6 +39,7 @@ class HomeAuthors extends StatelessWidget {
       height: height ?? 128,
       child: AsyncSection(
         load: _load,
+        empty: StateMessage(icon: Icons.person_outline_rounded, message: trs('no_authors')),
         loading: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 20),
