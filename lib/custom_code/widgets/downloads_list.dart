@@ -11,7 +11,9 @@ import 'package:flutter/material.dart' hide RepeatMode;
 import '/custom_code/player/download_manager.dart';
 import '/custom_code/player/player_core.dart';
 import '/custom_code/player/player_service.dart';
+import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_widgets.dart';
 
 /// "Downloaded" screen content: episodes saved for offline listening, with progress, play and delete.
@@ -48,15 +50,10 @@ class DownloadsList extends StatelessWidget {
     final manager = DownloadManager.instance;
 
     if (!manager.supported) {
-      return const Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: EdgeInsets.only(top: 24),
-          child: StateMessage(
-            icon: Icons.cloud_off_rounded,
-            message: 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.',
-          ),
-        ),
+      return const EmptyState(
+        icon: Icons.cloud_off_rounded,
+        title: 'Kupakua hakupatikani',
+        message: 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.',
       );
     }
 
@@ -70,20 +67,15 @@ class DownloadsList extends StatelessWidget {
           final active = manager.activeDownloads;
 
           if (done.isEmpty && active.isEmpty) {
-            return const Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 24),
-                child: StateMessage(
-                  icon: Icons.download_for_offline_outlined,
-                  message: 'Hujapakua simulizi bado. Gusa "Pakua" kwenye kicheza ili kusikiliza bila mtandao.',
-                ),
-              ),
+            return const EmptyState(
+              icon: Icons.download_for_offline_outlined,
+              title: 'Hujapakua simulizi bado',
+              message: 'Gusa "Pakua" kwenye simulizi ili kusikiliza bila mtandao.',
             );
           }
 
           return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             children: [
               if (done.isNotEmpty)
                 Padding(
@@ -136,8 +128,9 @@ class _DownloadedRow extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: BorderRadius.circular(AppSpace.radiusMd),
-        border: Border.all(color: palette.outline, width: 0.6),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: palette.outline, width: 0.8),
+        boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
       ),
       child: InkWell(
         onTap: onPlay,
@@ -199,8 +192,9 @@ class _ActiveRow extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: BorderRadius.circular(AppSpace.radiusMd),
-        border: Border.all(color: failed ? palette.error.withValues(alpha: 0.5) : palette.outline, width: 0.6),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: failed ? palette.error.withValues(alpha: 0.5) : palette.outline, width: 0.8),
+        boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
       ),
       child: Row(children: [
         PlayerArtworkThumb(url: item.artUrl),
