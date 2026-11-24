@@ -102,7 +102,7 @@ class _LanguageSelectALrtDialogWidgetState
                       onTap: () async {
                         FFAppState().langIndex = 0;
                         safeSetState(() {});
-                        setAppLanguage(context, 'en');
+                        setAppLanguage(context, 'sw');
                         Navigator.pop(context);
                       },
                       child: Row(
@@ -160,7 +160,7 @@ class _LanguageSelectALrtDialogWidgetState
                       onTap: () async {
                         FFAppState().langIndex = 1;
                         safeSetState(() {});
-                        setAppLanguage(context, 'sw');
+                        setAppLanguage(context, 'en');
                         Navigator.pop(context);
                       },
                       child: Row(
@@ -168,7 +168,7 @@ class _LanguageSelectALrtDialogWidgetState
                         children: [
                           Builder(
                             builder: (context) {
-                              if (FFAppState().langIndex == 2) {
+                              if (FFAppState().langIndex == 1) {
                                 return Icon(
                                   Icons.radio_button_checked,
                                   color: FlutterFlowTheme.of(context).primary,
@@ -196,7 +196,7 @@ class _LanguageSelectALrtDialogWidgetState
                                     .override(
                                       fontFamily: 'SF Pro Display',
                                       color: valueOrDefault<Color>(
-                                        FFAppState().langIndex == 2
+                                        FFAppState().langIndex == 1
                                             ? FlutterFlowTheme.of(context)
                                                 .primary
                                             : FlutterFlowTheme.of(context)

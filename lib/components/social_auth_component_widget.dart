@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/custom_code/ui/app_toast.dart';
 import '/backend/api_requests/api_calls.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -121,53 +122,24 @@ class _SocialAuthComponentWidgetState extends State<SocialAuthComponentWidget> {
                     context.pushNamedAuth(
                         HomePageWidget.routeName, context.mounted);
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Successfully Logged In.',
-                          style: TextStyle(
-                            fontFamily: 'SF Pro Display',
-                            color: Colors.white,
-                          ),
-                        ),
-                        duration: Duration(milliseconds: 4000),
-                        backgroundColor: FlutterFlowTheme.of(context).primary,
-                      ),
-                    );
+                    AppToast.success(context, 'Umeingia kikamilifu.');
                     if (_shouldSetState) safeSetState(() {});
                     return;
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          GeneralGroup.loginCall.message(
+                    AppToast.error(
+                      context,
+                      GeneralGroup.loginCall.message(
                             (_model.googleAuthResp?.jsonBody ?? ''),
-                          )!,
-                          style: TextStyle(
-                            fontFamily: 'SF Pro Display',
-                            color: Colors.white,
-                          ),
-                        ),
-                        duration: Duration(milliseconds: 4000),
-                        backgroundColor: FlutterFlowTheme.of(context).error,
-                      ),
+                          ) ??
+                          'Imeshindikana kuingia.',
                     );
                     if (_shouldSetState) safeSetState(() {});
                     return;
                   }
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Oops ! Technical Error. Try Again.',
-                        style: TextStyle(
-                          fontFamily: 'SF Pro Display',
-                          color: Colors.white,
-                        ),
-                      ),
-                      duration: Duration(milliseconds: 4000),
-                      backgroundColor: FlutterFlowTheme.of(context).error,
-                    ),
+                  AppToast.error(
+                    context,
+                    'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
                   );
                   if (_shouldSetState) safeSetState(() {});
                   return;

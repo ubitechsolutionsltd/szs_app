@@ -101,6 +101,9 @@ class _ArtworkBackdropState extends State<ArtworkBackdrop> {
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
+    // No artwork to sample a colour from yet: use a deep, branded tone (from
+    // the app accent) instead of a flat grey, so the backdrop still feels alive.
+    final fallback = HSVColor.fromColor(palette.accent).withSaturation(0.55).withValue(0.42).toColor();
 
     return Stack(
       children: [
@@ -110,7 +113,7 @@ class _ArtworkBackdropState extends State<ArtworkBackdrop> {
           right: 0,
           height: widget.height,
           child: TweenAnimationBuilder<Color?>(
-            tween: ColorTween(end: _color ?? palette.surface),
+            tween: ColorTween(end: _color ?? fallback),
             duration: const Duration(milliseconds: 500),
             builder: (context, color, _) => DecoratedBox(
               decoration: BoxDecoration(
@@ -119,8 +122,8 @@ class _ArtworkBackdropState extends State<ArtworkBackdrop> {
                   end: Alignment.bottomCenter,
                   stops: const [0.0, 0.2, 1.0],
                   colors: [
-                    (color ?? palette.surface).withValues(alpha: 0.0),
-                    (color ?? palette.surface).withValues(
+                    (color ?? fallback).withValues(alpha: 0.0),
+                    (color ?? fallback).withValues(
                         alpha: Theme.of(context).brightness == Brightness.dark ? 0.8 : 0.34),
                     palette.background.withValues(alpha: 0.0),
                   ],

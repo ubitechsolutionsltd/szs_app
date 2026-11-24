@@ -1,5 +1,6 @@
 import '/custom_code/ui/app_widgets.dart';
 import '/custom_code/ui/artwork_color.dart';
+import '/custom_code/ui/auth_gate.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
@@ -55,10 +56,14 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      FFAppState().nowPlaying = getJsonField(
-        widget.episodes,
-        r'''$[0]''',
+      final episodes = widget.episodes?.toList() ?? [];
+      final playable = episodes.firstWhere(
+        (e) =>
+            functions.jsonValueToInteger(getJsonField(e, r'''$["is_buy"]''')) == 1 ||
+            functions.jsonValueToInteger(getJsonField(e, r'''$["is_audio_coin"]''')) <= 0,
+        orElse: () => getJsonField(widget.episodes, r'''$[0]'''),
       );
+      FFAppState().nowPlaying = playable;
       FFAppState().update(() {});
       FFAppState().playercommand = 'play';
       FFAppState().update(() {});
@@ -133,13 +138,14 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     );
   }
 
-  /// Cover, title, author, badges, description and the main play button.
+  /// Cover, title, author, badges and description. Playback starts from the
+  /// embedded player below (and on load, via [initState]), so there is no
+  /// separate play button here.
   Widget _buildHero(BuildContext context) {
     final palette = AppPalette.of(context);
     final theme = FlutterFlowTheme.of(context);
     final story = widget.story;
     final rating = story?.avgRating ?? '';
-    final episodes = widget.episodes?.toList() ?? [];
 
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0),
@@ -213,47 +219,6 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
             SizedBox(height: 16.0),
             ExpandableText(text: story!.description),
           ],
-          SizedBox(height: 16.0),
-          SizedBox(
-            width: double.infinity,
-            height: 54.0,
-            child: FilledButton.icon(
-              style: FilledButton.styleFrom(
-                backgroundColor: palette.accent,
-                foregroundColor: palette.onAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.0)),
-              ),
-              icon: Icon(Icons.play_arrow_rounded, size: 28.0),
-              label: Text('Cheza simulizi',
-                  style: theme.titleSmall.override(
-                    fontFamily: 'SF Pro Display',
-                    color: palette.onAccent,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.0,
-                  )),
-              onPressed: episodes.isEmpty
-                  ? null
-                  : () {
-                      final playable = episodes.firstWhere(
-                        (e) =>
-                            functions.jsonValueToInteger(getJsonField(e, r'''$["is_buy"]''')) == 1 ||
-                            functions.jsonValueToInteger(getJsonField(e, r'''$["is_audio_coin"]''')) <= 0,
-                        orElse: () => null,
-                      );
-                      if (playable == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Sehemu zote zimefungwa. Chagua sehemu ili kuifungua.'),
-                        ));
-                        return;
-                      }
-                      FFAppState().nowPlaying = playable;
-                      FFAppState().playercommand = 'play';
-                      FFAppState().playerisplaying = true;
-                      FFAppState().update(() {});
-                    },
-            ),
-          ),
           SizedBox(height: 14.0),
         ],
       ),
@@ -411,6 +376,11 @@ ArtworkBackdrop(
                                     ),
                                     showLoadingIndicator: true,
                                     onPressed: () async {
+                                      if (!isLoggedIn) {
+                                        promptLogin(context,
+                                            'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+                                        return;
+                                      }
                                       var _shouldSetState = false;
                                       _model.addremoveBookmarkRes =
                                           await GeneralGroup
@@ -490,7 +460,20 @@ ArtworkBackdrop(
                                           child: Padding(
                                             padding: MediaQuery.viewInsetsOf(
                                                 context),
-                                            child: WhenEverBottomWidget(),
+                                            child: WhenEverBottomWidget(
+                                              story: widget.story,
+                                              episodes: widget.episodes,
+                                              onToggleSort: () {
+                                                final eps = widget.episodes;
+                                                if (eps is List && eps.length > 1) {
+                                                  final reversed = eps.reversed.toList();
+                                                  eps
+                                                    ..clear()
+                                                    ..addAll(reversed);
+                                                }
+                                                safeSetState(() {});
+                                              },
+                                            ),
                                           ),
                                         ),
                                       );

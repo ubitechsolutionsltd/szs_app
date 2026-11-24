@@ -48,11 +48,10 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
             context.goNamed(HomePageWidget.routeName);
           }
         } else {
-          if (FFAppState().skipUser) {
-            context.goNamed(HomePageWidget.routeName);
-          } else {
-            context.goNamed(LoginPageWidget.routeName);
-          }
+          // Browsing is open to everyone; login is only required for actions
+          // that need an account (bookmarking, following, buying an episode).
+          FFAppState().skipUser = true;
+          context.goNamed(HomePageWidget.routeName);
         }
       } else {
         context.goNamed(OnboardingPageWidget.routeName);

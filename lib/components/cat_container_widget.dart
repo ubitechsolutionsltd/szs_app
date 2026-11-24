@@ -104,7 +104,7 @@ class _CatContainerWidgetState extends State<CatContainerWidget> {
                           return widget.ctData?.cNArbic;
                         }
                       }(),
-                      'Hip hop',
+                      'Bila jina',
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,

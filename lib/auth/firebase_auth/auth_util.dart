@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_auth_manager.dart';
 

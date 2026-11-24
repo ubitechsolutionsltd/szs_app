@@ -1,5 +1,6 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
+import '/custom_code/ui/auth_gate.dart';
 import '/components/when_ever_bottom_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -33,6 +34,7 @@ class _SongDetailsPageWidgetState extends State<SongDetailsPageWidget> {
   late SongDetailsPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _episodesDescending = false;
 
   @override
   void initState() {
@@ -160,6 +162,11 @@ class _SongDetailsPageWidgetState extends State<SongDetailsPageWidget> {
                                 ),
                                 showLoadingIndicator: true,
                                 onPressed: () async {
+                                  if (!isLoggedIn) {
+                                    promptLogin(context,
+                                        'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+                                    return;
+                                  }
                                   var _shouldSetState = false;
                                   _model.addremoveBookmarkRes =
                                       await GeneralGroup.addOrRemoveBookmarkCall
@@ -230,7 +237,11 @@ class _SongDetailsPageWidgetState extends State<SongDetailsPageWidget> {
                                       child: Padding(
                                         padding:
                                             MediaQuery.viewInsetsOf(context),
-                                        child: WhenEverBottomWidget(),
+                                        child: WhenEverBottomWidget(
+                                          story: widget.story,
+                                          onToggleSort: () => safeSetState(
+                                              () => _episodesDescending = !_episodesDescending),
+                                        ),
                                       ),
                                     ),
                                   );
@@ -373,25 +384,32 @@ class _SongDetailsPageWidgetState extends State<SongDetailsPageWidget> {
                           final advancedAudioPlayerEpisodesAudioByContentResponse =
                               snapshot.data!;
 
+                          var urls = functions.extractPlaylistItems(
+                              GeneralGroup.episodesAudioByContentCall
+                                  .result(
+                                    advancedAudioPlayerEpisodesAudioByContentResponse
+                                        .jsonBody,
+                                  )!
+                                  .toList(),
+                              'audio');
+                          var titles = functions.extractPlaylistItems(
+                              GeneralGroup.episodesAudioByContentCall
+                                  .result(
+                                    advancedAudioPlayerEpisodesAudioByContentResponse
+                                        .jsonBody,
+                                  )!
+                                  .toList(),
+                              'name');
+                          if (_episodesDescending) {
+                            urls = urls.reversed.toList();
+                            titles = titles.reversed.toList();
+                          }
+
                           return custom_widgets.AdvancedAudioPlayer(
                             width: MediaQuery.sizeOf(context).width * 0.95,
                             height: MediaQuery.sizeOf(context).height * 0.95,
-                            urls: functions.extractPlaylistItems(
-                                GeneralGroup.episodesAudioByContentCall
-                                    .result(
-                                      advancedAudioPlayerEpisodesAudioByContentResponse
-                                          .jsonBody,
-                                    )!
-                                    .toList(),
-                                'audio'),
-                            titles: functions.extractPlaylistItems(
-                                GeneralGroup.episodesAudioByContentCall
-                                    .result(
-                                      advancedAudioPlayerEpisodesAudioByContentResponse
-                                          .jsonBody,
-                                    )!
-                                    .toList(),
-                                'name'),
+                            urls: urls,
+                            titles: titles,
                           );
                         },
                       ),

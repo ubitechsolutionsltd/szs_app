@@ -13,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '/app_state.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/custom_code/ui/app_toast.dart';
+import '/custom_code/ui/auth_gate.dart';
 import '/components/song_container_widget.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_widgets.dart';
@@ -71,6 +73,10 @@ class _AuthorProfileState extends State<AuthorProfile> {
   bool _truthy(dynamic value) => value == true || value == 1 || value == '1' || value == 'true';
 
   Future<void> _toggleFollow(bool current, int followers) async {
+    if (!isLoggedIn) {
+      promptLogin(context, 'Tafadhali ingia kwanza ili kumfuatilia mwandishi.');
+      return;
+    }
     setState(() {
       _following = !current;
       _followers = followers + (current ? -1 : 1);
@@ -81,9 +87,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
         _following = current;
         _followers = followers;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Imeshindikana. Jaribu tena.')),
-      );
+      AppToast.error(context, 'Imeshindikana. Jaribu tena.');
     }
   }
 
@@ -153,8 +157,9 @@ class _AuthorProfileState extends State<AuthorProfile> {
           style: TextStyle(fontFamily: 'SF Pro Display', color: palette.onAccent, fontSize: 44, fontWeight: FontWeight.w800)),
     );
     if (photo.isNotEmpty) {
+      final fallbackAvatar = avatar;
       avatar = ClipOval(
-        child: CachedNetworkImage(imageUrl: photo, width: 104, height: 104, fit: BoxFit.cover, errorWidget: (_, __, ___) => avatar),
+        child: CachedNetworkImage(imageUrl: photo, width: 104, height: 104, fit: BoxFit.cover, errorWidget: (_, __, ___) => fallbackAvatar),
       );
     }
 

@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/package_lists_component_widget.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/auth_gate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -196,6 +197,10 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
             if (_shouldSetState) safeSetState(() {});
             return;
           } else {
+            if (!isLoggedIn) {
+              promptLogin(context, 'Tafadhali ingia kwanza ili kununua kipindi hiki.');
+              return;
+            }
             if (FFAppState().walletcoin >=
                 valueOrDefault<int>(
                   functions.jsonValueToInteger(getJsonField(

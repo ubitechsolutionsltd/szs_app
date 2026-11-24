@@ -48,13 +48,14 @@ class HomeHeader extends StatelessWidget {
       ),
     );
     if (photo.isNotEmpty) {
+      final fallbackAvatar = avatar;
       avatar = ClipOval(
         child: CachedNetworkImage(
           imageUrl: photo,
           width: 46,
           height: 46,
           fit: BoxFit.cover,
-          errorWidget: (_, __, ___) => avatar,
+          errorWidget: (_, __, ___) => fallbackAvatar,
         ),
       );
     }

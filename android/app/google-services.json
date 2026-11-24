@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1067128048333-clfabkldsd3bq6380894ftrqem79u1eb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simulizi.ruhundwa",
+            "certificate_hash": "bb147057578b1dbe764136460ceb841325615701"
+          }
+        },
+        {
           "client_id": "1067128048333-tm7ucufsc4s6786q4g679qc3reavlafv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

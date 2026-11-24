@@ -250,24 +250,24 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Au',
     },
     'a1mkaptj': {
-      'sw': 'Tafadhari jaza barua pepe sahihi',
-      'en': 'Tafadhari jaza barua pepe sahihi',
+      'sw': 'Tafadhali jaza barua pepe sahihi',
+      'en': 'Tafadhali jaza barua pepe sahihi',
     },
     'h3holdcg': {
-      'sw': 'Tafadhari jaza barua pepe sahihi',
-      'en': 'Tafadhari jaza barua pepe sahihi',
+      'sw': 'Tafadhali jaza barua pepe sahihi',
+      'en': 'Tafadhali jaza barua pepe sahihi',
     },
     'jutdc41w': {
-      'sw': 'Tafadhari chaguo kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhari chaguo kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
+      'en': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
     },
     '381lm5sj': {
-      'sw': 'Tafadharinweka nywila sahihi',
-      'en': 'Tafadharinweka nywila sahihi',
+      'sw': 'Tafadhalinweka nywila sahihi',
+      'en': 'Tafadhalinweka nywila sahihi',
     },
     'ydzl450v': {
-      'sw': 'Tafadhari chaguo kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhari chaguo kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
+      'en': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
     },
     'ongo8hnn': {
       'sw': 'Hauna akaunti ?',
@@ -329,40 +329,40 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Au',
     },
     'fbdn8cn4': {
-      'sw': 'Tafadhari ingiza jina sahihi',
-      'en': 'Tafadhari ingiza jina sahihi',
+      'sw': 'Tafadhali ingiza jina sahihi',
+      'en': 'Tafadhali ingiza jina sahihi',
     },
     'pl1az6r6': {
-      'sw': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
+      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
     },
     'xgp5nyy1': {
-      'sw': 'Tafadhari ingiza',
-      'en': 'Tafadhari ingiza jina sahihi',
+      'sw': 'Tafadhali ingiza',
+      'en': 'Tafadhali ingiza jina sahihi',
     },
     'demerrz5': {
-      'sw': 'Please choose an option from the dropdown',
-      'en': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
+      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
     },
     '9ex6rlrs': {
-      'sw': 'Please enter valid email address',
-      'en': 'Tafadhari ingiza barua pepe sahihi',
+      'sw': 'Tafadhali ingiza barua pepe sahihi.',
+      'en': 'Tafadhali ingiza barua pepe sahihi',
     },
     'osdnm01b': {
-      'sw': 'Please enter valid email address',
-      'en': 'Tafadhari ingiza barua pepe sahihi',
+      'sw': 'Tafadhali ingiza barua pepe sahihi.',
+      'en': 'Tafadhali ingiza barua pepe sahihi',
     },
     '37k9j22e': {
-      'sw': 'Please choose an option from the dropdown',
-      'en': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
+      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
     },
     'ghr1qg5p': {
-      'sw': 'Please enter valid password',
-      'en': 'Tafadhari ingiza nywila sahihi',
+      'sw': 'Tafadhali ingiza nywila sahihi.',
+      'en': 'Tafadhali ingiza nywila sahihi',
     },
     '0t64c0vx': {
-      'sw': 'Please choose an option from the dropdown',
-      'en': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
+      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
     },
     'vk4bn3cf': {
       'sw': 'Tayari una akaunti ? ',
@@ -398,12 +398,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Endelea',
     },
     'nqecveoe': {
-      'sw': 'Tafadhari ingiza barua pepe sahihi',
-      'en': 'Tafadhari ingiza barua pepe sahihi',
+      'sw': 'Tafadhali ingiza barua pepe sahihi',
+      'en': 'Tafadhali ingiza barua pepe sahihi',
     },
     'ughwzogz': {
-      'sw': 'Tafadhari chagua kutoka machaguo uliyopewa',
-      'en': 'Tafadhari chagua kutoka machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka machaguo uliyopewa',
+      'en': 'Tafadhali chagua kutoka machaguo uliyopewa',
     },
     'aa4jctnz': {
       'sw': 'Mwanzo',
@@ -413,15 +413,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // VerifyCodePage
   {
     '6zfweh9y': {
-      'sw': 'The confimation code was sent via email       ',
+      'sw': 'Nambari ya uthibitisho imetumwa kwa barua pepe yako.',
       'en': '',
     },
     'smi16b8z': {
-      'sw': 'Code sent to ronaldrichards@gmail.com',
+      'sw': 'Nambari ya uthibitisho imetumwa kwenye barua pepe yako.',
       'en': '',
     },
     'xnatvojx': {
-      'sw': 'Please enter a valid OTP',
+      'sw': 'Tafadhali ingiza msimbo sahihi wa uthibitisho.',
       'en': '',
     },
     'g6fodzyt': {
@@ -444,7 +444,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // ResetPassPage
   {
     'jl4yxipx': {
-      'sw': 'Create your new password to Login',
+      'sw': 'Weka nywila yako mpya ili uingie.',
       'en': '',
     },
     'yjcptyr3': {
@@ -468,19 +468,19 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'spbo1zcl': {
-      'sw': 'Please enter valid new password',
+      'sw': 'Tafadhali ingiza nywila mpya sahihi.',
       'en': '',
     },
     '77b3yijv': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'caxj8eoj': {
-      'sw': 'Please enter valid confirm password',
+      'sw': 'Tafadhali ingiza nywila ya uthibitisho sahihi.',
       'en': '',
     },
     'foaj4cbi': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'd7laulri': {
@@ -495,11 +495,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'z8ymq7ag': {
-      'sw': 'Choose artists you like.',
+      'sw': 'Chagua waandishi unaowapenda.',
       'en': '',
     },
     'pgvdccls': {
-      'sw': 'Your experience will improve the more you listen.',
+      'sw': 'Uzoefu wako utazidi kuboreka unavyozidi kusikiliza.',
       'en': '',
     },
     'eoloksn6': {
@@ -742,27 +742,27 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'u1dcr77e': {
-      'sw': 'Please enter valid first name ',
+      'sw': 'Tafadhali ingiza jina sahihi.',
       'en': '',
     },
     '99hnq2x6': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'scmyok19': {
-      'sw': 'Please enter valid last name ',
+      'sw': 'Tafadhali ingiza jina la familia sahihi.',
       'en': '',
     },
     'kw8w6ryv': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     '4ne2jjm8': {
-      'sw': 'Please enter valid email address',
+      'sw': 'Tafadhali ingiza barua pepe sahihi.',
       'en': '',
     },
     '7rxlkh15': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'wg04a8ua': {
@@ -812,19 +812,19 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'ycy43bue': {
-      'sw': 'Please enter valid new password',
+      'sw': 'Tafadhali ingiza nywila mpya sahihi.',
       'en': '',
     },
     'mdtwkagy': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'gxydvmrr': {
-      'sw': 'Please enter valid confirm password',
+      'sw': 'Tafadhali ingiza nywila ya uthibitisho sahihi.',
       'en': '',
     },
     'fmzsx83i': {
-      'sw': 'Please choose an option from the dropdown',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
       'en': '',
     },
     'lc1yxhac': {
@@ -933,12 +933,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Andika mrejesho wako...',
     },
     '7bp3bdra': {
-      'sw': 'Tafadhari ingiza mrejesho sahihi',
-      'en': 'Tafadhari ingiza mrejesho sahihi',
+      'sw': 'Tafadhali ingiza mrejesho sahihi',
+      'en': 'Tafadhali ingiza mrejesho sahihi',
     },
     '5vojvdyx': {
-      'sw': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhari chagua kutoka kwenye machaguo uliyopewa',
+      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
+      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
     },
     '74eng8tt': {
       'sw': 'Wasilisha',
@@ -1154,8 +1154,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Nywila Imebadilika !',
     },
     'r0h1adas': {
-      'sw': 'Nywila yako imebadilika kikamilifum, itumie kuingia kwenye app.',
-      'en': 'Nywila yako imebadilika kikamilifum, itumie kuingia kwenye app.',
+      'sw': 'Nywila yako imebadilika kikamilifu, itumie kuingia kwenye app.',
+      'en': 'Nywila yako imebadilika kikamilifu, itumie kuingia kwenye app.',
     },
     '5pfvtb4m': {
       'sw': 'Sawa',
@@ -1209,8 +1209,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // CustomLoadingComponent
   {
     'p0rgp7cf': {
-      'sw': 'Loading ...',
-      'en': 'Loading ...',
+      'sw': 'Inapakia ...',
+      'en': 'Inapakia ...',
     },
   },
   // BalanceComponent
@@ -1315,7 +1315,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'x3ub8moy': {
-      'sw': 'We’d like to send you notifications for updates and alerts',
+      'sw': 'Tungependa kukutumia arifa za taarifa na masasisho.',
       'en': '',
     },
     '7cttp7t1': {

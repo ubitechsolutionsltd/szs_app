@@ -62,13 +62,7 @@ class FullPlayer extends StatelessWidget {
                 Text(PlayerStrings.nowPlaying.toUpperCase(),
                     style: theme.labelSmall.copyWith(color: pal.muted, letterSpacing: 1.4)),
                 const SizedBox(height: 16),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 24, offset: const Offset(0, 12))],
-                  ),
-                  child: PlayerArtwork(url: item.artUrl, size: artSize, radius: 24),
-                ),
+                PlayerArtwork(url: item.artUrl, size: artSize, radius: 24, playing: snap.playing),
                 const SizedBox(height: 24),
                 Text(item.title,
                     textAlign: TextAlign.center,
@@ -198,20 +192,16 @@ class _Transport extends StatelessWidget {
           height: 68,
           child: snap.loading && !snap.playing
               ? Center(child: CircularProgressIndicator(color: pal.accent))
-              : Material(
+              : _PlayButton(
+                  playing: snap.playing,
                   color: pal.accent,
-                  shape: const CircleBorder(),
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    onTap: service.toggle,
-                    child: Icon(snap.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                        size: 40, color: pal.onAccent),
-                  ),
+                  onColor: pal.onAccent,
+                  onTap: service.toggle,
                 ),
         ),
         IconButton(
           iconSize: 30,
-          tooltip: 'Songa sekunde 30',
+          tooltip: 'Ruka sekunde 30',
           icon: Icon(Icons.forward_30_rounded, color: pal.text),
           onPressed: () => service.seekRelative(const Duration(seconds: 30)),
         ),
@@ -227,6 +217,94 @@ class _Transport extends StatelessWidget {
           onPressed: service.cycleRepeat,
         ),
       ],
+    );
+  }
+}
+
+/// The central play/pause button: a soft pulsing glow while playing, a tap
+/// bounce, and a scale+fade swap between the play and pause glyphs.
+class _PlayButton extends StatefulWidget {
+  const _PlayButton({required this.playing, required this.color, required this.onColor, required this.onTap});
+
+  final bool playing;
+  final Color color;
+  final Color onColor;
+  final VoidCallback onTap;
+
+  @override
+  State<_PlayButton> createState() => _PlayButtonState();
+}
+
+class _PlayButtonState extends State<_PlayButton> with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 1600))
+    ..repeat();
+  bool _pressed = false;
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedBuilder(
+        animation: _pulse,
+        builder: (context, child) {
+          final t = widget.playing ? _pulse.value : 0.0;
+          return Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              if (widget.playing)
+                Container(
+                  width: 68 + t * 22,
+                  height: 68 + t * 22,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: widget.color.withValues(alpha: (1 - t) * 0.22),
+                  ),
+                ),
+              child!,
+            ],
+          );
+        },
+        child: AnimatedScale(
+          scale: _pressed ? 0.92 : 1.0,
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOut,
+          child: Material(
+            color: widget.color,
+            shape: const CircleBorder(),
+            elevation: 6,
+            shadowColor: widget.color.withValues(alpha: 0.5),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: widget.onTap,
+              child: SizedBox(
+                width: 68,
+                height: 68,
+                child: Center(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 220),
+                    transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                    child: Icon(
+                      widget.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                      key: ValueKey(widget.playing),
+                      size: 40,
+                      color: widget.onColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

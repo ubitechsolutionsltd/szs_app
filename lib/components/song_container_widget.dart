@@ -449,7 +449,7 @@ class _SongContainerWidgetState extends State<SongContainerWidget> {
                         child: Text(
                           valueOrDefault<String>(
                             widget.story?.categoryName,
-                            'Category',
+                            'Bila kundi',
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

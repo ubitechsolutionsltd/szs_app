@@ -38,13 +38,14 @@ class SettingsHeader extends StatelessWidget {
           style: TextStyle(fontFamily: 'SF Pro Display', color: palette.onAccent, fontSize: 26, fontWeight: FontWeight.w800)),
     );
     if (state.userphoto.isNotEmpty) {
+      final fallbackAvatar = avatar;
       avatar = ClipOval(
         child: CachedNetworkImage(
           imageUrl: state.userphoto,
           width: 60,
           height: 60,
           fit: BoxFit.cover,
-          errorWidget: (_, __, ___) => avatar,
+          errorWidget: (_, __, ___) => fallbackAvatar,
         ),
       );
     }

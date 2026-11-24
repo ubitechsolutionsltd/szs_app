@@ -218,7 +218,7 @@ class _ActiveRow extends StatelessWidget {
                     letterSpacing: 0)),
             const SizedBox(height: 8),
             if (failed)
-              Text(state.locked ? 'Ifungue kwanza ili kuipakua.' : 'Imeshindikana. Gusa kujaribu tena.',
+              Text(state.locked ? 'Fungua kwanza ili upakue.' : 'Imeshindikana. Gusa kujaribu tena.',
                   style: theme.bodySmall
                       .override(fontFamily: 'SF Pro Display', color: palette.error, fontSize: 13, letterSpacing: 0))
             else

@@ -642,6 +642,7 @@ class ApiManager {
         _apiCache[callOptions] = result;
       }
     } catch (e) {
+      if (kDebugMode) debugPrint('API call to $apiUrl failed: $e');
       result = ApiCallResponse(null, {}, -1, exception: e);
     }
 

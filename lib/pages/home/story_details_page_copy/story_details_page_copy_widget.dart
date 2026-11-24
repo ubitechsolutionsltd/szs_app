@@ -1,5 +1,6 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
+import '/custom_code/ui/auth_gate.dart';
 import '/components/custom_loading_indicator_widget.dart';
 import '/components/episode_list_item_widget.dart';
 import '/components/no_result_found_comp_widget.dart';
@@ -213,6 +214,11 @@ class _StoryDetailsPageCopyWidgetState extends State<StoryDetailsPageCopyWidget>
                                   ),
                                   showLoadingIndicator: true,
                                   onPressed: () async {
+                                    if (!isLoggedIn) {
+                                      promptLogin(context,
+                                          'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+                                      return;
+                                    }
                                     var _shouldSetState = false;
                                     _model.addremoveBookmarkRes =
                                         await GeneralGroup
@@ -288,7 +294,20 @@ class _StoryDetailsPageCopyWidgetState extends State<StoryDetailsPageCopyWidget>
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
-                                          child: WhenEverBottomWidget(),
+                                          child: WhenEverBottomWidget(
+                                            story: widget.story,
+                                            episodes: widget.episodes,
+                                            onToggleSort: () {
+                                              final eps = widget.episodes;
+                                              if (eps is List && eps.length > 1) {
+                                                final reversed = eps.reversed.toList();
+                                                eps
+                                                  ..clear()
+                                                  ..addAll(reversed);
+                                              }
+                                              safeSetState(() {});
+                                            },
+                                          ),
                                         ),
                                       ),
                                     );

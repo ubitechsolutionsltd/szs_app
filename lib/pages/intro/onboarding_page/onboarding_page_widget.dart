@@ -2,6 +2,7 @@ import '/backend/schema/structs/index.dart';
 import '/custom_code/ui/glass.dart';
 import '/custom_code/ui/app_logo.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_toast.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -55,36 +56,19 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
             FFAppState().isLogin = false;
             FFAppState().authToken = '';
             FFAppState().update(() {});
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  GeneralGroup.loginCall.message(
+            AppToast.error(
+              context,
+              GeneralGroup.loginCall.message(
                     (_model.autologinresponse?.jsonBody ?? ''),
-                  )!,
-                  style: TextStyle(
-                    fontFamily: 'SF Pro Display',
-                    color: Colors.white,
-                  ),
-                ),
-                duration: Duration(milliseconds: 4000),
-                backgroundColor: FlutterFlowTheme.of(context).error,
-              ),
+                  ) ??
+                  'Imeshindikana kuingia.',
             );
             return;
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Oops ! Technical Error. Try Again.',
-                style: TextStyle(
-                  fontFamily: 'SF Pro Display',
-                  color: Colors.white,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FlutterFlowTheme.of(context).error,
-            ),
+          AppToast.error(
+            context,
+            'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
           );
         }
 
@@ -106,8 +90,11 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
 
   void _finishIntro() {
     FFAppState().isIntro = true;
+    // Browsing is open to everyone; login is only required for actions that
+    // need an account (bookmarking, following, buying an episode).
+    FFAppState().skipUser = true;
     FFAppState().update(() {});
-    context.goNamed(LoginPageWidget.routeName);
+    context.goNamed(HomePageWidget.routeName);
   }
 
   /// One onboarding slide: artwork on a glass card (a branded fallback when the image cannot load), then text.

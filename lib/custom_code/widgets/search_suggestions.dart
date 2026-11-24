@@ -38,7 +38,7 @@ class SearchSuggestions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Chunguza kwa kundi'),
+        const SectionHeader(title: 'Vinjari kwa Kundi'),
         const SizedBox(height: 12),
         AsyncSection(
           load: _categories,

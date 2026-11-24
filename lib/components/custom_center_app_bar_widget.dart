@@ -12,7 +12,7 @@ class CustomCenterAppBarWidget extends StatefulWidget {
     required this.backIcon,
     required this.addIcon,
     required this.onTapAdd,
-  }) : this.title = title ?? 'Title';
+  }) : this.title = title ?? 'Bila jina';
 
   final String title;
   final bool? backIcon;
@@ -118,7 +118,7 @@ class _CustomCenterAppBarWidgetState extends State<CustomCenterAppBarWidget> {
               child: Text(
                 valueOrDefault<String>(
                   widget.title,
-                  'Title',
+                  'Bila jina',
                 ),
                 maxLines: 1,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(

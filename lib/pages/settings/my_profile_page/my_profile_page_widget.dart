@@ -86,13 +86,14 @@ class _MyProfilePageWidgetState extends State<MyProfilePageWidget> {
           style: TextStyle(fontFamily: 'SF Pro Display', color: palette.onAccent, fontSize: 40.0, fontWeight: FontWeight.w800)),
     );
     if (state.userphoto.isNotEmpty) {
+      final fallbackAvatar = avatar;
       avatar = ClipOval(
         child: CachedNetworkImage(
           imageUrl: state.userphoto,
           width: 96.0,
           height: 96.0,
           fit: BoxFit.cover,
-          errorWidget: (_, __, ___) => avatar,
+          errorWidget: (_, __, ___) => fallbackAvatar,
         ),
       );
     }

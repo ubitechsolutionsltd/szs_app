@@ -27,7 +27,7 @@ class HomeTrending extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: height ?? 262,
+      height: height ?? 274,
       child: AsyncSection(
         load: _load,
         loading: ListView.separated(

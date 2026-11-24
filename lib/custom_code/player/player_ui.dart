@@ -12,7 +12,7 @@ import 'player_service.dart';
 import 'playlist_store.dart';
 
 class PlayerStrings {
-  static const nowPlaying = 'Inacheza sasa';
+  static const nowPlaying = 'Unasikiliza';
   static const queue = 'Foleni';
   static const queueEmpty = 'Foleni ni tupu';
   static const speed = 'Kasi';
@@ -30,7 +30,7 @@ class PlayerStrings {
   static const cancel = 'Ghairi';
   static const remove = 'Ondoa';
   static const added = 'Imeongezwa kwenye orodha';
-  static const nothingPlaying = 'Hakuna kinachochezwa';
+  static const nothingPlaying = 'Bado hakuna kinachocheza';
   static const locked = 'Simulizi hii imefungwa. Ifungue kwanza ili kuisikiliza.';
   static const nextLocked = 'Sehemu zinazofuata zimefungwa. Zifungue ili kuendelea.';
   static const offline = 'Hakuna mtandao. Pakua simulizi ili kusikiliza bila mtandao.';
@@ -60,36 +60,119 @@ String formatDuration(Duration d) {
   return hours > 0 ? '$hours:$minutes:$seconds' : '$minutes:$seconds';
 }
 
-class PlayerArtwork extends StatelessWidget {
-  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16});
+/// Story artwork that breathes and glows gently while playing, and
+/// crossfades when the track changes — gives the player a sense of life
+/// instead of a static image.
+class PlayerArtwork extends StatefulWidget {
+  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16, this.playing = false});
 
   final String url;
   final double size;
   final double radius;
+  final bool playing;
+
+  @override
+  State<PlayerArtwork> createState() => _PlayerArtworkState();
+}
+
+class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.playing) _controller.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayerArtwork old) {
+    super.didUpdateWidget(old);
+    if (widget.playing && !_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.playing && _controller.isAnimating) {
+      _controller.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = FlutterFlowTheme.of(context);
     final pal = AppPalette.of(context);
     final placeholder = Container(
-      width: size,
-      height: size,
-      color: pal.outline,
-      child: Icon(Icons.headphones_rounded, color: pal.muted, size: size * 0.4),
+      width: widget.size,
+      height: widget.size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.lerp(pal.accent, Colors.black, 0.08)!,
+            Color.lerp(pal.accent, Colors.black, 0.55)!,
+          ],
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: widget.size * 0.56,
+          height: widget.size * 0.56,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withValues(alpha: 0.12),
+          ),
+          child: Icon(Icons.headphones_rounded, color: Colors.white.withValues(alpha: 0.92), size: widget.size * 0.3),
+        ),
+      ),
     );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: url.isEmpty
-          ? placeholder
-          : CachedNetworkImage(
-              imageUrl: url,
-              width: size,
-              height: size,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => placeholder,
-              errorWidget: (_, __, ___) => placeholder,
+    final image = widget.url.isEmpty
+        ? placeholder
+        : CachedNetworkImage(
+            imageUrl: widget.url,
+            width: widget.size,
+            height: widget.size,
+            fit: BoxFit.cover,
+            placeholder: (_, __) => placeholder,
+            errorWidget: (_, __, ___) => placeholder,
+          );
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final t = _controller.value;
+        return Transform.scale(
+          scale: 1.0 + t * 0.03,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.radius),
+              boxShadow: [
+                BoxShadow(
+                  color: pal.accent.withValues(alpha: 0.2 + t * 0.2),
+                  blurRadius: 24 + t * 16,
+                  spreadRadius: -4 + t * 2,
+                  offset: const Offset(0, 10),
+                ),
+                const BoxShadow(color: Colors.black54, blurRadius: 24, offset: Offset(0, 12)),
+              ],
             ),
+            child: child,
+          ),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(widget.radius),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 420),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          child: KeyedSubtree(key: ValueKey(widget.url), child: image),
+        ),
+      ),
     );
   }
 }

@@ -14,7 +14,7 @@ class ProfContainerWidget extends StatefulWidget {
     this.onTap,
   })  : this.opImg = opImg ??
             'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/tune-track-music-app-omyrkn/assets/2cvg3kv46zn2/pr_ic.svg',
-        this.opName = opName ?? 'My profile';
+        this.opName = opName ?? 'Wasifu wangu';
 
   final String opImg;
   final String opName;
@@ -100,7 +100,7 @@ class _ProfContainerWidgetState extends State<ProfContainerWidget> {
                       child: Text(
                         valueOrDefault<String>(
                           widget.opName,
-                          'My profile',
+                          'Wasifu wangu',
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
