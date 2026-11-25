@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
@@ -67,7 +68,8 @@ class PlayerService {
   static const _sessionKey = 'szs.player.session';
   static const _resumePrefix = 'szs.resume.';
 
-  final AudioPlayer player = AudioPlayer();
+  final AudioPlayer player = AudioPlayer(handleInterruptions: false);
+  bool _resumeAfterInterruption = false;
   final PlayQueue _queue = PlayQueue();
   final ValueNotifier<PlayerSnapshot> snapshot = ValueNotifier(const PlayerSnapshot());
   final StreamController<PlayableItem> _completions = StreamController.broadcast();
@@ -108,6 +110,7 @@ class PlayerService {
     _queue.isPlayable =
         (item) => item.hasRemoteUrl || DownloadManager.instance.isDownloaded(item.id);
 
+    await _setupAudioSession();
     player.playerStateStream.listen(_onPlayerState);
     player.playbackEventStream.listen((_) {}, onError: (Object e, StackTrace s) {
       debugPrint('Playback error: $e');
@@ -117,6 +120,50 @@ class PlayerService {
 
     await _restoreSession();
     _publish();
+  }
+
+  /// Configures the system audio session for spoken audio and reacts to interruptions (another app's sound, a
+  /// call, an alarm): pause when interrupted and resume by itself when the interruption is over. Short sounds
+  /// (notifications) lower the volume instead of stopping the story. Headphones unplugged pauses.
+  Future<void> _setupAudioSession() async {
+    try {
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.speech());
+
+      session.interruptionEventStream.listen((event) {
+        if (event.begin) {
+          switch (event.type) {
+            case AudioInterruptionType.duck:
+              unawaited(player.setVolume(0.35));
+            case AudioInterruptionType.pause:
+            case AudioInterruptionType.unknown:
+              if (player.playing) {
+                _resumeAfterInterruption = true;
+                unawaited(pause());
+              }
+          }
+        } else {
+          switch (event.type) {
+            case AudioInterruptionType.duck:
+              unawaited(player.setVolume(1.0));
+            case AudioInterruptionType.pause:
+            case AudioInterruptionType.unknown:
+              unawaited(player.setVolume(1.0));
+              if (_resumeAfterInterruption) {
+                _resumeAfterInterruption = false;
+                unawaited(play());
+              }
+          }
+        }
+      });
+
+      session.becomingNoisyEventStream.listen((_) {
+        _resumeAfterInterruption = false;
+        if (player.playing) unawaited(pause());
+      });
+    } catch (e) {
+      debugPrint('Audio session setup failed: $e');
+    }
   }
 
   // ---- starting playback ----------------------------------------------------------------------------------
@@ -162,6 +209,7 @@ class PlayerService {
   // ---- transport ------------------------------------------------------------------------------------------
 
   Future<void> play() async {
+    _resumeAfterInterruption = false; // the user (or the resume itself) is in control again
     await init();
     final current = _queue.current;
     if (current == null) return;
