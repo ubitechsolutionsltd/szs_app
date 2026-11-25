@@ -33,6 +33,10 @@ class AppTokens {
   static const Color darkBorder = Color(0xFF253A5E);
   static const Color darkAccent = Color(0xFF3B9BF0);
 
+  // ── Coins (sarafu): sky-to-brand blue, so money never introduces an off-theme colour ──────────────────────────
+  static const Color coinLight = Color(0xFF3FB4FF);
+  static const List<Color> coinGradient = [coinLight, brandPrimary];
+
   // ── Status ─────────────────────────────────────────────────────────────────────────────────────────────────
   static const Color success = Color(0xFF1EAA70);
   static const Color warning = Color(0xFFE7A33E);

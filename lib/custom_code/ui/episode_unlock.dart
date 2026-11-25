@@ -153,9 +153,9 @@ class _AnimatedLockBadgeState extends State<AnimatedLockBadge> with SingleTicker
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFFFFD36B), Color(0xFFF2A21B)],
+                    colors: [Color(0xFF9BDCFF), Color(0xFF3FB4FF)],
                   ),
-                  boxShadow: [BoxShadow(color: const Color(0xFFF2A21B).withValues(alpha: 0.55), blurRadius: 28, spreadRadius: 2)],
+                  boxShadow: [BoxShadow(color: const Color(0xFF3FB4FF).withValues(alpha: 0.55), blurRadius: 28, spreadRadius: 2)],
                 ),
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 420),
@@ -164,7 +164,7 @@ class _AnimatedLockBadgeState extends State<AnimatedLockBadge> with SingleTicker
                     widget.open ? Icons.lock_open_rounded : Icons.lock_rounded,
                     key: ValueKey(widget.open),
                     size: s * 0.5,
-                    color: const Color(0xFF3A2500),
+                    color: const Color(0xFF07549A),
                   ),
                 ),
               ),
@@ -182,7 +182,7 @@ class _AnimatedLockBadgeState extends State<AnimatedLockBadge> with SingleTicker
       height: d,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFFFFD36B).withValues(alpha: (1 - p) * 0.45), width: 2),
+        border: Border.all(color: const Color(0xFF9BDCFF).withValues(alpha: (1 - p) * 0.45), width: 2),
       ),
     );
   }
@@ -205,7 +205,7 @@ class CoinPill extends StatelessWidget {
         border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.toll_rounded, size: 17, color: warn ? const Color(0xFFFFB4B4) : const Color(0xFFFFD36B)),
+        Icon(Icons.toll_rounded, size: 17, color: warn ? const Color(0xFFFFB4B4) : const Color(0xFF9BDCFF)),
         const SizedBox(width: 6),
         Text(label,
             style: const TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white, fontSize: 13.5, fontWeight: FontWeight.w700)),
@@ -434,7 +434,7 @@ class _UnlockingDialogState extends State<_UnlockingDialog> with SingleTickerPro
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white.withValues(alpha: 0.85), fontSize: 14))
               else if (!failed)
-                const SizedBox(width: 120, child: LinearProgressIndicator(minHeight: 3, color: Color(0xFFFFD36B), backgroundColor: Colors.white24)),
+                const SizedBox(width: 120, child: LinearProgressIndicator(minHeight: 3, color: Color(0xFF9BDCFF), backgroundColor: Colors.white24)),
             ]),
           ),
         ),
@@ -466,7 +466,7 @@ class _SparklePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
-    final paint = Paint()..color = const Color(0xFFFFD36B).withValues(alpha: (1 - t).clamp(0.0, 1.0));
+    final paint = Paint()..color = const Color(0xFF9BDCFF).withValues(alpha: (1 - t).clamp(0.0, 1.0));
     for (var i = 0; i < 14; i++) {
       final a = i / 14 * 2 * math.pi;
       final r = 46 + t * (40 + (i % 3) * 14);

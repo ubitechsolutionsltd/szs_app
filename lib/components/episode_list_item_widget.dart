@@ -71,16 +71,16 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
       trailing = Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
         decoration: BoxDecoration(
-          color: palette.warning.withValues(alpha: 0.16),
+          color: palette.accent.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.lock_rounded, color: palette.warning, size: 14.0),
+          Icon(Icons.lock_rounded, color: palette.accent, size: 14.0),
           SizedBox(width: 4.0),
           Text('$price',
               style: theme.bodySmall.override(
                 fontFamily: 'SF Pro Display',
-                color: palette.warning,
+                color: palette.accent,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,

@@ -111,14 +111,14 @@ class _PackageListsComponentWidgetState
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
                       decoration: BoxDecoration(
-                        color: AppPalette.of(context).warning.withValues(alpha: 0.16),
+                        color: AppPalette.of(context).accent.withValues(alpha: 0.16),
                         borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(color: AppPalette.of(context).warning.withValues(alpha: 0.5), width: 0.8),
+                        border: Border.all(color: AppPalette.of(context).accent.withValues(alpha: 0.5), width: 0.8),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.toll_rounded, color: AppPalette.of(context).warning, size: 20.0),
+                          Icon(Icons.toll_rounded, color: AppPalette.of(context).accent, size: 20.0),
                           SizedBox(width: 6.0),
                           Text(
                             '${FFAppState().walletcoin}',
