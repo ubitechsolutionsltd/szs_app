@@ -128,7 +128,21 @@ class PlayerService {
   Future<void> _setupAudioSession() async {
     try {
       final session = await AudioSession.instance;
-      await session.configure(const AudioSessionConfiguration.speech());
+      // Spoken audio that does NOT mix with other apps: only then does iOS show the app on the lock screen and
+      // in Control Center, and other apps' audio interrupts it (we resume afterwards, see below).
+      await session.configure(const AudioSessionConfiguration(
+        avAudioSessionCategory: AVAudioSessionCategory.playback,
+        avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.none,
+        avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+        avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+        avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+        androidAudioAttributes: AndroidAudioAttributes(
+          contentType: AndroidAudioContentType.speech,
+          usage: AndroidAudioUsage.media,
+        ),
+        androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+        androidWillPauseWhenDucked: true,
+      ));
 
       session.interruptionEventStream.listen((event) {
         if (event.begin) {
