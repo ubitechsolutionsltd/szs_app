@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import '/custom_code/ui/app_components.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/social_auth_component_widget.dart';
@@ -290,16 +289,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                           },
                         ),
                       ),
-                      // Google sign-in is hidden on iOS: the App Store then only sees the app's own account system
-                      // (guideline 4.8), so Sign in with Apple is not required.
-                      if (defaultTargetPlatform != TargetPlatform.iOS) ...[
-                        LabeledDivider(label: FFLocalizations.of(context).getText('6yippc7s' /* Au */)),
-                        wrapWithModel(
-                          model: _model.socialAuthComponentModel,
-                          updateCallback: () => safeSetState(() {}),
-                          child: SocialAuthComponentWidget(),
-                        ),
-                      ],
+                      LabeledDivider(label: FFLocalizations.of(context).getText('6yippc7s' /* Au */)),
+                      wrapWithModel(
+                        model: _model.socialAuthComponentModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: SocialAuthComponentWidget(),
+                      ),
                     ],
                   ),
                 ),

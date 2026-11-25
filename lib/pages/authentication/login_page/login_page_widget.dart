@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_toast.dart';
 import '/auth/firebase_auth/auth_util.dart';
@@ -305,16 +304,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                           },
                         ),
                       ),
-                      // Google sign-in is hidden on iOS: the App Store then only sees the app's own account system
-                      // (guideline 4.8), so Sign in with Apple is not required.
-                      if (defaultTargetPlatform != TargetPlatform.iOS) ...[
-                        LabeledDivider(label: FFLocalizations.of(context).getText('0exjuge8' /* Au */)),
-                        wrapWithModel(
-                          model: _model.socialAuthComponentModel,
-                          updateCallback: () => safeSetState(() {}),
-                          child: SocialAuthComponentWidget(),
-                        ),
-                      ],
+                      LabeledDivider(label: FFLocalizations.of(context).getText('0exjuge8' /* Au */)),
+                      wrapWithModel(
+                        model: _model.socialAuthComponentModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: SocialAuthComponentWidget(),
+                      ),
                     ],
                   ),
                 ),
