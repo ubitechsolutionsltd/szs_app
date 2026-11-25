@@ -28,6 +28,15 @@ class MiniPlayerBar extends StatelessWidget {
   final double? height;
   final Future Function()? onTap;
 
+  /// Id of the episode whose bar was just swiped away / closed. The bar disappears at once, before the player has
+  /// finished stopping (a Dismissible must leave the tree in the same frame it is dismissed).
+  static final ValueNotifier<int?> _hiddenId = ValueNotifier<int?>(null);
+
+  void _close(PlayerService service, int id) {
+    _hiddenId.value = id;
+    service.stopAndClear();
+  }
+
   void _openFullPlayer(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
@@ -46,14 +55,21 @@ class MiniPlayerBar extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     final pal = AppPalette.of(context);
 
-    return ValueListenableBuilder<PlayerSnapshot>(
+    return ValueListenableBuilder<int?>(
+      valueListenable: _hiddenId,
+      builder: (context, hiddenId, _) => ValueListenableBuilder<PlayerSnapshot>(
       valueListenable: service.snapshot,
       builder: (context, snap, _) {
         final item = snap.item;
-        if (item == null) return const SizedBox.shrink();
+        if (item == null) {
+          // Nothing is loaded any more: forget the dismissal so the next episode shows its bar again.
+          if (hiddenId != null) Future.microtask(() => _hiddenId.value = null);
+          return const SizedBox.shrink();
+        }
+        if (item.id == hiddenId) return const SizedBox.shrink();
 
         final hasError = snap.error != PlayerErrorCode.none;
-        return Semantics(
+        final bar = Semantics(
           container: true,
           label: trs('sem_now_playing', args: {'title': item.title}),
           child: DecoratedBox(
@@ -135,6 +151,13 @@ class MiniPlayerBar extends StatelessWidget {
                                 icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 28),
                                 onPressed: service.next,
                               ),
+                              IconButton(
+                                tooltip: trs('dismiss_player'),
+                                constraints: const BoxConstraints(minWidth: 40, minHeight: 48),
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.close_rounded, color: Colors.white.withValues(alpha: 0.75), size: 22),
+                                onPressed: () => _close(service, item.id),
+                              ),
                             ],
                           ),
                         ),
@@ -161,7 +184,16 @@ class MiniPlayerBar extends StatelessWidget {
             ),
           ),
         );
+        return Dismissible(
+          key: ValueKey('mini_player_${item.id}'),
+          direction: DismissDirection.horizontal,
+          dismissThresholds: const {DismissDirection.startToEnd: 0.35, DismissDirection.endToStart: 0.35},
+          onDismissed: (_) => _close(service, item.id),
+          child: bar,
+        );
       },
+    ),
     );
   }
 }
+

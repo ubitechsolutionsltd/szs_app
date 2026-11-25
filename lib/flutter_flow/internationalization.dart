@@ -355,6 +355,7 @@ final kTranslationsMap = <String, Map<String, String>>{
   'delete_all': {'sw': 'Futa zote', 'en': 'Delete all'},
   'delete_all_msg': {'sw': 'Simulizi zote ulizopakua zitafutwa kwenye simu hii.', 'en': 'All downloaded stories will be removed from this phone.'},
   'delete_all_q': {'sw': 'Futa zote?', 'en': 'Delete all?'},
+  'dismiss_player': {'sw': 'Ondoa kicheza', 'en': 'Close player'},
   'dl_failed_tap': {'sw': 'Imeshindikana. Gusa kujaribu tena.', 'en': 'Failed. Tap to try again.'},
   'dl_hint': {'sw': 'Gusa “Pakua” kwenye simulizi ili kusikiliza bila mtandao.', 'en': 'Tap “Download” on a story to listen offline.'},
   'dl_started': {'sw': 'Kupakua kumeanza.', 'en': 'Download started.'},
