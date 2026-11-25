@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import '/backend/api_requests/api_calls.dart';
+import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_widgets.dart';
@@ -28,12 +29,12 @@ class HomeCategories extends StatelessWidget {
     return GeneralGroup.categoriesCall.result(response.jsonBody)?.toList() ?? [];
   }
 
-  static const _grid = SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2,
-    mainAxisSpacing: 14,
-    crossAxisSpacing: 14,
-    mainAxisExtent: 84,
-  );
+  static SliverGridDelegate _grid(BuildContext context) => SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: Adaptive.tileColumns(context),
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 14,
+        mainAxisExtent: 84,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +47,18 @@ class HomeCategories extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          gridDelegate: _grid,
-          itemCount: 4,
+          gridDelegate: _grid(context),
+          itemCount: Adaptive.tileColumns(context),
           itemBuilder: (_, __) => const SkeletonBox(radius: 22),
         ),
         empty: StateMessage(icon: Icons.category_outlined, message: trs('no_categories')),
         builder: (context, categories) {
-          final visible = categories.take(4).toList();
+          final visible = categories.take(Adaptive.tileColumns(context)).toList();
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            gridDelegate: _grid,
+            gridDelegate: _grid(context),
             itemCount: visible.length,
             itemBuilder: (context, index) {
               final category = visible[index];

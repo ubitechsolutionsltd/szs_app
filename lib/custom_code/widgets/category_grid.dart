@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import '/backend/api_requests/api_calls.dart';
+import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_widgets.dart';
@@ -51,7 +52,7 @@ class CategoryGrid extends StatelessWidget {
         loading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: GridView.count(
-            crossAxisCount: 2,
+            crossAxisCount: Adaptive.tileColumns(context),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 14,
@@ -67,8 +68,8 @@ class CategoryGrid extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: categories.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: Adaptive.tileColumns(context),
               mainAxisSpacing: 14,
               crossAxisSpacing: 14,
               mainAxisExtent: 84,

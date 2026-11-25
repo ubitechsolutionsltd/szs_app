@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/wave_background.dart';
@@ -50,7 +51,8 @@ class FullPlayer extends StatelessWidget {
             builder: (context, snap, _) {
               final item = snap.item;
               return Stack(fit: StackFit.expand, children: [
-                if (item != null && item.artUrl.isNotEmpty) _blurredCover(item.artUrl),
+                if (item != null && item.artUrl.isNotEmpty)
+                  _blurredCover(item.artUrl),
                 // Navy wash so text stays readable whatever the cover looks like.
                 const DecoratedBox(
                   decoration: BoxDecoration(
@@ -62,9 +64,13 @@ class FullPlayer extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Align(alignment: Alignment.bottomCenter, child: FooterWave(height: 150)),
+                const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: FooterWave(height: 150)),
                 SafeArea(
-                  child: item == null ? _empty(context) : _content(context, service, snap, item),
+                  child: item == null
+                      ? _empty(context)
+                      : _content(context, service, snap, item),
                 ),
               ]);
             },
@@ -91,7 +97,9 @@ class FullPlayer extends StatelessWidget {
     );
   }
 
-  Widget _topBar(BuildContext context, PlayerService service, PlayerSnapshot snap, {bool showTools = true}) {
+  Widget _topBar(
+      BuildContext context, PlayerService service, PlayerSnapshot snap,
+      {bool showTools = true}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(children: [
@@ -99,7 +107,8 @@ class FullPlayer extends StatelessWidget {
           tooltip: trs('close'),
           iconSize: 30,
           constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white),
+          icon: const Icon(Icons.keyboard_arrow_down_rounded,
+              color: Colors.white),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         Expanded(
@@ -107,20 +116,28 @@ class FullPlayer extends StatelessWidget {
             PlayerStrings.nowPlaying.toUpperCase(),
             textAlign: TextAlign.center,
             style: const TextStyle(
-                fontFamily: AppTokens.fontFamily, color: Colors.white70, fontSize: 12, letterSpacing: 1.6, fontWeight: FontWeight.w700),
+                fontFamily: AppTokens.fontFamily,
+                color: Colors.white70,
+                fontSize: 12,
+                letterSpacing: 1.6,
+                fontWeight: FontWeight.w700),
           ),
         ),
         if (showTools) ...[
           IconButton(
             tooltip: trs('shuffle'),
             constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
-            icon: Icon(Icons.shuffle_rounded, color: snap.shuffle ? _glow : Colors.white70),
+            icon: Icon(Icons.shuffle_rounded,
+                color: snap.shuffle ? _glow : Colors.white70),
             onPressed: () => service.setShuffle(!snap.shuffle),
           ),
           IconButton(
             tooltip: trs('repeat'),
             constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
-            icon: Icon(snap.repeat == QueueRepeat.one ? Icons.repeat_one_rounded : Icons.repeat_rounded,
+            icon: Icon(
+                snap.repeat == QueueRepeat.one
+                    ? Icons.repeat_one_rounded
+                    : Icons.repeat_rounded,
                 color: snap.repeat == QueueRepeat.off ? Colors.white70 : _glow),
             onPressed: service.cycleRepeat,
           ),
@@ -132,7 +149,8 @@ class FullPlayer extends StatelessWidget {
 
   Widget _empty(BuildContext context) {
     return Column(children: [
-      _topBar(context, PlayerService.instance, const PlayerSnapshot(), showTools: false),
+      _topBar(context, PlayerService.instance, const PlayerSnapshot(),
+          showTools: false),
       Expanded(
         child: Center(
           child: Padding(
@@ -142,7 +160,10 @@ class FullPlayer extends StatelessWidget {
               SizedBox(height: 16),
               Text(PlayerStrings.nothingPlaying,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white70, fontSize: 17)),
+                  style: TextStyle(
+                      fontFamily: AppTokens.fontFamily,
+                      color: Colors.white70,
+                      fontSize: 17)),
             ]),
           ),
         ),
@@ -150,70 +171,101 @@ class FullPlayer extends StatelessWidget {
     ]);
   }
 
-  Widget _content(BuildContext context, PlayerService service, PlayerSnapshot snap, PlayableItem item) {
+  Widget _content(BuildContext context, PlayerService service,
+      PlayerSnapshot snap, PlayableItem item) {
     final errorText = PlayerStrings.errorText(snap.error);
     final size = MediaQuery.sizeOf(context);
     // Artwork scales with the screen but never crowds the controls on short phones.
-    final artWidth = (size.width * 0.66).clamp(150.0, size.height * 0.34).clamp(150.0, 320.0).toDouble();
+    final artWidth = (size.width * 0.66)
+        .clamp(150.0, size.height * 0.34)
+        .clamp(150.0, Adaptive.isTablet(context) ? 440.0 : 320.0)
+        .toDouble();
 
     return Column(children: [
       _topBar(context, service, snap),
       Expanded(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
-          child: Column(children: [
-            PlayerArtwork(url: item.artUrl, size: artWidth, aspect: 1.18, radius: 24, playing: snap.playing),
-            const SizedBox(height: 26),
-            Text(item.title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontFamily: AppTokens.fontFamily, color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800, height: 1.15)),
-            if (item.subtitle.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Text(item.subtitle,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white70, fontSize: 16)),
-            ],
-            if (errorText != null) ...[
-              const SizedBox(height: 14),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF6B6B).withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(children: [
-                  const Icon(Icons.info_outline_rounded, color: Color(0xFFFF9B9B), size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(errorText,
-                        style: const TextStyle(fontFamily: AppTokens.fontFamily, color: Color(0xFFFFC2C2), fontSize: 13, height: 1.35)),
+        child: LayoutBuilder(
+            builder: (context, box) => SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+                  // Tablets: keep the player vertically centred instead of leaving the lower half empty.
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: box.maxHeight - 28),
+                    child: Center(
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                      PlayerArtwork(
+                          url: item.artUrl,
+                          size: artWidth,
+                          aspect: 1.18,
+                          radius: 24,
+                          playing: snap.playing),
+                      const SizedBox(height: 26),
+                      Text(item.title,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontFamily: AppTokens.fontFamily,
+                              color: Colors.white,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              height: 1.15)),
+                      if (item.subtitle.isNotEmpty) ...[
+                        const SizedBox(height: 6),
+                        Text(item.subtitle,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontFamily: AppTokens.fontFamily,
+                                color: Colors.white70,
+                                fontSize: 16)),
+                      ],
+                      if (errorText != null) ...[
+                        const SizedBox(height: 14),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color:
+                                const Color(0xFFFF6B6B).withValues(alpha: 0.16),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Row(children: [
+                            const Icon(Icons.info_outline_rounded,
+                                color: Color(0xFFFF9B9B), size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(errorText,
+                                  style: const TextStyle(
+                                      fontFamily: AppTokens.fontFamily,
+                                      color: Color(0xFFFFC2C2),
+                                      fontSize: 13,
+                                      height: 1.35)),
+                            ),
+                            if (snap.error == PlayerErrorCode.loginRequired)
+                              TextButton(
+                                onPressed: () {
+                                  final router = context;
+                                  Navigator.of(context).pop();
+                                  router.pushNamed(LoginPageWidget.routeName);
+                                },
+                                child: Text(trs('gdn2b1x7'),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800)),
+                              ),
+                          ]),
+                        ),
+                      ],
+                      const SizedBox(height: 20),
+                      SeekBar(service: service, onDark: true),
+                      const SizedBox(height: 10),
+                      _Transport(snap: snap, service: service),
+                      const SizedBox(height: 24),
+                      _ActionRow(snap: snap, service: service, item: item),
+                    ])),
                   ),
-                  if (snap.error == PlayerErrorCode.loginRequired)
-                    TextButton(
-                      onPressed: () {
-                        final router = context;
-                        Navigator.of(context).pop();
-                        router.pushNamed(LoginPageWidget.routeName);
-                      },
-                      child: Text(trs('gdn2b1x7'),
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
-                    ),
-                ]),
-              ),
-            ],
-            const SizedBox(height: 20),
-            SeekBar(service: service, onDark: true),
-            const SizedBox(height: 10),
-            _Transport(snap: snap, service: service),
-            const SizedBox(height: 24),
-            _ActionRow(snap: snap, service: service, item: item),
-          ]),
-        ),
+                )),
       ),
     ]);
   }
@@ -237,7 +289,9 @@ class _Transport extends StatelessWidget {
           icon: const Icon(Icons.skip_previous_rounded, color: Colors.white),
           onPressed: service.previous,
         ),
-        _SkipButton(forward: false, onTap: () => service.seekRelative(const Duration(seconds: -15))),
+        _SkipButton(
+            forward: false,
+            onTap: () => service.seekRelative(const Duration(seconds: -15))),
         SizedBox(
           width: 76,
           height: 76,
@@ -247,7 +301,9 @@ class _Transport extends StatelessWidget {
             onTap: service.toggle,
           ),
         ),
-        _SkipButton(forward: true, onTap: () => service.seekRelative(const Duration(seconds: 15))),
+        _SkipButton(
+            forward: true,
+            onTap: () => service.seekRelative(const Duration(seconds: 15))),
         IconButton(
           iconSize: 36,
           tooltip: trs('next'),
@@ -281,12 +337,17 @@ class _SkipButton extends StatelessWidget {
           child: Stack(alignment: Alignment.center, children: [
             Transform.flip(
               flipX: forward,
-              child: const Icon(Icons.replay_rounded, color: Colors.white, size: 40),
+              child: const Icon(Icons.replay_rounded,
+                  color: Colors.white, size: 40),
             ),
             const Padding(
               padding: EdgeInsets.only(top: 3),
               child: Text('15',
-                  style: TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800)),
+                  style: TextStyle(
+                      fontFamily: AppTokens.fontFamily,
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800)),
             ),
           ]),
         ),
@@ -297,7 +358,12 @@ class _SkipButton extends StatelessWidget {
 
 /// Labelled action under the transport (Kasi, Foleni, Muda, Pakua).
 class _Action extends StatelessWidget {
-  const _Action({required this.label, required this.onTap, this.icon, this.leading, this.active = false});
+  const _Action(
+      {required this.label,
+      required this.onTap,
+      this.icon,
+      this.leading,
+      this.active = false});
 
   final String label;
   final VoidCallback onTap;
@@ -319,12 +385,19 @@ class _Action extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              SizedBox(height: 30, child: Center(child: leading ?? Icon(icon, color: color, size: 28))),
+              SizedBox(
+                  height: 30,
+                  child: Center(
+                      child: leading ?? Icon(icon, color: color, size: 28))),
               const SizedBox(height: 4),
               Text(label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontFamily: AppTokens.fontFamily, color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+                  style: TextStyle(
+                      fontFamily: AppTokens.fontFamily,
+                      color: color,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600)),
             ]),
           ),
         ),
@@ -334,13 +407,16 @@ class _Action extends StatelessWidget {
 }
 
 class _ActionRow extends StatelessWidget {
-  const _ActionRow({required this.snap, required this.service, required this.item});
+  const _ActionRow(
+      {required this.snap, required this.service, required this.item});
 
   final PlayerSnapshot snap;
   final PlayerService service;
   final PlayableItem item;
 
-  String _speedLabel() => snap.speed == snap.speed.roundToDouble() ? '${snap.speed.toInt()}.0x' : '${snap.speed}x';
+  String _speedLabel() => snap.speed == snap.speed.roundToDouble()
+      ? '${snap.speed.toInt()}.0x'
+      : '${snap.speed}x';
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +427,11 @@ class _ActionRow extends StatelessWidget {
         _Action(
           label: PlayerStrings.speed,
           leading: Text(_speedLabel(),
-              style: const TextStyle(fontFamily: AppTokens.fontFamily, color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+              style: const TextStyle(
+                  fontFamily: AppTokens.fontFamily,
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800)),
           onTap: () => PlayerSheets.speed(context, service),
         ),
         _Action(
@@ -360,7 +440,9 @@ class _ActionRow extends StatelessWidget {
           onTap: () => PlayerSheets.queue(context, service),
         ),
         _Action(
-          label: snap.sleepRemaining != null ? formatDuration(snap.sleepRemaining!) : trs('timer_short'),
+          label: snap.sleepRemaining != null
+              ? formatDuration(snap.sleepRemaining!)
+              : trs('timer_short'),
           icon: Icons.timer_outlined,
           active: snap.sleepActive,
           onTap: () => PlayerSheets.sleepTimer(context, service),
@@ -390,7 +472,11 @@ class _DownloadAction extends StatelessWidget {
         final state = manager.stateOf(item.id);
         switch (state.status) {
           case DownloadStatus.completed:
-            return _Action(label: trs('downloaded'), icon: Icons.download_done_rounded, active: true, onTap: () => manager.remove(item.id));
+            return _Action(
+                label: trs('downloaded'),
+                icon: Icons.download_done_rounded,
+                active: true,
+                onTap: () => manager.remove(item.id));
           case DownloadStatus.waiting:
           case DownloadStatus.downloading:
             return _Action(
@@ -398,7 +484,10 @@ class _DownloadAction extends StatelessWidget {
               leading: SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2.4, value: state.fraction, color: FullPlayer._glow),
+                child: CircularProgressIndicator(
+                    strokeWidth: 2.4,
+                    value: state.fraction,
+                    color: FullPlayer._glow),
               ),
               onTap: () => manager.cancel(item.id),
             );
@@ -408,7 +497,10 @@ class _DownloadAction extends StatelessWidget {
                 icon: Icons.refresh_rounded,
                 onTap: () => manager.download(item));
           case DownloadStatus.none:
-            return _Action(label: trs('download_short'), icon: Icons.download_rounded, onTap: () => manager.download(item));
+            return _Action(
+                label: trs('download_short'),
+                icon: Icons.download_rounded,
+                onTap: () => manager.download(item));
         }
       },
     );
@@ -418,7 +510,8 @@ class _DownloadAction extends StatelessWidget {
 /// The central play/pause button: blue gradient with a soft glow, a pulse while playing, a spinner while
 /// loading or buffering, and a scale+fade swap between the play and pause glyphs.
 class _PlayButton extends StatefulWidget {
-  const _PlayButton({required this.playing, required this.loading, required this.onTap});
+  const _PlayButton(
+      {required this.playing, required this.loading, required this.onTap});
 
   final bool playing;
   final bool loading;
@@ -428,8 +521,10 @@ class _PlayButton extends StatefulWidget {
   State<_PlayButton> createState() => _PlayButtonState();
 }
 
-class _PlayButtonState extends State<_PlayButton> with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 1800))
+class _PlayButtonState extends State<_PlayButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 1800))
     ..repeat();
   bool _pressed = false;
 
@@ -462,7 +557,10 @@ class _PlayButtonState extends State<_PlayButton> with SingleTickerProviderState
                   Container(
                     width: size + t * 26,
                     height: size + t * 26,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: FullPlayer._glow.withValues(alpha: (1 - t) * 0.25)),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            FullPlayer._glow.withValues(alpha: (1 - t) * 0.25)),
                   ),
                 child!,
               ],
@@ -482,16 +580,28 @@ class _PlayButtonState extends State<_PlayButton> with SingleTickerProviderState
                   end: Alignment.bottomRight,
                   colors: [Color(0xFF3FB4FF), AppTokens.brandPrimary],
                 ),
-                boxShadow: [BoxShadow(color: FullPlayer._glow.withValues(alpha: 0.5), blurRadius: 24, offset: const Offset(0, 8))],
+                boxShadow: [
+                  BoxShadow(
+                      color: FullPlayer._glow.withValues(alpha: 0.5),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8))
+                ],
               ),
               child: Center(
                 child: widget.loading
-                    ? const SizedBox(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
+                    ? const SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 3, color: Colors.white))
                     : AnimatedSwitcher(
                         duration: const Duration(milliseconds: 220),
-                        transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+                        transitionBuilder: (child, anim) =>
+                            ScaleTransition(scale: anim, child: child),
                         child: Icon(
-                          widget.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                          widget.playing
+                              ? Icons.pause_rounded
+                              : Icons.play_arrow_rounded,
                           key: ValueKey(widget.playing),
                           size: 44,
                           color: Colors.white,

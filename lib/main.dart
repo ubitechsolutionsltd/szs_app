@@ -9,6 +9,7 @@ import 'auth/firebase_auth/auth_util.dart';
 import 'backend/firebase/firebase_config.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/api_cache.dart';
 import '/custom_code/ui/app_theme.dart';
 import '/custom_code/ui/glass.dart';
@@ -130,7 +131,8 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: _themeMode,
-      builder: (context, child) => AuroraBackground(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) =>
+          AuroraBackground(child: AdaptiveFrame(child: child ?? const SizedBox.shrink())),
       routerConfig: _router,
     );
   }

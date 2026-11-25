@@ -10,6 +10,7 @@ import 'package:flutter/material.dart' hide RepeatMode;
 
 import '/backend/api_requests/api_calls.dart';
 import '/components/song_container_widget.dart';
+import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_widgets.dart';
@@ -46,8 +47,8 @@ class SearchSuggestions extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Adaptive.tileColumns(context), mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
             itemCount: 4,
             itemBuilder: (_, __) => const SkeletonBox(radius: 22),
           ),
@@ -57,8 +58,8 @@ class SearchSuggestions extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: Adaptive.tileColumns(context), mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
               itemCount: visible.length,
               itemBuilder: (context, index) {
                 final category = visible[index];
