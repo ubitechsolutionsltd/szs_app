@@ -58,6 +58,54 @@ class SettingsView extends StatelessWidget {
         ),
       );
 
+  void _signOutLocally(BuildContext context) {
+    FFAppState().authToken = '';
+    FFAppState().isLogin = false;
+    context.goNamed(LoginPageWidget.routeName);
+  }
+
+  Future<void> _deleteAccount(BuildContext context) async {
+    Navigator.pop(context); // close the confirmation dialog first
+    final messenger = ScaffoldMessenger.of(context);
+
+    final response = await GeneralGroup.deleteAccountCall.call();
+    if (!context.mounted) return;
+
+    // An already-invalid token (401) means the account is effectively gone already.
+    if (response.statusCode == 401) {
+      _signOutLocally(context);
+      return;
+    }
+    final body = response.jsonBody;
+    final status = body is Map ? body['status'] : null;
+    if (status == 200) {
+      _signOutLocally(context);
+      messenger.showSnackBar(SnackBar(content: Text(trs('delete_account_success'))));
+    } else if (status == 400) {
+      // Already deleted by an earlier call; treat the same as success.
+      _signOutLocally(context);
+    } else if (status == 429) {
+      messenger.showSnackBar(SnackBar(content: Text(trs('delete_account_rate_limited'))));
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(trs('delete_account_error'))));
+    }
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext context) => showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(trs('delete_account_q')),
+          content: Text(trs('delete_account_msg')),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(trs('cancel'))),
+            TextButton(
+              onPressed: () => _deleteAccount(dialogContext),
+              child: Text(trs('delete_account'), style: TextStyle(color: AppTokens.error)),
+            ),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -106,14 +154,20 @@ class SettingsView extends StatelessWidget {
               onTap: () => context.pushNamed(FeedbackPageWidget.routeName),
             ),
             const SizedBox(height: 12),
-            if (_loggedIn)
+            if (_loggedIn) ...[
               _Row(
                 icon: Icons.logout_rounded,
                 label: trs('x2z78gev'),
                 danger: true,
                 onTap: () => _confirmLogout(context),
-              )
-            else
+              ),
+              _Row(
+                icon: Icons.delete_forever_rounded,
+                label: trs('delete_account'),
+                danger: true,
+                onTap: () => _confirmDeleteAccount(context),
+              ),
+            ] else
               AppButton(label: trs('gdn2b1x7'), icon: Icons.login_rounded, onPressed: () => context.pushNamed(LoginPageWidget.routeName)),
             const SizedBox(height: 16),
             if (BackgroundAudio.lastError != null) ...[

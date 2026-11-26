@@ -355,6 +355,21 @@ final kTranslationsMap = <String, Map<String, String>>{
   'delete_all': {'sw': 'Futa zote', 'en': 'Delete all'},
   'delete_all_msg': {'sw': 'Simulizi zote ulizopakua zitafutwa kwenye simu hii.', 'en': 'All downloaded stories will be removed from this phone.'},
   'delete_all_q': {'sw': 'Futa zote?', 'en': 'Delete all?'},
+  'delete_account': {'sw': 'Futa akaunti', 'en': 'Delete account'},
+  'delete_account_q': {'sw': 'Futa akaunti yako?', 'en': 'Delete your account?'},
+  'delete_account_msg': {
+    'sw': 'Hatua hii haiwezi kutenduliwa. Jina, barua pepe, namba ya simu, vipendwa, historia ya kusikiliza na vilivyopakuliwa vitafutwa. Sarafu zilizobaki hazitarejeshwa.',
+    'en': 'This cannot be undone. Your name, email, phone number, favourites, listening history and downloads will be deleted. Any remaining coins are forfeited.',
+  },
+  'delete_account_success': {'sw': 'Akaunti yako imefutwa.', 'en': 'Your account has been deleted.'},
+  'delete_account_error': {
+    'sw': 'Imeshindikana kufuta akaunti. Tafadhali jaribu tena baadaye.',
+    'en': 'We could not delete your account right now. Please try again in a moment.',
+  },
+  'delete_account_rate_limited': {
+    'sw': 'Majaribio mengi. Tafadhali subiri kidogo kisha ujaribu tena.',
+    'en': 'Too many attempts. Please wait a minute and try again.',
+  },
   'dismiss_player': {'sw': 'Ondoa kicheza', 'en': 'Close player'},
   'dl_failed_tap': {'sw': 'Imeshindikana. Gusa kujaribu tena.', 'en': 'Failed. Tap to try again.'},
   'dl_hint': {'sw': 'Gusa “Pakua” kwenye simulizi ili kusikiliza bila mtandao.', 'en': 'Tap “Download” on a story to listen offline.'},

@@ -46,6 +46,7 @@ class GeneralGroup {
   static RegisterCall registerCall = RegisterCall();
   static MeCall meCall = MeCall();
   static LogoutCall logoutCall = LogoutCall();
+  static DeleteAccountCall deleteAccountCall = DeleteAccountCall();
   static AkCall akCall = AkCall();
   static AlCall alCall = AlCall();
   static AmCall amCall = AmCall();
@@ -1018,6 +1019,36 @@ class LogoutCall {
     return ApiManager.instance.makeApiCall(
       callName: 'Logout',
       apiUrl: '${baseUrl}/auth/logout',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: '{}',
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// Permanently deletes the signed-in user's account (Apple guideline 5.1.1(v)).
+/// Returns HTTP 200 for both success and application-level failure; check the
+/// numeric `status` field in the body (200 = deleted, 400 = already deleted,
+/// 500 = server fault, 429 = rate limited). A 401 means the token is already
+/// invalid, which should also be treated as "deleted" by the caller.
+class DeleteAccountCall {
+  Future<ApiCallResponse> call() async {
+    final baseUrl = GeneralGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'DeleteAccount',
+      apiUrl: '${baseUrl}/auth/delete-account',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
