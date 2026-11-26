@@ -70,6 +70,8 @@
     <string>In order to take a picture or video, this app requires permission to access the camera.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>In order to upload data, this app requires permission to access the photo library.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Simulizi za Sauti does not use your location. This permission is not requested by the app.</string>
 	<key>PermissionGroupNotification</key>
     <string>We’d like to send you notifications for updates and alerts</string>
 
