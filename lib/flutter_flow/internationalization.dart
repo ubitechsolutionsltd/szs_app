@@ -6,9 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _kLocaleStorageKey = '__locale_key__';
 
 class FFLocalizations {
-  FFLocalizations(this.locale);
+  FFLocalizations(this.locale) {
+    _currentCode = locale.languageCode;
+  }
 
   final Locale locale;
+
+  static String _currentCode = 'sw';
+
+  /// Language code of the most recently loaded locale (used by [trs], which needs no BuildContext).
+  static String get currentCode => _currentCode;
 
   static FFLocalizations of(BuildContext context) =>
       Localizations.of<FFLocalizations>(context, FFLocalizations)!;
@@ -36,16 +43,29 @@ class FFLocalizations {
 
   /// Text for [key] in the current language. A missing or blank translation falls back to Swahili, then
   /// English, so a screen never shows an empty label or button.
-  String getText(String key) {
-    final translations = kTranslationsMap[key] ?? {};
-    final current = translations[locale.toString()];
-    if (current != null && current.isNotEmpty) return current;
-    for (final fallback in const ['sw', 'en']) {
-      final text = translations[fallback];
-      if (text != null && text.isNotEmpty) return text;
+  String getText(String key, {Map<String, String>? args}) =>
+      _lookup(key, locale.languageCode, args);
+
+  static String _lookup(String key, String code, Map<String, String>? args) {
+    final translations = kTranslationsMap[key] ?? const {};
+    var text = translations[code];
+    if (text == null || text.isEmpty) {
+      for (final fallback in const ['sw', 'en']) {
+        final t = translations[fallback];
+        if (t != null && t.isNotEmpty) {
+          text = t;
+          break;
+        }
+      }
     }
-    return '';
+    text ??= '';
+    args?.forEach((name, value) => text = text!.replaceAll('{$name}', value));
+    return text!;
   }
+
+  /// Translate [key] without a BuildContext, using the language that was loaded last.
+  static String translate(String key, {Map<String, String>? args}) =>
+      _lookup(key, _currentCode, args);
 
   String getVariableText({
     String? swText = '',
@@ -153,1282 +173,351 @@ bool _isSupportedLocale(Locale locale) {
   );
 }
 
-final kTranslationsMap = <Map<String, Map<String, String>>>[
-  // HomePage
-  {
-    'lplgi0st': {
-      'sw': 'Karibu ',
-      'en': 'Karibu',
-    },
-    'lgb4aznq': {
-      'sw': 'Tafuta',
-      'en': 'Tafuta',
-    },
-    'tuwluj0n': {
-      'sw': 'Makundi',
-      'en': 'Makundi',
-    },
-    '61tzl2pc': {
-      'sw': 'Tazama zaidi',
-      'en': 'Tazama zaidi',
-    },
-    'awke62tg': {
-      'sw': 'Zinazobamba',
-      'en': 'Zinazobamba',
-    },
-    'kz1r6p5g': {
-      'sw': 'Tazama zaidi',
-      'en': 'Tazama zaidi',
-    },
-    'kwqsy6cx': {
-      'sw': 'Waandishi',
-      'en': 'Waandishi',
-    },
-    'x44p14fp': {
-      'sw': 'Tazama zaidi',
-      'en': 'Tazama zaidi',
-    },
-    '9zuihdkf': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
+/// All user-facing text, Swahili (sw) and English (en). Edit translations here, in one place.
+/// Keys with 8 random characters come from the original FlutterFlow export; readable keys are newer.
+final kTranslationsMap = <String, Map<String, String>>{
+  '0exjuge8': {'sw': 'Au', 'en': 'or'},
+  '0hus5k3h': {'sw': 'Endelea', 'en': 'Continue'},
+  '0ojuxiob': {'sw': 'Jina la ukoo', 'en': 'Last name'},
+  '0vcg0ato': {'sw': 'Jina la ukoo', 'en': 'Last name'},
+  '17f0vx1x': {'sw': 'Ingia', 'en': 'Log in'},
+  '19gzc2d1': {'sw': 'Ingia.', 'en': 'Log in.'},
+  '1izax02y': {'sw': 'Tafuta', 'en': 'Search'},
+  '1jig2hkn': {'sw': 'Lugha', 'en': 'Language'},
+  '21oynxin': {'sw': 'Ndiyo, kusikiliza mtandaoni kunahitaji intaneti. Hata hivyo, unaweza kupakua simulizi na kuzisikiliza bila intaneti.', 'en': 'Yes, streaming needs an internet connection. However, you can download stories and listen to them offline.'},
+  '2no99jg7': {'sw': 'Nyingine kama hizi', 'en': 'More like this'},
+  '381lm5sj': {'sw': 'Tafadhali weka nywila sahihi.', 'en': 'Please enter a valid password.'},
+  '3hktdhyo': {'sw': 'Nywila mpya', 'en': 'New password'},
+  '4gly7jca': {'sw': 'Barua pepe', 'en': 'Email'},
+  '4l2dbb28': {'sw': 'Kuhusu sisi', 'en': 'About us'},
+  '4nm3sliq': {'sw': 'Weka nywila mpya', 'en': 'Reset password'},
+  '59uyb1a3': {'sw': 'Barua pepe', 'en': 'Email'},
+  '5imusn2p': {'sw': 'Ruka', 'en': 'Skip'},
+  '5kkorlnu': {'sw': 'Jina la kwanza', 'en': 'First name'},
+  '5os77yxn': {'sw': 'Baadhi ya simulizi ni bure, na nyingine zinahitaji sarafu. Unaweza kujaza kibubu chako kwa kununua kifurushi.', 'en': 'Some stories are free and others need coins. You can top up your wallet by buying a package.'},
+  '5pfvtb4m': {'sw': 'Sawa', 'en': 'OK'},
+  '61tzl2pc': {'sw': 'Tazama zaidi', 'en': 'See more'},
+  '6jdqpyfo': {'sw': 'Simulizi za Sauti ni nini?', 'en': 'What is Simulizi za Sauti?'},
+  '6s0s4jvz': {'sw': 'English', 'en': 'English'},
+  '6t5vctjg': {'sw': 'Lugha', 'en': 'Language'},
+  '6yippc7s': {'sw': 'Au', 'en': 'or'},
+  '6zfweh9y': {'sw': 'Nambari ya uthibitisho imetumwa kwenye barua pepe yako.', 'en': 'The verification code was sent to your email.'},
+  '74eng8tt': {'sw': 'Wasilisha', 'en': 'Submit'},
+  '77r7vwy9': {'sw': 'Badilisha nywila', 'en': 'Change password'},
+  '7bp3bdra': {'sw': 'Tafadhali ingiza mrejesho sahihi.', 'en': 'Please enter valid feedback.'},
+  '7fzs7t21': {'sw': 'Ongeza kwenye Pendwa', 'en': 'Add to favourites'},
+  '7gkibsd5': {'sw': 'Nywila mpya', 'en': 'New password'},
+  '7xeca45h': {'sw': 'Zilizoongezwa karibuni', 'en': 'Recently added'},
+  '85udr75o': {'sw': 'Geuza mpangilio', 'en': 'Reverse order'},
+  '8toq78qv': {'sw': 'Thibitisha nywila', 'en': 'Confirm password'},
+  '8xdcr9ag': {'sw': 'Simulizi mpya huongezwa mara kwa mara. Fuatilia sehemu ya “Zinazobamba” kwenye Mwanzo ili kuzipata kwanza.', 'en': 'New stories are added regularly. Check “Trending” on Home to find them first.'},
+  '98xsz2gm': {'sw': 'Je, kuna gharama za kutumia app hii?', 'en': 'Does the app cost anything to use?'},
+  '9cdr0td1': {'sw': 'Nywila imebadilishwa!', 'en': 'Password changed!'},
+  '9ex6rlrs': {'sw': 'Tafadhali ingiza barua pepe sahihi.', 'en': 'Please enter a valid email.'},
+  '9j6i9mj3': {'sw': 'Sawa', 'en': 'OK'},
+  '9zuihdkf': {'sw': 'Mwanzo', 'en': 'Home'},
+  'a1mkaptj': {'sw': 'Tafadhali ingiza barua pepe sahihi.', 'en': 'Please enter a valid email.'},
+  'adni9znu': {'sw': 'Msaada', 'en': 'Help'},
+  'aew02nx5': {'sw': 'Panga kwa', 'en': 'Sort by'},
+  'awke62tg': {'sw': 'Zinazobamba', 'en': 'Trending'},
+  'bcrgr35y': {'sw': 'Andika barua pepe utakayotumiwa kiungo cha kurejesha nywila yako.', 'en': 'Enter the email we should send your password reset link to.'},
+  'bdathw2i': {'sw': 'Tuma nambari tena', 'en': 'Resend code'},
+  'bh30kghu': {'sw': 'Sawa', 'en': 'OK'},
+  'caxj8eoj': {'sw': 'Tafadhali thibitisha nywila yako.', 'en': 'Please confirm your password.'},
+  'cmafpird': {'sw': 'Za hivi karibuni', 'en': 'Most recent'},
+  'dcr851fh': {'sw': 'Je, una uhakika unataka kutoka?', 'en': 'Are you sure you want to log out?'},
+  'dcwrzltf': {'sw': 'LIPA # (SELCOM)', 'en': 'PAY # (SELCOM)'},
+  'dqnmfycd': {'sw': 'Mrejesho wako umepokelewa. Tutakurejea.', 'en': 'Your feedback has been received. We will get back to you.'},
+  'dxcpkfka': {'sw': 'Salio', 'en': 'Balance'},
+  'dxz2dcs9': {'sw': 'Tumia kitufe cha “Shirikisha” kwenye ukurasa wa simulizi kutuma kiungo kwa marafiki zako.', 'en': 'Use the “Share” button on a story page to send a link to your friends.'},
+  'e35ntc31': {'sw': 'Je, nahitaji intaneti kusikiliza simulizi?', 'en': 'Do I need internet to listen to stories?'},
+  'e46mrzzy': {'sw': 'Mipangilio', 'en': 'Settings'},
+  'ekonhu1v': {'sw': 'Tafuta na ongeza simulizi pendwa', 'en': 'Search and add your favourite stories'},
+  'enh71z8b': {'sw': 'Nywila imebadilishwa!', 'en': 'Password changed!'},
+  'eoloksn6': {'sw': 'Maliza', 'en': 'Done'},
+  'eznefvfn': {'sw': 'Lipa kwa benki au mtandao wowote wa simu.', 'en': 'Pay with any bank or mobile network.'},
+  'f3kfj34i': {'sw': 'Usalama', 'en': 'Security'},
+  'fbdn8cn4': {'sw': 'Tafadhali ingiza jina sahihi.', 'en': 'Please enter a valid name.'},
+  'fvirzxyl': {'sw': 'Kiswahili', 'en': 'Kiswahili'},
+  'fx01qmw3': {'sw': 'Lipa sasa', 'en': 'Pay now'},
+  'g0445k83': {'sw': 'Nawezaje kushiriki simulizi ninazozipenda na marafiki zangu?', 'en': 'How do I share stories I like with my friends?'},
+  'g6fodzyt': {'sw': 'Hujapata nambari? ', 'en': 'Didn’t get the code? '},
+  'gdn2b1x7': {'sw': 'Ingia', 'en': 'Log in'},
+  'ghr1qg5p': {'sw': 'Tafadhali ingiza nywila sahihi.', 'en': 'Please enter a valid password.'},
+  'gpe5dtpu': {'sw': 'Hakuna taarifa', 'en': 'No notifications'},
+  'gxydvmrr': {'sw': 'Tafadhali thibitisha nywila yako.', 'en': 'Please confirm your password.'},
+  'h3holdcg': {'sw': 'Tafadhali ingiza barua pepe sahihi.', 'en': 'Please enter a valid email.'},
+  'id4jjfok': {'sw': 'Ndiyo! Tutumie mapendekezo yako kupitia “Mrejesho” na tutayazingatia.', 'en': 'Yes! Send us your suggestions through “Feedback” and we will consider them.'},
+  'if6tqvbk': {'sw': 'Tumia sehemu ya “Mrejesho” kwenye Mipangilio kuripoti tatizo lolote.', 'en': 'Use “Feedback” in Settings to report any problem.'},
+  'ifwfe1wl': {'sw': 'Sasa unaweza kuburudika huku ukielimika upendavyo.', 'en': 'Now you can enjoy being entertained and informed as you please.'},
+  'j6diwfc7': {'sw': 'Ndiyo', 'en': 'Yes'},
+  'jds1z5tn': {'sw': 'Barua pepe', 'en': 'Email'},
+  'jg8v9xve': {'sw': 'Umesahau nywila?', 'en': 'Forgot password?'},
+  'jpp0w391': {'sw': 'Mrejesho', 'en': 'Feedback'},
+  'klplvg9m': {'sw': 'Andika maoni au mrejesho wako...', 'en': 'Write your feedback...'},
+  'kwqsy6cx': {'sw': 'Waandishi', 'en': 'Authors'},
+  'kz1r6p5g': {'sw': 'Tazama zaidi', 'en': 'See more'},
+  'l72igk1q': {'sw': 'Arifa', 'en': 'Notifications'},
+  'lcitwxqm': {'sw': 'Thibitisha nywila', 'en': 'Confirm password'},
+  'm714g4la': {'sw': 'Nywila yako imebadilishwa. Itumie kuingia kwenye app.', 'en': 'Your password has been changed. Use it to log in to the app.'},
+  'mi20nny6': {'sw': 'Mrejesho umewasilishwa', 'en': 'Feedback submitted'},
+  'nn8dwuu4': {'sw': 'Barua pepe', 'en': 'Email'},
+  'nqecveoe': {'sw': 'Tafadhali ingiza barua pepe sahihi.', 'en': 'Please enter a valid email.'},
+  'o7brnlux': {'sw': 'Nambari ya simu', 'en': 'Phone number'},
+  'odgxauyg': {'sw': 'Pakua', 'en': 'Download'},
+  'ogmm0zrr': {'sw': 'Simulizi za Sauti ni app ya simulizi za Kiswahili za kusikiliza. Utapata hadithi za mapenzi, uchawi, upelelezi na nyingine nyingi kutoka kwa waandishi mbalimbali.', 'en': 'Simulizi za Sauti is an app for listening to Swahili stories. You will find romance, magic, detective and many other stories from different authors.'},
+  'oixojyl4': {'sw': 'Tafuta', 'en': 'Search'},
+  'om7jkz3e': {'sw': 'Ninawezaje kupata simulizi mpya?', 'en': 'How do I find new stories?'},
+  'omyauk4s': {'sw': 'Google', 'en': 'Google'},
+  'ongo8hnn': {'sw': 'Huna akaunti?', 'en': 'Don’t have an account?'},
+  'osdnm01b': {'sw': 'Tafadhali ingiza barua pepe sahihi.', 'en': 'Please enter a valid email.'},
+  'oyknbu1f': {'sw': 'Jina la kwanza', 'en': 'First name'},
+  'p0rgp7cf': {'sw': 'Inapakia...', 'en': 'Loading...'},
+  'pgvdccls': {'sw': 'Uzoefu wako utaboreka kadri unavyosikiliza zaidi.', 'en': 'Your experience gets better the more you listen.'},
+  'q5aoajhk': {'sw': 'Hakuna matokeo', 'en': 'No results'},
+  'qtk3q5ro': {'sw': 'Jina kamili', 'en': 'Full name'},
+  'qtyye74m': {'sw': 'Shirikisha', 'en': 'Share'},
+  'r0h1adas': {'sw': 'Nywila yako imebadilishwa. Itumie kuingia kwenye app.', 'en': 'Your password has been changed. Use it to log in to the app.'},
+  'r6xo1k3j': {'sw': 'Barua pepe', 'en': 'Email'},
+  'r8h8mx18': {'sw': 'Barua pepe', 'en': 'Email'},
+  'retxuu9v': {'sw': 'Ahirisha', 'en': 'Later'},
+  'ror2owk3': {'sw': 'Hakuna ulizohifadhi', 'en': 'Nothing saved yet'},
+  'rq4szjuu': {'sw': 'Nywila', 'en': 'Password'},
+  'rxu0qsy2': {'sw': 'Toka?', 'en': 'Log out?'},
+  's1tc1aqp': {'sw': 'Thibitisha nywila', 'en': 'Confirm password'},
+  'scmyok19': {'sw': 'Tafadhali ingiza jina la ukoo sahihi.', 'en': 'Please enter a valid last name.'},
+  'spbo1zcl': {'sw': 'Tafadhali ingiza nywila mpya sahihi.', 'en': 'Please enter a valid new password.'},
+  't6iq9mry': {'sw': 'Hifadhi', 'en': 'Save'},
+  'tuwluj0n': {'sw': 'Makundi', 'en': 'Categories'},
+  'u1dcr77e': {'sw': 'Tafadhali ingiza jina sahihi.', 'en': 'Please enter a valid name.'},
+  'ulmedo12': {'sw': 'Jisajili', 'en': 'Sign up'},
+  'uqbilfzc': {'sw': 'Chaguo za haraka', 'en': 'Quick options'},
+  'utscy6vt': {'sw': 'Simulizi za Sauti ni jukwaa la kidijitali linalokuletea simulizi mbalimbali za Kiswahili kwa njia ya sauti.', 'en': 'Simulizi za Sauti is a digital platform that brings you a variety of Swahili stories in audio.'},
+  'v9ziahjw': {'sw': 'Kwa alfabeti', 'en': 'Alphabetical'},
+  'viv75x51': {'sw': 'Endelea', 'en': 'Continue'},
+  'vk4bn3cf': {'sw': 'Tayari una akaunti? ', 'en': 'Already have an account? '},
+  'vtz9zqyc': {'sw': 'Nywila', 'en': 'Password'},
+  'wegcolwg': {'sw': 'Naweza kupendekeza simulizi ziongezwe?', 'en': 'Can I suggest stories to be added?'},
+  'wg04a8ua': {'sw': 'Hifadhi', 'en': 'Save'},
+  'wjjbutxk': {'sw': 'Mwandishi', 'en': 'Author'},
+  'wsf2z5m5': {'sw': 'Ruka', 'en': 'Skip'},
+  'x076kttg': {'sw': 'Nywila mpya', 'en': 'New password'},
+  'x1d7pvns': {'sw': 'Barua pepe', 'en': 'Email'},
+  'x2z78gev': {'sw': 'Toka kwenye app', 'en': 'Log out'},
+  'x44p14fp': {'sw': 'Tazama zaidi', 'en': 'See more'},
+  'x4nwc5r8': {'sw': 'Ingia', 'en': 'Log in'},
+  'x4pwu6ka': {'sw': 'Jisajili', 'en': 'Sign up'},
+  'xcjoq77j': {'sw': 'Akaunti imetengenezwa kikamilifu', 'en': 'Account created successfully'},
+  'xdgj78m1': {'sw': 'Jaribu kutumia herufi 3 za mwanzo za simulizi', 'en': 'Try the first 3 letters of a story title'},
+  'xgp5nyy1': {'sw': 'Tafadhali ingiza jina sahihi.', 'en': 'Please enter a valid name.'},
+  'xnatvojx': {'sw': 'Tafadhali ingiza msimbo sahihi wa uthibitisho.', 'en': 'Please enter a valid verification code.'},
+  'xuntpavf': {'sw': 'Hapana', 'en': 'No'},
+  'y0bgn9o5': {'sw': 'Hakuna taarifa yoyote kwa sasa', 'en': 'You have no notifications right now'},
+  'ybm2n8lx': {'sw': 'Jisajili', 'en': 'Sign up'},
+  'ycy43bue': {'sw': 'Tafadhali ingiza nywila mpya sahihi.', 'en': 'Please enter a valid new password.'},
+  'z8ymq7ag': {'sw': 'Chagua waandishi unaowapenda.', 'en': 'Choose the authors you like.'},
+  'zijcwc8u': {'sw': 'Ninawezaje kuripoti tatizo?', 'en': 'How do I report a problem?'},
+  'zkpe8jnx': {'sw': 'Nywila', 'en': 'Password'},
+  'zrgrvxw3': {'sw': 'Twende sasa', 'en': 'Let’s go'},
+  'ztt7zgno': {'sw': 'Maktaba', 'en': 'Library'},
+  'about_app_name': {'sw': 'Simulizi za Sauti', 'en': 'Simulizi za Sauti'},
+  'about_author': {'sw': 'Kuhusu mwandishi', 'en': 'About the author'},
+  'about_me': {'sw': 'Kuhusu mimi', 'en': 'About me'},
+  'about_point_1': {'sw': 'Kusikiliza simulizi asilia za Kiswahili.', 'en': 'Listen to original Swahili stories.'},
+  'about_point_2': {'sw': 'Kupata hadithi kutoka kwa waandishi na wasimulizi tofauti.', 'en': 'Discover stories from different authors and narrators.'},
+  'about_point_3': {'sw': 'Kufurahia uzoefu wa sauti unaokupa uhondo bila kusumbua macho yako.', 'en': 'Enjoy an audio experience that entertains without straining your eyes.'},
+  'about_tagline': {'sw': 'Maisha ni Hadithi', 'en': 'Life is a Story'},
+  'about_us_title': {'sw': 'Kuhusu sisi', 'en': 'About us'},
+  'add_story': {'sw': 'Ongeza simulizi', 'en': 'Add a story'},
+  'add_to_playlist': {'sw': 'Ongeza kwenye orodha', 'en': 'Add to playlist'},
+  'added_fav': {'sw': 'Imeongezwa kwenye Pendwa.', 'en': 'Added to favourites.'},
+  'added_to_playlist': {'sw': 'Imeongezwa kwenye orodha', 'en': 'Added to playlist'},
+  'amount_label': {'sw': 'Kiasi cha kulipa', 'en': 'Amount to pay'},
+  'author_load_fail': {'sw': 'Imeshindikana kupakia ukurasa wa mwandishi.', 'en': 'Could not load the author page.'},
+  'back': {'sw': 'Rudi nyuma', 'en': 'Back'},
+  'back15': {'sw': 'Rudi sekunde 15', 'en': 'Back 15 seconds'},
+  'balance_label': {'sw': 'Salio lako', 'en': 'Your balance'},
+  'balance_n': {'sw': 'Salio lako: {n}', 'en': 'Your balance: {n}'},
+  'best_of_author': {'sw': 'Bora ya mwandishi', 'en': 'Best of the author'},
+  'buy_failed': {'sw': 'Imeshindwa kununua. Jaribu tena baadaye.', 'en': 'Could not complete the purchase. Please try again later.'},
+  'cancel': {'sw': 'Ghairi', 'en': 'Cancel'},
+  'choose_package': {'sw': 'Chagua kifurushi cha sarafu', 'en': 'Choose a coin package'},
+  'close': {'sw': 'Funga', 'en': 'Close'},
+  'close_player': {'sw': 'Funga', 'en': 'Close'},
+  'coins_n': {'sw': '{n} sarafu', 'en': '{n} coins'},
+  'complete_payment': {'sw': 'Kamilisha malipo', 'en': 'Complete your payment'},
+  'connect_failed': {'sw': 'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.', 'en': 'Could not connect. Check your internet and try again.'},
+  'copied': {'sw': 'Namba imenakiliwa', 'en': 'Number copied'},
+  'copy_number': {'sw': 'Nakili', 'en': 'Copy'},
+  'create': {'sw': 'Unda', 'en': 'Create'},
+  'current_language': {'sw': 'Kiswahili', 'en': 'English'},
+  'delete': {'sw': 'Futa', 'en': 'Delete'},
+  'delete_all': {'sw': 'Futa zote', 'en': 'Delete all'},
+  'delete_all_msg': {'sw': 'Simulizi zote ulizopakua zitafutwa kwenye simu hii.', 'en': 'All downloaded stories will be removed from this phone.'},
+  'delete_all_q': {'sw': 'Futa zote?', 'en': 'Delete all?'},
+  'dismiss_player': {'sw': 'Ondoa kicheza', 'en': 'Close player'},
+  'dl_failed_tap': {'sw': 'Imeshindikana. Gusa kujaribu tena.', 'en': 'Failed. Tap to try again.'},
+  'dl_hint': {'sw': 'Gusa “Pakua” kwenye simulizi ili kusikiliza bila mtandao.', 'en': 'Tap “Download” on a story to listen offline.'},
+  'dl_started': {'sw': 'Kupakua kumeanza.', 'en': 'Download started.'},
+  'dl_started_n': {'sw': 'Kupakua kwa vipindi {n} kumeanza.', 'en': 'Downloading {n} episodes has started.'},
+  'dl_locked_skip': {
+    'sw': 'Vipindi {n} vimerukwa (sarafu hazitoshi).',
+    'en': '{n} episodes were skipped (not enough coins).'
   },
-  // SplashPage
-  {
-    'dzjyko91': {
-      'sw': 'Sikiliza Uelimike.',
-      'en': 'Sikiliza Uelimike.',
-    },
-    'v8abcs7p': {
-      'sw': 'Home',
-      'en': 'Home',
-    },
-  },
-  // OnboardingPage
-  {
-    '5imusn2p': {
-      'sw': 'Ruka',
-      'en': 'Ruka',
-    },
-    '10mo37vj': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // LoginPage
-  {
-    'gdn2b1x7': {
-      'sw': 'Ingia',
-      'en': 'Ingia',
-    },
-    'nn8dwuu4': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    '4gly7jca': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    'vtz9zqyc': {
-      'sw': 'Nywila',
-      'en': 'Nywila',
-    },
-    'rq4szjuu': {
-      'sw': 'Nywila',
-      'en': 'Nywila',
-    },
-    'jg8v9xve': {
-      'sw': 'Umesahau Nywila ?',
-      'en': 'Umesahau Nywila ?',
-    },
-    'x4nwc5r8': {
-      'sw': 'Ingia',
-      'en': 'Ingia',
-    },
-    '0exjuge8': {
-      'sw': 'Au',
-      'en': 'Au',
-    },
-    'a1mkaptj': {
-      'sw': 'Tafadhali jaza barua pepe sahihi',
-      'en': 'Tafadhali jaza barua pepe sahihi',
-    },
-    'h3holdcg': {
-      'sw': 'Tafadhali jaza barua pepe sahihi',
-      'en': 'Tafadhali jaza barua pepe sahihi',
-    },
-    'jutdc41w': {
-      'sw': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
-    },
-    '381lm5sj': {
-      'sw': 'Tafadhalinweka nywila sahihi',
-      'en': 'Tafadhalinweka nywila sahihi',
-    },
-    'ydzl450v': {
-      'sw': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhali chaguo kutoka kwenye machaguo uliyopewa',
-    },
-    'ongo8hnn': {
-      'sw': 'Hauna akaunti ?',
-      'en': 'Hauna akaunti ?',
-    },
-    'ybm2n8lx': {
-      'sw': 'Jisajili',
-      'en': 'Jisajili',
-    },
-    '7y5md3jn': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // SignupPage
-  {
-    'ulmedo12': {
-      'sw': 'Jisajili',
-      'en': 'Jisajili',
-    },
-    '0t4ljk6m': {
-      'sw': 'Jina kamili',
-      'en': 'Jina kamili',
-    },
-    'qtk3q5ro': {
-      'sw': 'Jina kamili',
-      'en': 'Jina kamili',
-    },
-    'cwp6g6mz': {
-      'sw': 'Nambari ya simu',
-      'en': 'Nambari ya simu',
-    },
-    'o7brnlux': {
-      'sw': 'Nambari ya simu',
-      'en': 'Nambari ya simu',
-    },
-    's4ttj8pu': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    '59uyb1a3': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    'pooqs8qv': {
-      'sw': 'Nywila',
-      'en': 'Nywila',
-    },
-    'zkpe8jnx': {
-      'sw': 'Nywila',
-      'en': 'Nywila',
-    },
-    'x4pwu6ka': {
-      'sw': 'Jisajili',
-      'en': 'Jisajili',
-    },
-    '6yippc7s': {
-      'sw': 'Au',
-      'en': 'Au',
-    },
-    'fbdn8cn4': {
-      'sw': 'Tafadhali ingiza jina sahihi',
-      'en': 'Tafadhali ingiza jina sahihi',
-    },
-    'pl1az6r6': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-    },
-    'xgp5nyy1': {
-      'sw': 'Tafadhali ingiza',
-      'en': 'Tafadhali ingiza jina sahihi',
-    },
-    'demerrz5': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-    },
-    '9ex6rlrs': {
-      'sw': 'Tafadhali ingiza barua pepe sahihi.',
-      'en': 'Tafadhali ingiza barua pepe sahihi',
-    },
-    'osdnm01b': {
-      'sw': 'Tafadhali ingiza barua pepe sahihi.',
-      'en': 'Tafadhali ingiza barua pepe sahihi',
-    },
-    '37k9j22e': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-    },
-    'ghr1qg5p': {
-      'sw': 'Tafadhali ingiza nywila sahihi.',
-      'en': 'Tafadhali ingiza nywila sahihi',
-    },
-    '0t64c0vx': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-    },
-    'vk4bn3cf': {
-      'sw': 'Tayari una akaunti ? ',
-      'en': 'Tayari una akaunti ? ',
-    },
-    '19gzc2d1': {
-      'sw': 'Ingia.',
-      'en': 'Ingia.',
-    },
-    'nfo02asn': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // ForgotPassPage
-  {
-    'bcrgr35y': {
-      'sw':
-          'Andikwa barua pepe utakayotumiwa kiunganishi cha kurejesha nywila yako.',
-      'en':
-          'Andikwa barua pepe utakayotumiwa kiunganishi cha kurejesha nywila yako.',
-    },
-    'x1d7pvns': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    'jds1z5tn': {
-      'sw': 'Barua pepe',
-      'en': 'Barua pepe',
-    },
-    'viv75x51': {
-      'sw': 'Endelea',
-      'en': 'Endelea',
-    },
-    'nqecveoe': {
-      'sw': 'Tafadhali ingiza barua pepe sahihi',
-      'en': 'Tafadhali ingiza barua pepe sahihi',
-    },
-    'ughwzogz': {
-      'sw': 'Tafadhali chagua kutoka machaguo uliyopewa',
-      'en': 'Tafadhali chagua kutoka machaguo uliyopewa',
-    },
-    'aa4jctnz': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // VerifyCodePage
-  {
-    '6zfweh9y': {
-      'sw': 'Nambari ya uthibitisho imetumwa kwa barua pepe yako.',
-      'en': '',
-    },
-    'smi16b8z': {
-      'sw': 'Nambari ya uthibitisho imetumwa kwenye barua pepe yako.',
-      'en': '',
-    },
-    'xnatvojx': {
-      'sw': 'Tafadhali ingiza msimbo sahihi wa uthibitisho.',
-      'en': '',
-    },
-    'g6fodzyt': {
-      'sw': 'Don’t get the code? ',
-      'en': '',
-    },
-    'bdathw2i': {
-      'sw': 'Resend code',
-      'en': '',
-    },
-    '0hus5k3h': {
-      'sw': 'Continue',
-      'en': '',
-    },
-    '16nfx8b0': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // ResetPassPage
-  {
-    'jl4yxipx': {
-      'sw': 'Weka nywila yako mpya ili uingie.',
-      'en': '',
-    },
-    'yjcptyr3': {
-      'sw': 'New password',
-      'en': '',
-    },
-    'x076kttg': {
-      'sw': 'New password',
-      'en': '',
-    },
-    '58dgt1dl': {
-      'sw': 'Confirm password',
-      'en': '',
-    },
-    'lcitwxqm': {
-      'sw': 'Confirm password',
-      'en': '',
-    },
-    '4nm3sliq': {
-      'sw': 'Reset password',
-      'en': '',
-    },
-    'spbo1zcl': {
-      'sw': 'Tafadhali ingiza nywila mpya sahihi.',
-      'en': '',
-    },
-    '77b3yijv': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'caxj8eoj': {
-      'sw': 'Tafadhali ingiza nywila ya uthibitisho sahihi.',
-      'en': '',
-    },
-    'foaj4cbi': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'd7laulri': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // ChooseArtistLikePage
-  {
-    'wsf2z5m5': {
-      'sw': 'Skip',
-      'en': '',
-    },
-    'z8ymq7ag': {
-      'sw': 'Chagua waandishi unaowapenda.',
-      'en': '',
-    },
-    'pgvdccls': {
-      'sw': 'Uzoefu wako utazidi kuboreka unavyozidi kusikiliza.',
-      'en': '',
-    },
-    'eoloksn6': {
-      'sw': 'Done',
-      'en': '',
-    },
-    'x42upbd1': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // NotificationPage
-  {
-    'cg9sd8ll': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // HomeSearchPage
-  {
-    '7eh0tobe': {
-      'sw': '',
-      'en': '',
-    },
-    'kvcx3p0j': {
-      'sw': 'Tafuta',
-      'en': 'Tafuta',
-    },
-    'jngadwrz': {
-      'sw': 'Matokeo',
-      'en': 'Matokeo',
-    },
-    'zwh5bqrg': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // SongDetailsPage
-  {
-    'zythedii': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // SimilarArtistPage
-  {
-    'sn9gwl1s': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // PlayListPage
-  {
-    '43xzl45h': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // AllCategoriesPage
-  {
-    '72zx7yh5': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // SubCatListPage
-  {
-    '61g9mfek': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // QuickPicksPage
-  {
-    '66gkgjec': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // ViewAlbumPage
-  {
-    'kjcn25l7': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // PlaylistofTheDayPage
-  {
-    'avp8ndwy': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // BestOfArtistPage
-  {
-    'wddyt9vn': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // ExplorePage
-  {
-    'eud5gaf0': {
-      'sw': 'Unahitaji kusikiliza nini ?',
-      'en': 'Unahitaji kusikiliza nini ?',
-    },
-    'p3ptflvq': {
-      'sw': 'Makundi yote',
-      'en': 'Makundi yote',
-    },
-    '1izax02y': {
-      'sw': 'Tafuta',
-      'en': 'Tafuta',
-    },
-  },
-  // LibraryPage
-  {
-    'jgolgzzs': {
-      'sw': 'Maktaba',
-      'en': 'Maktaba',
-    },
-    'iaf3iuiz': {
-      'sw': 'Jaza Kibubu',
-      'en': 'Jaza Kibubu',
-    },
-    'dbv0tfqw': {
-      'sw': 'Uzipendazo',
-      'en': 'Uzipendazo',
-    },
-    'utdfpwic': {
-      'sw': 'Ulizopakua',
-      'en': 'Ulizopakua',
-    },
-    'ztt7zgno': {
-      'sw': 'Maktaba',
-      'en': 'Maktaba',
-    },
-  },
-  // AddSongPage
-  {
-    'oixojyl4': {
-      'sw': 'Tafuta',
-      'en': 'Tafuta',
-    },
-    'i032i06g': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // SettingPage
-  {
-    'sonue45h': {
-      'sw': 'Wasifu',
-      'en': 'Wasifu',
-    },
-    'f3kfj34i': {
-      'sw': 'Usalama',
-      'en': 'Usalama',
-    },
-    '4l2dbb28': {
-      'sw': 'Kuhusu sisi',
-      'en': 'Kuhusu sisi',
-    },
-    '1jig2hkn': {
-      'sw': 'Lugha',
-      'en': 'Lugha',
-    },
-    'adni9znu': {
-      'sw': 'Msaada',
-      'en': 'Msaada',
-    },
-    'jpp0w391': {
-      'sw': 'Mrejesho',
-      'en': 'Mrejesho',
-    },
-    'x2z78gev': {
-      'sw': 'Toka kwenye app',
-      'en': 'Toka kwenye app',
-    },
-    '17f0vx1x': {
-      'sw': 'Ingia',
-      'en': 'Ingia',
-    },
-    'e46mrzzy': {
-      'sw': 'Mpangilio',
-      'en': 'Mpangilio',
-    },
-  },
-  // MyProfilePage
-  {
-    'hpnw4a0q': {
-      'sw': 'Jina',
-      'en': 'Jina',
-    },
-    '78t09vij': {
-      'sw': 'Simu',
-      'en': 'Simu',
-    },
-    'ex80160f': {
-      'sw': 'Wasifu',
-      'en': 'Wasifu',
-    },
-    '3hn3y8nb': {
-      'sw': 'Jaza',
-      'en': 'Jaza',
-    },
-    '794hvx2w': {
-      'sw': 'Kujiunga',
-      'en': 'Kujiunga',
-    },
-    'gagd8vj9': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // EditProfilePage
-  {
-    'oyknbu1f': {
-      'sw': 'First name',
-      'en': '',
-    },
-    '5kkorlnu': {
-      'sw': 'First name',
-      'en': '',
-    },
-    '0vcg0ato': {
-      'sw': 'Last name',
-      'en': '',
-    },
-    '0ojuxiob': {
-      'sw': 'Last name',
-      'en': '',
-    },
-    'r6xo1k3j': {
-      'sw': 'Email address',
-      'en': '',
-    },
-    'r8h8mx18': {
-      'sw': 'Email address',
-      'en': '',
-    },
-    'u1dcr77e': {
-      'sw': 'Tafadhali ingiza jina sahihi.',
-      'en': '',
-    },
-    '99hnq2x6': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'scmyok19': {
-      'sw': 'Tafadhali ingiza jina la familia sahihi.',
-      'en': '',
-    },
-    'kw8w6ryv': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    '4ne2jjm8': {
-      'sw': 'Tafadhali ingiza barua pepe sahihi.',
-      'en': '',
-    },
-    '7rxlkh15': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'wg04a8ua': {
-      'sw': 'Save',
-      'en': '',
-    },
-    'sk30q9me': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // SecurityPage
-  {
-    'l72igk1q': {
-      'sw': 'Notifications',
-      'en': '',
-    },
-    '77r7vwy9': {
-      'sw': 'Change password',
-      'en': '',
-    },
-    'pnzjaf2p': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // ChangePassPage
-  {
-    '3hktdhyo': {
-      'sw': 'New password',
-      'en': '',
-    },
-    '7gkibsd5': {
-      'sw': 'New password',
-      'en': '',
-    },
-    '8toq78qv': {
-      'sw': 'Confirm password',
-      'en': '',
-    },
-    's1tc1aqp': {
-      'sw': 'Confirm password',
-      'en': '',
-    },
-    't6iq9mry': {
-      'sw': 'Save',
-      'en': '',
-    },
-    'ycy43bue': {
-      'sw': 'Tafadhali ingiza nywila mpya sahihi.',
-      'en': '',
-    },
-    'mdtwkagy': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'gxydvmrr': {
-      'sw': 'Tafadhali ingiza nywila ya uthibitisho sahihi.',
-      'en': '',
-    },
-    'fmzsx83i': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa.',
-      'en': '',
-    },
-    'lc1yxhac': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // AboutUsPage
-  {
-    'utscy6vt': {
-      'sw':
-          'Simulizi za Sauti ni jukwaa la kidijitali linalokuletea simulizi mbalimbali za Kiswahili kwa njia ya sauti. Lengo letu ni kufufua na kukuza utamaduni wa kusimulia hadithi za Kiswahili, huku tukirahisisha namna ya kuzifikia kupitia simu janja yako.\n\nKupitia app hii, unaweza:\n\nKusikiliza simulizi asilia za Kiswahili zilizojaa mafunzo, burudani na hekima.\n\nKupata hadithi kutoka kwa waandishi na wasimulizi tofauti.\n\nKufurahia uzoefu wa sauti unaokupa uhondo bila kusumbua macho yako.\n\nTunajivunia kukuza fasihi na utamaduni wa Kiswahili kwa kizazi cha sasa na kijacho kupitia teknolojia rahisi na ya kisasa. Simulizi za Sauti ni nyumbani pa hadithi zako.',
-      'en':
-          'Simulizi za Sauti ni jukwaa la kidijitali linalokuletea simulizi mbalimbali za Kiswahili kwa njia ya sauti. Lengo letu ni kufufua na kukuza utamaduni wa kusimulia hadithi za Kiswahili, huku tukirahisisha namna ya kuzifikia kupitia simu janja yako.\n\nKupitia app hii, unaweza:\n\nKusikiliza simulizi asilia za Kiswahili zilizojaa mafunzo, burudani na hekima.\n\nKupata hadithi kutoka kwa waandishi na wasimulizi tofauti.\n\nKufurahia uzoefu wa sauti unaokupa uhondo bila kusumbua macho yako.\n\nTunajivunia kukuza fasihi na utamaduni wa Kiswahili kwa kizazi cha sasa na kijacho kupitia teknolojia rahisi na ya kisasa. Simulizi za Sauti ni nyumbani pa hadithi zako.',
-    },
-    'dgow7v1w': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // HelpPage
-  {
-    '6jdqpyfo': {
-      'sw': 'Simulizi za Sauti ni nini?',
-      'en': 'Simulizi za Sauti ni nini?',
-    },
-    'ogmm0zrr': {
-      'sw':
-          'Simulizi za Sauti ni app ya simu inayokuwezesha kusikiliza simulizi mbalimbali za Kiswahili kwa njia ya sauti, popote ulipo na wakati wowote.',
-      'en':
-          'Simulizi za Sauti ni app ya simu inayokuwezesha kusikiliza simulizi mbalimbali za Kiswahili kwa njia ya sauti, popote ulipo na wakati wowote.',
-    },
-    'e35ntc31': {
-      'sw': 'Je, nahitaji intaneti kusikiliza simulizi?',
-      'en': 'Je, nahitaji intaneti kusikiliza simulizi?',
-    },
-    '21oynxin': {
-      'sw':
-          'Ndiyo, kusikiliza simulizi mtandaoni unahitaji intaneti. Lakini baadhi ya simulizi unaweza kupakua na kuyasikiliza bila intaneti.',
-      'en':
-          'Ndiyo, kusikiliza simulizi mtandaoni unahitaji intaneti. Lakini baadhi ya simulizi unaweza kupakua na kuyasikiliza bila intaneti.',
-    },
-    'om7jkz3e': {
-      'sw': 'Ninawezaje kupata simulizi mpya?',
-      'en': 'Ninawezaje kupata simulizi mpya?',
-    },
-    '8xdcr9ag': {
-      'sw':
-          'Simulizi mpya huongezwa mara kwa mara. Hakikisha unafungua app na kuboresha orodha ya simulizi ili kuona yaliyoongezwa.',
-      'en':
-          'Simulizi mpya huongezwa mara kwa mara. Hakikisha unafungua app na kuboresha orodha ya simulizi ili kuona yaliyoongezwa.',
-    },
-    '98xsz2gm': {
-      'sw': 'kuna gharama za kutumia app hii?',
-      'en': 'kuna gharama za kutumia app hii?',
-    },
-    '5os77yxn': {
-      'sw':
-          'Kusikiliza baadhi ya simulizi ni bure. Simulizi maalum au za kifurushi zinaweza kuhitaji malipo madogo kupitia njia za kawaida za kulipa mtandaoni.',
-      'en':
-          'Kusikiliza baadhi ya simulizi ni bure. Simulizi maalum au za kifurushi zinaweza kuhitaji malipo madogo kupitia njia za kawaida za kulipa mtandaoni.',
-    },
-    'g0445k83': {
-      'sw': 'Nawezaje kushiriki simulizi ninazozipenda na rafiki zangu?',
-      'en': 'Nawezaje kushiriki simulizi ninazozipenda na rafiki zangu?',
-    },
-    'dxz2dcs9': {
-      'sw':
-          'Ndani ya app, tumia kitufe cha kushiriki (share) ili kutuma kiungo cha simulizi kupitia WhatsApp, SMS, au mitandao ya kijamii.',
-      'en':
-          'Ndani ya app, tumia kitufe cha kushiriki (share) ili kutuma kiungo cha simulizi kupitia WhatsApp, SMS, au mitandao ya kijamii.',
-    },
-    'zijcwc8u': {
-      'sw': 'Ninawezaje kuripoti tatizo?',
-      'en': 'Ninawezaje kuripoti tatizo?',
-    },
-    'if6tqvbk': {
-      'sw':
-          'Unaweza kutumia sehemu ya “Mawasiliano” au “Feedback” ndani ya app, au kututumia barua pepe moja kwa moja',
-      'en':
-          'Unaweza kutumia sehemu ya “Mawasiliano” au “Feedback” ndani ya app, au kututumia barua pepe moja kwa moja',
-    },
-    'wegcolwg': {
-      'sw': 'Naweza kupendekeza ziongezwe?',
-      'en': 'Naweza kupendekeza ziongezwe?',
-    },
-    'id4jjfok': {
-      'sw':
-          'Ndiyo! Karibu utoe mapendekezo yako kupitia sehemu ya mawasiliano. Timu yetu itapitia na kuzingatia maombi yako.',
-      'en':
-          'Ndiyo! Karibu utoe mapendekezo yako kupitia sehemu ya mawasiliano. Timu yetu itapitia na kuzingatia maombi yako.',
-    },
-    'st00lguy': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // FeedbackPage
-  {
-    '101g5b8s': {
-      'sw': '',
-      'en': '',
-    },
-    'klplvg9m': {
-      'sw': 'Andika maoni au mrejesho wako...',
-      'en': 'Andika mrejesho wako...',
-    },
-    '7bp3bdra': {
-      'sw': 'Tafadhali ingiza mrejesho sahihi',
-      'en': 'Tafadhali ingiza mrejesho sahihi',
-    },
-    '5vojvdyx': {
-      'sw': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-      'en': 'Tafadhali chagua kutoka kwenye machaguo uliyopewa',
-    },
-    '74eng8tt': {
-      'sw': 'Wasilisha',
-      'en': 'Wasilisha',
-    },
-    'bcd9gou4': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // FeaturedArtistsPage
-  {
-    'zzis3034': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // DemoPage
-  {
-    'nndo7bag': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // StoryDetailsPage
-  {
-    '1o21hc5k': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // StoryDetailsPageCopy
-  {
-    'wptbggyu': {
-      'sw': 'Mwanzo',
-      'en': 'Mwanzo',
-    },
-  },
-  // PaymentConfirmation
-  {
-    'sisdm8s6': {
-      'sw': 'Home',
-      'en': '',
-    },
-  },
-  // password_succsess_alrt
-  {
-    '9cdr0td1': {
-      'sw': 'Password changed!',
-      'en': '',
-    },
-    'm714g4la': {
-      'sw':
-          'Your password has been changed successfully use your new password to login',
-      'en': '',
-    },
-    'bh30kghu': {
-      'sw': 'Ok',
-      'en': '',
-    },
-  },
-  // WhenEverBottom
-  {
-    'uqbilfzc': {
-      'sw': 'Chaguo za Haraka',
-      'en': 'Chaguo za Haraka',
-    },
-    'odgxauyg': {
-      'sw': 'Pakua',
-      'en': 'Pakua',
-    },
-    '7fzs7t21': {
-      'sw': 'Ongeza Orodha Pendwa',
-      'en': 'Ongeza Orodha Pendwa',
-    },
-    '85udr75o': {
-      'sw': 'Geuza Mpangilio',
-      'en': 'Geuza Mpangilio',
-    },
-    '2no99jg7': {
-      'sw': 'Nyingine kama hizi',
-      'en': 'Nyingine kama hizi',
-    },
-    'qtyye74m': {
-      'sw': 'Shirikisha',
-      'en': 'Shirikisha',
-    },
-  },
-  // AccountCreatedDialog
-  {
-    'xcjoq77j': {
-      'sw': 'Akaunti imetengenezwa kikamilifu',
-      'en': 'Akaunti imetengenezwa kikamilifu',
-    },
-    'ifwfe1wl': {
-      'sw': 'Sasa unaweza kuburudika huku ukielimika upendavyo.',
-      'en': 'Sasa unaweza kuburudika huku ukielimika upendavyo.',
-    },
-    'zrgrvxw3': {
-      'sw': 'Twende sasa',
-      'en': 'Twende sasa',
-    },
-  },
-  // NoResultFoundComp
-  {
-    'q5aoajhk': {
-      'sw': 'Hakuna Matokeo',
-      'en': 'Hakuna Matokeo',
-    },
-    'xdgj78m1': {
-      'sw': 'Jaribu kutumia herufi 3 za awali za simulizi',
-      'en': 'Jaribu kutumia herufi 3 za awali za simulizi',
-    },
-  },
-  // NoNotificationYetComp
-  {
-    'gpe5dtpu': {
-      'sw': 'Hakuna Taarifa',
-      'en': 'Hakuna Taarifa',
-    },
-    'y0bgn9o5': {
-      'sw': 'Hakuna taarifa yeyote kwa sasa',
-      'en': 'Hakuna taarifa yeyote kwa sasa',
-    },
-  },
-  // sort_by_btm
-  {
-    'aew02nx5': {
-      'sw': 'Sort by',
-      'en': '',
-    },
-    'cmafpird': {
-      'sw': 'Recent',
-      'en': '',
-    },
-    '7xeca45h': {
-      'sw': 'Recently added',
-      'en': '',
-    },
-    'v9ziahjw': {
-      'sw': 'Alphabetical',
-      'en': '',
-    },
-    'wjjbutxk': {
-      'sw': 'Creator',
-      'en': '',
-    },
-  },
-  // NoSongPlaylistComp
-  {
-    'ror2owk3': {
-      'sw': 'Hakuna ulizochagua',
-      'en': 'Hakuna ulizochagua',
-    },
-    'ekonhu1v': {
-      'sw': 'Tafuta  na ongeza simulizi pendwa',
-      'en': 'Tafuta  na ongeza simulizi pendwa',
-    },
-  },
-  // LogoutAlrtDialog
-  {
-    'rxu0qsy2': {
-      'sw': 'Toka ?',
-      'en': 'Toka ?',
-    },
-    'dcr851fh': {
-      'sw': 'Ni kweli unataka kutoka ?',
-      'en': 'Ni kweli unataka kutoka ?',
-    },
-    'xuntpavf': {
-      'sw': 'Hapana',
-      'en': 'Hapana',
-    },
-    'j6diwfc7': {
-      'sw': 'Ndio',
-      'en': 'Ndio',
-    },
-  },
-  // FeedbackSubmitAlrt
-  {
-    'mi20nny6': {
-      'sw': 'Mrejesho umewasilishwa',
-      'en': 'Mrejesho wako umewasilishwa kikamilifu',
-    },
-    'dqnmfycd': {
-      'sw': 'Maoni yamepokelewa kikamilifu. Tutakurejea.',
-      'en': 'Mrejesho wako umewasilishwa kikamilifu',
-    },
-    '9j6i9mj3': {
-      'sw': 'Sawa',
-      'en': 'Sawa',
-    },
-  },
-  // LanguageSelectALrtDialog
-  {
-    '6t5vctjg': {
-      'sw': 'Lugha',
-      'en': 'Lugha',
-    },
-    'fvirzxyl': {
-      'sw': 'Kiswahili',
-      'en': 'Kiswahili',
-    },
-    '6s0s4jvz': {
-      'sw': 'English',
-      'en': 'English',
-    },
-  },
-  // PasswordSuccessAlrtDialog
-  {
-    'enh71z8b': {
-      'sw': 'Nywila Imebadilika !',
-      'en': 'Nywila Imebadilika !',
-    },
-    'r0h1adas': {
-      'sw': 'Nywila yako imebadilika kikamilifu, itumie kuingia kwenye app.',
-      'en': 'Nywila yako imebadilika kikamilifu, itumie kuingia kwenye app.',
-    },
-    '5pfvtb4m': {
-      'sw': 'Sawa',
-      'en': 'Sawa',
-    },
-  },
-  // socialAuthComponent
-  {
-    'omyauk4s': {
-      'sw': 'Google',
-      'en': 'Google',
-    },
-  },
-  // PackageItem
-  {
-    'ac0zqdlz': {
-      'sw': 'Bofya kufanya malipo',
-      'en': 'Bofya kufanya malipo',
-    },
-  },
-  // PackageListsComponent
-  {
-    'vo9pw1aw': {
-      'sw': 'Vifurushi',
-      'en': 'Vifurishi',
-    },
-    'rv2yhosj': {
-      'sw': 'Vifurushi vilivyopo',
-      'en': 'Chagua kifurushi kisha ulipie',
-    },
-  },
-  // PackagePaymentSuccess
-  {
-    'dcwrzltf': {
-      'sw': 'LIPA # (SELCOM)',
-      'en': 'LIPA # (SELCOM)',
-    },
-    'eznefvfn': {
-      'sw': 'Lipa kwa Benki au Mtandao wowote.',
-      'en': 'Lipa kwa Benki au Mtandao wowote.',
-    },
-    'fx01qmw3': {
-      'sw': 'Lipa Sasa',
-      'en': 'Lipa Sasa',
-    },
-    'retxuu9v': {
-      'sw': 'Ahirisha',
-      'en': 'Funga',
-    },
-  },
-  // CustomLoadingComponent
-  {
-    'p0rgp7cf': {
-      'sw': 'Inapakia ...',
-      'en': 'Inapakia ...',
-    },
-  },
-  // BalanceComponent
-  {
-    'dxcpkfka': {
-      'sw': 'Salio ',
-      'en': 'Salio',
-    },
-  },
-  // Miscellaneous
-  {
-    'lv2bq6px': {
-      'sw': 'Large title ',
-      'en': '',
-    },
-    'gvthp07h': {
-      'sw': 'Title 1',
-      'en': '',
-    },
-    '7cubbq2d': {
-      'sw': 'Title 2',
-      'en': '',
-    },
-    'ocli6pyv': {
-      'sw': 'Title 3',
-      'en': '',
-    },
-    'ix2pfwu7': {
-      'sw': 'Headline',
-      'en': '',
-    },
-    '2ozdagp7': {
-      'sw': 'Subheadline',
-      'en': '',
-    },
-    'i096pzld': {
-      'sw': 'Body',
-      'en': '',
-    },
-    'ltyd22sk': {
-      'sw': 'Callout',
-      'en': '',
-    },
-    '7cnbmrsr': {
-      'sw': 'button large',
-      'en': '',
-    },
-    '0gs259n8': {
-      'sw': 'button small',
-      'en': '',
-    },
-    '32o64kdd': {
-      'sw': 'Footnote',
-      'en': '',
-    },
-    '5mujlh5u': {
-      'sw': 'Button',
-      'en': '',
-    },
-    '45icto23': {
-      'sw': 'Button',
-      'en': '',
-    },
-    'l07i9ufe': {
-      'sw': 'Button',
-      'en': '',
-    },
-    'u98jzy62': {
-      'sw': 'Button',
-      'en': '',
-    },
-    '65nfg89i': {
-      'sw': 'Email address',
-      'en': '',
-    },
-    'p8mq9ul2': {
-      'sw': 'Email address',
-      'en': '',
-    },
-    'st1ig1gu': {
-      'sw': 'Search here',
-      'en': '',
-    },
-    'qwziy16v': {
-      'sw': 'Search here',
-      'en': '',
-    },
-    'rzykjx16': {
-      'sw': 'First name here',
-      'en': '',
-    },
-    '6mhmt9fe': {
-      'sw': 'First name here',
-      'en': '',
-    },
-    'p7go08ma': {
-      'sw': '',
-      'en': '',
-    },
-    'o7mmqnfj': {
-      'sw': '',
-      'en': '',
-    },
-    'x3ub8moy': {
-      'sw': 'Tungependa kukutumia arifa za taarifa na masasisho.',
-      'en': '',
-    },
-    '7cttp7t1': {
-      'sw': '',
-      'en': '',
-    },
-    'rz76rkze': {
-      'sw': '',
-      'en': '',
-    },
-    'yg7um6t7': {
-      'sw': '',
-      'en': '',
-    },
-    'q1xxzm8p': {
-      'sw': '',
-      'en': '',
-    },
-    'u3garogz': {
-      'sw': '',
-      'en': '',
-    },
-    '86e883d2': {
-      'sw': '',
-      'en': '',
-    },
-    'ni3715lv': {
-      'sw': '',
-      'en': '',
-    },
-    'bxyve1g5': {
-      'sw': '',
-      'en': '',
-    },
-    '4dqfr77n': {
-      'sw': '',
-      'en': '',
-    },
-    'd4xu56h3': {
-      'sw': '',
-      'en': '',
-    },
-    'yek5vkq9': {
-      'sw': '',
-      'en': '',
-    },
-    'ivsiaxf7': {
-      'sw': '',
-      'en': '',
-    },
-    '0lf6d3hd': {
-      'sw': '',
-      'en': '',
-    },
-    'e7tb8hxp': {
-      'sw': '',
-      'en': '',
-    },
-    'qggcfyps': {
-      'sw': '',
-      'en': '',
-    },
-    'o0314qql': {
-      'sw': '',
-      'en': '',
-    },
-    'kazb2ai6': {
-      'sw': '',
-      'en': '',
-    },
-    'l7nb55yw': {
-      'sw': '',
-      'en': '',
-    },
-    '8g0307t1': {
-      'sw': '',
-      'en': '',
-    },
-    '5ts5jtbk': {
-      'sw': '',
-      'en': '',
-    },
-    '3onoeqrq': {
-      'sw': '',
-      'en': '',
-    },
-    'q9073edi': {
-      'sw': '',
-      'en': '',
-    },
-    'jyzwn3h8': {
-      'sw': '',
-      'en': '',
-    },
-    'lvjhxg3k': {
-      'sw': '',
-      'en': '',
-    },
-    'i9jijiz2': {
-      'sw': '',
-      'en': '',
-    },
-    'cscfh5nc': {
-      'sw': '',
-      'en': '',
-    },
-    'uy69i0kj': {
-      'sw': '',
-      'en': '',
-    },
-    'ti8ezssb': {
-      'sw': '',
-      'en': '',
-    },
-  },
-].reduce((a, b) => a..addAll(b));
+  'resume_all_downloads': {'sw': 'Jaribu tena zote', 'en': 'Resume all'},
+  'dl_unavail': {'sw': 'Kupakua hakupatikani', 'en': 'Downloads unavailable'},
+  'dl_web': {'sw': 'Kupakua hakupatikani kwenye kivinjari. Tumia programu ya simu.', 'en': 'Downloads aren’t available in the browser. Use the mobile app.'},
+  'dl_web2': {'sw': 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.', 'en': 'Downloading stories isn’t available on the web. Use the mobile app.'},
+  'download_short': {'sw': 'Chini', 'en': 'Download'},
+  'downloaded': {'sw': 'Imepakuliwa', 'en': 'Downloaded'},
+  'downloading': {'sw': 'Inapakua', 'en': 'Downloading'},
+  'downloads_tab': {'sw': 'Ulizopakua', 'en': 'Downloads'},
+  'edit_profile': {'sw': 'Hariri wasifu', 'en': 'Edit profile'},
+  'end_of_episode': {'sw': 'Mwisho wa kipindi', 'en': 'End of episode'},
+  'episodes': {'sw': 'Vipindi', 'en': 'Episodes'},
+  'err_failed': {'sw': 'Imeshindikana kucheza. Jaribu tena.', 'en': 'Could not play. Please try again.'},
+  'err_locked': {'sw': 'Simulizi hii imefungwa. Ifungue kwanza ili kuisikiliza.', 'en': 'This story is locked. Unlock it first to listen.'},
+  'err_login': {'sw': 'Ingia ili kusikiliza simulizi hii.', 'en': 'Log in to listen to this story.'},
+  'err_next_locked': {'sw': 'Sehemu zinazofuata zimefungwa. Zifungue ili kuendelea.', 'en': 'The next parts are locked. Unlock them to continue.'},
+  'err_offline': {'sw': 'Hakuna mtandao. Pakua simulizi ili kusikiliza bila mtandao.', 'en': 'No connection. Download stories to listen offline.'},
+  'error_load': {'sw': 'Imeshindikana kupakia. Angalia mtandao wako.', 'en': 'Could not load. Check your connection.'},
+  'error_title': {'sw': 'Kuna tatizo', 'en': 'Something went wrong'},
+  'failed_retry': {'sw': 'Imeshindikana. Jaribu tena.', 'en': 'Something went wrong. Please try again.'},
+  'favourites_tab': {'sw': 'Uzipendazo', 'en': 'Favourites'},
+  'feedback_title': {'sw': 'Maoni', 'en': 'Feedback'},
+  'follow': {'sw': 'Fuatilia', 'en': 'Follow'},
+  'following': {'sw': 'Unafuatilia', 'en': 'Following'},
+  'forward15': {'sw': 'Ruka sekunde 15', 'en': 'Forward 15 seconds'},
+  'greet_afternoon': {'sw': 'Habari za mchana', 'en': 'Good afternoon'},
+  'greet_evening': {'sw': 'Habari za jioni', 'en': 'Good evening'},
+  'greet_morning': {'sw': 'Habari za asubuhi', 'en': 'Good morning'},
+  'guest': {'sw': 'Mgeni', 'en': 'Guest'},
+  'guest_account': {'sw': 'Mgeni', 'en': 'Guest'},
+  'guest_login_hint': {'sw': 'Ingia ili kufikia akaunti yako', 'en': 'Log in to access your account'},
+  'hero_empty': {'sw': 'Simulizi mpya zitaonekana hapa hivi karibuni.', 'en': 'New stories will appear here soon.'},
+  'hero_load_fail': {'sw': 'Imeshindikana kupakia simulizi. Angalia mtandao wako.', 'en': 'Could not load stories. Check your connection.'},
+  'hide': {'sw': 'Ficha', 'en': 'Hide'},
+  'his_stories': {'sw': 'Simulizi zake', 'en': 'Their stories'},
+  'listen_now': {'sw': 'Sikiliza Sasa', 'en': 'Listen now'},
+  'locked': {'sw': 'Imefungwa', 'en': 'Locked'},
+  'locked_sub': {'sw': 'Fungua kwa sarafu {n} ili ukisikilize.', 'en': 'Unlock it for {n} coins to listen.'},
+  'locked_title': {'sw': 'Kipindi hiki kimefungwa', 'en': 'This episode is locked'},
+  'login_failed': {'sw': 'Imeshindikana kuingia.', 'en': 'Login failed.'},
+  'login_first': {'sw': 'Tafadhali ingia kwanza ili kuendelea.', 'en': 'Please log in first to continue.'},
+  'login_ok': {'sw': 'Umeingia kikamilifu.', 'en': 'Logged in successfully.'},
+  'login_sub': {'sw': 'Karibu tena. Ingia ili uendelee kusikiliza simulizi zako.', 'en': 'Welcome back. Log in to keep listening to your stories.'},
+  'login_to_buy': {'sw': 'Tafadhali ingia kwanza ili kununua kipindi hiki.', 'en': 'Please log in first to buy this episode.'},
+  'login_to_follow': {'sw': 'Tafadhali ingia kwanza ili kumfuatilia mwandishi.', 'en': 'Please log in first to follow this author.'},
+  'login_to_save': {'sw': 'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.', 'en': 'Please log in first to save to favourites.'},
+  'login_to_see': {'sw': 'Ingia ili kuona maktaba yako', 'en': 'Log in to see your library'},
+  'minutes_n': {'sw': 'Dakika {n}', 'en': '{n} minutes'},
+  'my_profile': {'sw': 'Wasifu wangu', 'en': 'My profile'},
+  'need_more': {'sw': 'Unahitaji sarafu {n} zaidi.', 'en': 'You need {n} more coins.'},
+  'new_password_title': {'sw': 'Nywila Mpya', 'en': 'New password'},
+  'new_playlist': {'sw': 'Orodha mpya', 'en': 'New playlist'},
+  'next': {'sw': 'Inayofuata', 'en': 'Next'},
+  'no_authors': {'sw': 'Waandishi bado hawapatikani.', 'en': 'Authors are not available yet.'},
+  'no_categories': {'sw': 'Makundi bado hayapatikani.', 'en': 'Categories are not available yet.'},
+  'no_category': {'sw': 'Bila kundi', 'en': 'No category'},
+  'no_downloads': {'sw': 'Hujapakua simulizi bado', 'en': 'No downloads yet'},
+  'no_episodes': {'sw': 'Hakuna vipindi bado', 'en': 'No episodes yet'},
+  'no_episodes_sub': {'sw': 'Vipindi vya simulizi hii vitaonekana hapa.', 'en': 'Episodes of this story will appear here.'},
+  'no_name': {'sw': 'Bila jina', 'en': 'Untitled'},
+  'no_results_for': {'sw': 'Hatukupata simulizi inayolingana na “{q}”.', 'en': 'We couldn’t find a story matching “{q}”.'},
+  'no_saved_title': {'sw': 'Hakuna ulizohifadhi', 'en': 'Nothing saved yet'},
+  'no_stories_now': {'sw': 'Hakuna simulizi za kuonyesha kwa sasa.', 'en': 'No stories to show right now.'},
+  'no_stories_yet': {'sw': 'Hakuna simulizi bado.', 'en': 'No stories yet.'},
+  'nothing_playing': {'sw': 'Bado hakuna kinachocheza', 'en': 'Nothing is playing yet'},
+  'nothing_to_download': {'sw': 'Hakuna cha kupakua kwa sasa.', 'en': 'Nothing to download right now.'},
+  'notifications': {'sw': 'Taarifa', 'en': 'Notifications'},
+  'now_playing': {'sw': 'Unasikiliza', 'en': 'Now playing'},
+  'offline_sub': {'sw': 'Angalia mtandao wako kisha ujaribu tena. Simulizi ulizopakua bado zinapatikana.', 'en': 'Check your connection and try again. Your downloaded stories still work.'},
+  'offline_title': {'sw': 'Hatuna mtandao kwa sasa', 'en': 'You\'re offline right now'},
+  'onboard_0_sub': {'sw': 'Sikiliza simulizi za mapenzi, uchawi, siasa na uchumi popote ulipo, hata ukiwa offline.', 'en': 'Listen to stories about love, magic, politics and the economy wherever you are, even offline.'},
+  'onboard_0_title': {'sw': 'Simulizi za kila aina', 'en': 'Stories of every kind'},
+  'onboard_1_sub': {'sw': 'Pata hadithi mpya kila wiki katika makundi mbalimbali unayopenda.', 'en': 'Find new stories every week in the categories you love.'},
+  'onboard_1_title': {'sw': 'Maktaba kubwa', 'en': 'A big library'},
+  'onboard_2_sub': {'sw': 'Pakua simulizi zako uzisikilize bila intaneti, popote na wakati wowote.', 'en': 'Download your stories and listen without internet, anywhere, any time.'},
+  'onboard_2_title': {'sw': 'Sikiliza Offline', 'en': 'Listen offline'},
+  'open_player': {'sw': 'Fungua kicheza kikuu', 'en': 'Open full player'},
+  'package_word': {'sw': 'Kifurushi', 'en': 'Package'},
+  'pause': {'sw': 'Simamisha', 'en': 'Pause'},
+  'pay_hint': {'sw': 'Lipa kwa namba hii kupitia benki au mtandao wowote wa simu, kisha sarafu zitaingia kwenye kibubu chako.', 'en': 'Pay to this number through any bank or mobile network and the coins will be added to your wallet.'},
+  'payment_info_fail': {'sw': 'Imeshindwa kupata taarifa za malipo', 'en': 'Could not get payment details'},
+  'payment_link_fail': {'sw': 'Imeshindwa kupata kiungo cha malipo', 'en': 'Could not get the payment link'},
+  'payment_secure': {'sw': 'Malipo ni salama kupitia Selcom', 'en': 'Payments are secure through Selcom'},
+  'per_coin': {'sw': 'TZS {price} kwa sarafu', 'en': 'TZS {price} per coin'},
+  'phone_label': {'sw': 'Simu', 'en': 'Phone'},
+  'play': {'sw': 'Cheza', 'en': 'Play'},
+  'play_error_short': {'sw': 'Imeshindikana kucheza.', 'en': 'Could not play.'},
+  'playlist': {'sw': 'Orodha', 'en': 'Playlist'},
+  'playlist_name': {'sw': 'Jina la orodha', 'en': 'Playlist name'},
+  'playlist_of_day': {'sw': 'Orodha ya siku', 'en': 'Playlist of the day'},
+  'popular': {'sw': 'Zinazopendwa', 'en': 'Popular'},
+  'popular_cats': {'sw': 'Makundi maarufu', 'en': 'Popular categories'},
+  'previous': {'sw': 'Iliyopita', 'en': 'Previous'},
+  'profile': {'sw': 'Wasifu', 'en': 'Profile'},
+  'queue': {'sw': 'Foleni', 'en': 'Queue'},
+  'queue_empty': {'sw': 'Foleni ni tupu', 'en': 'The queue is empty'},
+  'refresh': {'sw': 'Onyesha upya', 'en': 'Refresh'},
+  'remove': {'sw': 'Ondoa', 'en': 'Remove'},
+  'removed_fav': {'sw': 'Imeondolewa kwenye Pendwa.', 'en': 'Removed from favourites.'},
+  'repeat': {'sw': 'Rudia', 'en': 'Repeat'},
+  'reset_sub': {'sw': 'Weka nywila mpya ili uendelee kusikiliza simulizi zako.', 'en': 'Set a new password to keep listening to your stories.'},
+  'reset_title': {'sw': 'Rejesha Nywila', 'en': 'Reset password'},
+  'results': {'sw': 'Matokeo', 'en': 'Results'},
+  'retry': {'sw': 'Jaribu tena', 'en': 'Try again'},
+  'save_story': {'sw': 'Hifadhi', 'en': 'Save'},
+  'saved': {'sw': 'Imehifadhiwa', 'en': 'Saved'},
+  'saved_empty_hint': {'sw': 'Tafuta na hifadhi simulizi pendwa ili uzipate hapa kwa haraka.', 'en': 'Search and save your favourite stories to find them here quickly.'},
+  'saved_hint': {'sw': 'Hifadhi simulizi unazozipenda na zitaonekana hapa.', 'en': 'Save stories you love and they will appear here.'},
+  'saved_tab': {'sw': 'Ulizohifadhi', 'en': 'Saved'},
+  'search_a11y': {'sw': 'Tafuta simulizi au mwandishi', 'en': 'Search stories or authors'},
+  'search_hint_home': {'sw': 'Tafuta simulizi, mwandishi…', 'en': 'Search stories, authors…'},
+  'search_prompt': {'sw': 'Unatafuta simulizi gani?', 'en': 'What story are you looking for?'},
+  'search_stories': {'sw': 'Tafuta simulizi', 'en': 'Search stories'},
+  'sem_balance': {'sw': 'Salio lako: {n}. Jaza kibubu', 'en': 'Your balance: {n}. Top up wallet'},
+  'sem_now_playing': {'sw': 'Kinachocheza sasa: {title}', 'en': 'Now playing: {title}'},
+  'share_generic': {'sw': 'Sikiliza simulizi na hadithi za kusisimua kwa Kiswahili kwenye Simulizi za Sauti: ', 'en': 'Listen to exciting Swahili stories on Simulizi za Sauti: '},
+  'share_story': {'sw': '{title} na {artist}\nSikiliza kwenye Simulizi za Sauti: ', 'en': '{title} by {artist}\nListen on Simulizi za Sauti: '},
+  'show': {'sw': 'Onyesha', 'en': 'Show'},
+  'shuffle': {'sw': 'Changanya', 'en': 'Shuffle'},
+  'signup_sub': {'sw': 'Fungua akaunti yako ili usikilize simulizi za Kiswahili.', 'en': 'Create your account to listen to Swahili stories.'},
+  'similar_authors': {'sw': 'Waandishi wanaofanana', 'en': 'Similar authors'},
+  'sleep_timer': {'sw': 'Kipima muda', 'en': 'Sleep timer'},
+  'speed': {'sw': 'Kasi', 'en': 'Speed'},
+  'start': {'sw': 'Anza', 'en': 'Get started'},
+  'stories_label': {'sw': 'Simulizi', 'en': 'Stories'},
+  'tech_problem': {'sw': 'Tatizo la Kiufundi', 'en': 'Technical problem'},
+  'tech_try_later': {'sw': 'Kuna tatizo la kiufundi. Jaribu tena baadaye.', 'en': 'A technical problem occurred. Please try again later.'},
+  'theme': {'sw': 'Mandhari', 'en': 'Theme'},
+  'theme_dark': {'sw': 'Giza', 'en': 'Dark'},
+  'theme_light': {'sw': 'Mwanga', 'en': 'Light'},
+  'theme_system': {'sw': 'Mfumo', 'en': 'System'},
+  'timer_short': {'sw': 'Muda', 'en': 'Timer'},
+  'top_up': {'sw': 'Jaza kibubu', 'en': 'Top up wallet'},
+  'try_again_words': {'sw': 'Jaribu maneno mengine', 'en': 'Try other words'},
+  'try_other': {'sw': 'Jaribu maneno mengine', 'en': 'Try other words'},
+  'turn_off': {'sw': 'Zima', 'en': 'Turn off'},
+  'unavailable_now': {'sw': 'Haipatikani kwa sasa.', 'en': 'Not available right now.'},
+  'unlock_cta': {'sw': 'Fungua kipindi', 'en': 'Unlock episode'},
+  'unlock_first': {'sw': 'Fungua kwanza ili upakue.', 'en': 'Unlock it first to download.'},
+  'unlock_listen': {'sw': 'Fungua na Sikiliza · {n}', 'en': 'Unlock & Listen · {n}'},
+  'unlock_sheet_hint': {'sw': 'Jaza kibubu chako kisha ufungue kipindi hiki.', 'en': 'Top up your wallet, then unlock this episode.'},
+  'unlocked': {'sw': 'Imefunguliwa!', 'en': 'Unlocked!'},
+  'unlocked_sub': {'sw': 'Sarafu {n} zimetumika · Salio {b}', 'en': '{n} coins used · Balance {b}'},
+  'unlocking': {'sw': 'Inafungua…', 'en': 'Unlocking…'},
+  'verify_title': {'sw': 'Thibitisha Msimbo', 'en': 'Verify code'},
+  'wallet_coins': {'sw': 'sarafu', 'en': 'coins'},
+  'welcome': {'sw': 'Karibu', 'en': 'Welcome'},
+};
+
+/// Context-free shortcut for [FFLocalizations.translate], e.g. trs('retry').
+String trs(String key, {Map<String, String>? args}) =>
+    FFLocalizations.translate(key, args: args);
+
+extension TranslateContext on BuildContext {
+  /// context.tr('retry'): translated text that updates when the language changes.
+  String tr(String key, {Map<String, String>? args}) =>
+      FFLocalizations.of(this).getText(key, args: args);
+}

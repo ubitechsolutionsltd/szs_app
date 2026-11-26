@@ -8,15 +8,39 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import '/custom_code/actions/downloads.dart' show resumeAllDownloads;
 import '/custom_code/player/download_manager.dart';
 import '/custom_code/player/player_core.dart';
 import '/custom_code/player/player_service.dart';
+import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_widgets.dart';
+
+/// [done], split into one list per story (in the order [DownloadManager.downloaded] already sorts them:
+/// most recently downloaded story first, episodes in their own natural order inside each).
+List<List<DownloadedEpisode>> _groupByStory(List<DownloadedEpisode> done) {
+  final groups = <List<DownloadedEpisode>>[];
+  for (final episode in done) {
+    if (groups.isNotEmpty && groups.last.first.item.contentId == episode.item.contentId) {
+      groups.last.add(episode);
+    } else {
+      groups.add([episode]);
+    }
+  }
+  return groups;
+}
+
+/// The story title a group of downloaded episodes was tagged with, or a generic fallback for episodes
+/// downloaded before this was tracked.
+String _groupTitle(List<DownloadedEpisode> group) {
+  final subtitle = group.first.item.subtitle;
+  return subtitle.isNotEmpty ? subtitle : trs('episodes');
+}
 
 /// "Downloaded" screen content: episodes saved for offline listening, with progress, play and delete.
 class DownloadsList extends StatelessWidget {
-  const DownloadsList({super.key, this.width, this.height});
+  DownloadsList({super.key, this.width, this.height});
 
   final double? width;
   final double? height;
@@ -30,11 +54,11 @@ class DownloadsList extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Futa zote?'),
-        content: const Text('Simulizi zote ulizopakua zitafutwa kwenye simu hii.'),
+        title: Text(trs('delete_all_q')),
+        content: Text(trs('delete_all_msg')),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Ghairi')),
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Futa zote')),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(trs('cancel'))),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(trs('delete_all'))),
         ],
       ),
     );
@@ -48,15 +72,10 @@ class DownloadsList extends StatelessWidget {
     final manager = DownloadManager.instance;
 
     if (!manager.supported) {
-      return const Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: EdgeInsets.only(top: 24),
-          child: StateMessage(
-            icon: Icons.cloud_off_rounded,
-            message: 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.',
-          ),
-        ),
+      return EmptyState(
+        icon: Icons.cloud_off_rounded,
+        title: trs('dl_unavail'),
+        message: trs('dl_web2'),
       );
     }
 
@@ -68,49 +87,67 @@ class DownloadsList extends StatelessWidget {
         builder: (context, _, __) {
           final done = manager.downloaded;
           final active = manager.activeDownloads;
+          final hasFailed = active.any((item) => manager.stateOf(item.id).status == DownloadStatus.failed);
+          final groups = _groupByStory(done);
 
           if (done.isEmpty && active.isEmpty) {
-            return const Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 24),
-                child: StateMessage(
-                  icon: Icons.download_for_offline_outlined,
-                  message: 'Hujapakua simulizi bado. Gusa "Pakua" kwenye kicheza ili kusikiliza bila mtandao.',
-                ),
-              ),
+            return EmptyState(
+              icon: Icons.download_for_offline_outlined,
+              title: trs('no_downloads'),
+              message: trs('dl_hint'),
             );
           }
 
           return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             children: [
-              if (done.isNotEmpty)
+              if (done.isNotEmpty || hasFailed)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
                   child: Row(children: [
                     Expanded(
                       child: Text(
-                        '${done.length} zimepakuliwa · ${_size(manager.totalBytes)}',
+                        done.isEmpty
+                            ? ''
+                            : '${done.length} zimepakuliwa · ${_size(manager.totalBytes)}',
                         style: theme.bodyMedium.override(
                             fontFamily: 'SF Pro Display', color: palette.muted, fontSize: 14, letterSpacing: 0),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () => _confirmClear(context),
-                      child: Text('Futa zote', style: TextStyle(color: palette.error, fontWeight: FontWeight.w700)),
-                    ),
+                    if (hasFailed)
+                      TextButton(
+                        onPressed: () => resumeAllDownloads(),
+                        child: Text(trs('resume_all_downloads'),
+                            style: TextStyle(color: palette.accent, fontWeight: FontWeight.w700)),
+                      ),
+                    if (done.isNotEmpty)
+                      TextButton(
+                        onPressed: () => _confirmClear(context),
+                        child: Text(trs('delete_all'), style: TextStyle(color: palette.error, fontWeight: FontWeight.w700)),
+                      ),
                   ]),
                 ),
               for (final item in active) _ActiveRow(item: item),
-              for (var i = 0; i < done.length; i++)
-                _DownloadedRow(
-                  episode: done[i],
-                  onPlay: () => PlayerService.instance.playQueue(
-                    [for (final d in done) d.item],
-                    startIndex: i,
+              for (final group in groups) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 14, 4, 6),
+                  child: Text(
+                    _groupTitle(group),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.bodyMedium.override(
+                        fontFamily: 'SF Pro Display', color: palette.text, fontSize: 15, fontWeight: FontWeight.w800, letterSpacing: 0),
                   ),
                 ),
+                for (var i = 0; i < group.length; i++)
+                  _DownloadedRow(
+                    episode: group[i],
+                    onPlay: () => PlayerService.instance.playQueue(
+                      [for (final d in group) d.item],
+                      startIndex: i,
+                    ),
+                  ),
+              ],
             ],
           );
         },
@@ -136,8 +173,9 @@ class _DownloadedRow extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: BorderRadius.circular(AppSpace.radiusMd),
-        border: Border.all(color: palette.outline, width: 0.6),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: palette.outline, width: 0.8),
+        boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
       ),
       child: InkWell(
         onTap: onPlay,
@@ -157,7 +195,8 @@ class _DownloadedRow extends StatelessWidget {
                       letterSpacing: 0)),
               const SizedBox(height: 3),
               Text(
-                [if (item.subtitle.isNotEmpty) item.subtitle, DownloadsList._size(episode.bytes)].join(' · '),
+                // The story title is already the group header above this row, so just the file size here.
+                DownloadsList._size(episode.bytes),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.bodySmall
@@ -166,12 +205,12 @@ class _DownloadedRow extends StatelessWidget {
             ]),
           ),
           IconButton(
-            tooltip: 'Cheza',
+            tooltip: trs('play'),
             icon: Icon(Icons.play_circle_fill_rounded, color: palette.accent, size: 34),
             onPressed: onPlay,
           ),
           IconButton(
-            tooltip: 'Futa',
+            tooltip: trs('delete'),
             icon: Icon(Icons.delete_outline_rounded, color: palette.muted),
             onPressed: () => DownloadManager.instance.remove(item.id),
           ),
@@ -199,8 +238,9 @@ class _ActiveRow extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: palette.surface,
-        borderRadius: BorderRadius.circular(AppSpace.radiusMd),
-        border: Border.all(color: failed ? palette.error.withValues(alpha: 0.5) : palette.outline, width: 0.6),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: failed ? palette.error.withValues(alpha: 0.5) : palette.outline, width: 0.8),
+        boxShadow: AppTokens.cardShadow(Theme.of(context).brightness == Brightness.dark),
       ),
       child: Row(children: [
         PlayerArtworkThumb(url: item.artUrl),
@@ -218,7 +258,7 @@ class _ActiveRow extends StatelessWidget {
                     letterSpacing: 0)),
             const SizedBox(height: 8),
             if (failed)
-              Text(state.locked ? 'Fungua kwanza ili upakue.' : 'Imeshindikana. Gusa kujaribu tena.',
+              Text(state.locked ? 'Fungua kwanza ili upakue.' : trs('dl_failed_tap'),
                   style: theme.bodySmall
                       .override(fontFamily: 'SF Pro Display', color: palette.error, fontSize: 13, letterSpacing: 0))
             else
@@ -234,7 +274,7 @@ class _ActiveRow extends StatelessWidget {
           ]),
         ),
         IconButton(
-          tooltip: failed ? 'Jaribu tena' : 'Ghairi',
+          tooltip: failed ? 'Jaribu tena' : trs('cancel'),
           icon: Icon(failed ? Icons.refresh_rounded : Icons.close_rounded, color: palette.muted),
           onPressed: () => failed ? manager.download(item) : manager.cancel(item.id),
         ),

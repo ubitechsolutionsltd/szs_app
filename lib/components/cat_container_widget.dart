@@ -104,7 +104,7 @@ class _CatContainerWidgetState extends State<CatContainerWidget> {
                           return widget.ctData?.cNArbic;
                         }
                       }(),
-                      'Bila jina',
+                      trs('no_name'),
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,

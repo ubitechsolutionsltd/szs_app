@@ -10,32 +10,33 @@ import 'download_manager.dart';
 import 'player_core.dart';
 import 'player_service.dart';
 import 'playlist_store.dart';
+import '/flutter_flow/internationalization.dart' show trs;
 
 class PlayerStrings {
-  static const nowPlaying = 'Unasikiliza';
-  static const queue = 'Foleni';
-  static const queueEmpty = 'Foleni ni tupu';
-  static const speed = 'Kasi';
-  static const sleepTimer = 'Kipima muda';
-  static const endOfEpisode = 'Mwisho wa kipindi';
-  static const turnOff = 'Zima';
-  static const download = 'Pakua';
-  static const downloaded = 'Imepakuliwa';
-  static const downloading = 'Inapakua';
-  static const retry = 'Jaribu tena';
-  static const addToPlaylist = 'Ongeza kwenye orodha';
-  static const newPlaylist = 'Orodha mpya';
-  static const playlistName = 'Jina la orodha';
-  static const create = 'Unda';
-  static const cancel = 'Ghairi';
-  static const remove = 'Ondoa';
-  static const added = 'Imeongezwa kwenye orodha';
-  static const nothingPlaying = 'Bado hakuna kinachocheza';
-  static const locked = 'Simulizi hii imefungwa. Ifungue kwanza ili kuisikiliza.';
-  static const nextLocked = 'Sehemu zinazofuata zimefungwa. Zifungue ili kuendelea.';
-  static const offline = 'Hakuna mtandao. Pakua simulizi ili kusikiliza bila mtandao.';
-  static const failed = 'Imeshindikana kucheza. Jaribu tena.';
-  static String minutes(int m) => 'Dakika $m';
+  static String get nowPlaying => trs('now_playing');
+  static String get queue => trs('queue');
+  static String get queueEmpty => trs('queue_empty');
+  static String get speed => trs('speed');
+  static String get sleepTimer => trs('sleep_timer');
+  static String get endOfEpisode => trs('end_of_episode');
+  static String get turnOff => trs('turn_off');
+  static String get download => trs('odgxauyg');
+  static String get downloaded => trs('downloaded');
+  static String get downloading => trs('downloading');
+  static String get retry => trs('retry');
+  static String get addToPlaylist => trs('add_to_playlist');
+  static String get newPlaylist => trs('new_playlist');
+  static String get playlistName => trs('playlist_name');
+  static String get create => trs('create');
+  static String get cancel => trs('cancel');
+  static String get remove => trs('remove');
+  static String get added => trs('added_to_playlist');
+  static String get nothingPlaying => trs('nothing_playing');
+  static String get locked => trs('err_locked');
+  static String get nextLocked => trs('err_next_locked');
+  static String get offline => trs('err_offline');
+  static String get failed => trs('err_failed');
+  static String minutes(int m) => trs('minutes_n', args: {'n': '$m'});
 
   static String? errorText(PlayerErrorCode code) {
     switch (code) {
@@ -47,6 +48,8 @@ class PlayerStrings {
         return offline;
       case PlayerErrorCode.failed:
         return failed;
+      case PlayerErrorCode.loginRequired:
+        return trs('err_login');
       case PlayerErrorCode.none:
         return null;
     }
@@ -64,10 +67,13 @@ String formatDuration(Duration d) {
 /// crossfades when the track changes — gives the player a sense of life
 /// instead of a static image.
 class PlayerArtwork extends StatefulWidget {
-  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16, this.playing = false});
+  const PlayerArtwork({super.key, required this.url, required this.size, this.radius = 16, this.playing = false, this.aspect = 1.0});
 
   final String url;
   final double size;
+
+  /// Height / width (1 = square).
+  final double aspect;
   final double radius;
   final bool playing;
 
@@ -104,9 +110,10 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final pal = AppPalette.of(context);
+    final h = widget.size * widget.aspect;
     final placeholder = Container(
       width: widget.size,
-      height: widget.size,
+      height: h,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -135,7 +142,7 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
         : CachedNetworkImage(
             imageUrl: widget.url,
             width: widget.size,
-            height: widget.size,
+            height: h,
             fit: BoxFit.cover,
             placeholder: (_, __) => placeholder,
             errorWidget: (_, __, ___) => placeholder,
@@ -179,9 +186,12 @@ class _PlayerArtworkState extends State<PlayerArtwork> with SingleTickerProvider
 
 /// Seek bar with buffered progress and a drag that only seeks when released.
 class SeekBar extends StatefulWidget {
-  const SeekBar({super.key, required this.service});
+  const SeekBar({super.key, required this.service, this.onDark = false});
 
   final PlayerService service;
+
+  /// White-on-dark styling with a "-remaining" label (the full-screen player); default is the themed look.
+  final bool onDark;
 
   @override
   State<SeekBar> createState() => _SeekBarState();
@@ -201,8 +211,12 @@ class _SeekBarState extends State<SeekBar> {
         final position = snap.data?.position ?? Duration.zero;
         final duration = snap.data?.duration ?? Duration.zero;
         final buffered = snap.data?.buffered ?? Duration.zero;
-        final maxMs = duration.inMilliseconds <= 0 ? 1.0 : duration.inMilliseconds.toDouble();
-        final valueMs = (_dragMs ?? position.inMilliseconds.toDouble()).clamp(0.0, maxMs);
+        // The server may report no length (audio_duration 0) and the player cannot always work it out. With an
+        // unknown total the bar must still show the live position instead of clamping it to nothing.
+        final known = duration.inMilliseconds > 0;
+        final positionMs = position.inMilliseconds.toDouble();
+        final maxMs = known ? duration.inMilliseconds.toDouble() : (positionMs > 1 ? positionMs : 1.0);
+        final valueMs = known ? (_dragMs ?? positionMs).clamp(0.0, maxMs) : positionMs;
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -212,17 +226,17 @@ class _SeekBarState extends State<SeekBar> {
                 trackHeight: 4,
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-                activeTrackColor: pal.accent,
-                inactiveTrackColor: pal.outline,
-                thumbColor: pal.accent,
-                secondaryActiveTrackColor: pal.accent.withValues(alpha: 0.3),
+                activeTrackColor: widget.onDark ? const Color(0xFF3FB4FF) : pal.accent,
+                inactiveTrackColor: widget.onDark ? Colors.white24 : pal.outline,
+                thumbColor: widget.onDark ? Colors.white : pal.accent,
+                secondaryActiveTrackColor: (widget.onDark ? Colors.white : pal.accent).withValues(alpha: 0.28),
               ),
               child: Slider(
-                value: valueMs,
+                value: known ? valueMs : 0,
                 min: 0,
                 max: maxMs,
                 secondaryTrackValue: buffered.inMilliseconds.toDouble().clamp(0.0, maxMs),
-                onChanged: duration == Duration.zero ? null : (v) => setState(() => _dragMs = v),
+                onChanged: !known ? null : (v) => setState(() => _dragMs = v),
                 onChangeEnd: (v) {
                   widget.service.seek(Duration(milliseconds: v.toInt()));
                   setState(() => _dragMs = null);
@@ -235,9 +249,14 @@ class _SeekBarState extends State<SeekBar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(formatDuration(Duration(milliseconds: valueMs.toInt())),
-                      style: theme.labelSmall.copyWith(color: pal.muted)),
-                  Text(formatDuration(duration),
-                      style: theme.labelSmall.copyWith(color: pal.muted)),
+                      style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
+                  Text(
+                      !known
+                          ? '--:--'
+                          : widget.onDark
+                              ? '-${formatDuration(Duration(milliseconds: (maxMs - valueMs).clamp(0.0, maxMs).toInt()))}'
+                              : formatDuration(duration),
+                      style: theme.labelSmall.copyWith(color: widget.onDark ? Colors.white70 : pal.muted, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -451,7 +470,7 @@ class PlayerSheets {
           await store.addItem(playlistId, item);
           if (sheetContext.mounted) {
             Navigator.of(sheetContext).pop();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(PlayerStrings.added)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(PlayerStrings.added)));
           }
         }
 
@@ -460,17 +479,17 @@ class PlayerSheets {
           final name = await showDialog<String>(
             context: sheetContext,
             builder: (dialogContext) => AlertDialog(
-              title: const Text(PlayerStrings.newPlaylist),
+              title: Text(PlayerStrings.newPlaylist),
               content: TextField(
                 controller: controller,
                 autofocus: true,
-                decoration: const InputDecoration(hintText: PlayerStrings.playlistName),
+                decoration: InputDecoration(hintText: PlayerStrings.playlistName),
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text(PlayerStrings.cancel)),
+                TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(PlayerStrings.cancel)),
                 TextButton(
                     onPressed: () => Navigator.of(dialogContext).pop(controller.text),
-                    child: const Text(PlayerStrings.create)),
+                    child: Text(PlayerStrings.create)),
               ],
             ),
           );

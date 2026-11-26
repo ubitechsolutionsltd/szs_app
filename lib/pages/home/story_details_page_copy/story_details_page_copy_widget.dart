@@ -216,7 +216,7 @@ class _StoryDetailsPageCopyWidgetState extends State<StoryDetailsPageCopyWidget>
                                   onPressed: () async {
                                     if (!isLoggedIn) {
                                       promptLogin(context,
-                                          'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+                                          trs('login_to_save'));
                                       return;
                                     }
                                     var _shouldSetState = false;

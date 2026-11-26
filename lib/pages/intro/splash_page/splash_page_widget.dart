@@ -1,6 +1,7 @@
 import '/custom_code/ui/app_logo.dart';
+import '/custom_code/ui/app_tokens.dart';
+import '/custom_code/ui/wave_background.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(
         Duration(
-          milliseconds: 3000,
+          milliseconds: 2200,
         ),
       );
       if (FFAppState().isIntro == true) {
@@ -97,52 +98,64 @@ class _SplashPageWidgetState extends State<SplashPageWidget>
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: AppTokens.brandPrimary,
+      body: WaveBackground(
+        child: SafeArea(
+          child: Center(
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppLogo(size: 128.0, radius: 32.0).animateOnPageLoad(
-                      animationsMap['imageOnPageLoadAnimation']!),
-                  Text(
-                    FFLocalizations.of(context).getText(
-                      'dzjyko91' /* Sikiliza Uelimike. */,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(34.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.22),
+                          blurRadius: 30.0,
+                          offset: const Offset(0, 12),
+                        ),
+                      ],
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).tertiary,
-                          fontSize: 22.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.bold,
-                          lineHeight: 1.5,
-                        ),
-                  ).animateOnPageLoad(
-                      animationsMap['textOnPageLoadAnimation']!),
+                    child: const AppLogo(size: 116.0, radius: 34.0),
+                  ).animateOnPageLoad(animationsMap['imageOnPageLoadAnimation']!),
+                  const SizedBox(height: 22.0),
                   Text(
-                    'Maisha ni Hadithi',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'SF Pro Display',
-                          color: FlutterFlowTheme.of(context).primary,
-                          fontSize: 16.0,
-                          fontStyle: FontStyle.italic,
-                          letterSpacing: 0.4,
-                        ),
+                    'Simulizi za Sauti',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: AppTokens.fontFamily,
+                      color: Colors.white,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.4,
+                    ),
+                  ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation']!),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    trs('about_tagline'),
+                    style: TextStyle(
+                      fontFamily: AppTokens.fontFamily,
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontSize: 17.0,
+                      fontStyle: FontStyle.italic,
+                      letterSpacing: 0.4,
+                    ),
+                  ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation']!),
+                  const SizedBox(height: 48.0),
+                  const SizedBox(
+                    width: 30.0,
+                    height: 30.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3.0,
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                      backgroundColor: Color(0x33FFFFFF),
+                    ),
                   ),
-                ].divide(SizedBox(height: 15.0)),
+                ],
               ),
             ),
           ),

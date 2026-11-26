@@ -74,7 +74,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
 
   Future<void> _toggleFollow(bool current, int followers) async {
     if (!isLoggedIn) {
-      promptLogin(context, 'Tafadhali ingia kwanza ili kumfuatilia mwandishi.');
+      promptLogin(context, trs('login_to_follow'));
       return;
     }
     setState(() {
@@ -87,7 +87,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
         _following = current;
         _followers = followers;
       });
-      AppToast.error(context, 'Imeshindikana. Jaribu tena.');
+      AppToast.error(context, trs('failed_retry'));
     }
   }
 
@@ -109,7 +109,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
               padding: const EdgeInsets.only(top: 24),
               child: StateMessage(
                 icon: Icons.wifi_off_rounded,
-                message: 'Imeshindikana kupakia ukurasa wa mwandishi.',
+                message: trs('author_load_fail'),
                 onRetry: () => setState(() => _future = _load()),
               ),
             ),
@@ -206,7 +206,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
               style: theme.bodyMedium.override(
                   fontFamily: 'SF Pro Display', color: palette.text, fontSize: 26, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
           const SizedBox(height: 2),
-          Text('Mwandishi',
+          Text(trs('wjjbutxk'),
               textAlign: TextAlign.center,
               style: theme.bodyMedium.override(fontFamily: 'SF Pro Display', color: palette.muted, fontSize: 15, letterSpacing: 0)),
           const SizedBox(height: 18),
@@ -217,7 +217,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
             child: Row(children: [
               stat('$followers', 'Wafuasi'),
               Container(width: 1, height: 36, color: palette.outline),
-              stat('${data.stories.length}', 'Simulizi'),
+              stat('${data.stories.length}', trs('stories_label')),
             ]),
           ),
           const SizedBox(height: 16),
@@ -233,7 +233,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         icon: const Icon(Icons.check_rounded),
-                        label: const Text('Unafuatilia', style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
+                        label: Text(trs('following'), style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
                         onPressed: () => _toggleFollow(true, followers),
                       )
                     : FilledButton.icon(
@@ -243,7 +243,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         icon: const Icon(Icons.add_rounded),
-                        label: const Text('Fuatilia', style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
+                        label: Text(trs('follow'), style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
                         onPressed: () => _toggleFollow(false, followers),
                       ),
               ),
@@ -258,7 +258,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
               strong: true,
               padding: const EdgeInsets.all(16),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Kuhusu mwandishi',
+                Text(trs('about_author'),
                     style: theme.bodyMedium.override(
                         fontFamily: 'SF Pro Display', color: palette.text, fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0)),
                 const SizedBox(height: 8),
@@ -269,7 +269,7 @@ class _AuthorProfileState extends State<AuthorProfile> {
           const SizedBox(height: 26),
           Row(children: [
             Expanded(
-              child: Text('Simulizi zake',
+              child: Text(trs('his_stories'),
                   style: theme.bodyMedium.override(
                       fontFamily: 'SF Pro Display', color: palette.text, fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
             ),
@@ -279,12 +279,12 @@ class _AuthorProfileState extends State<AuthorProfile> {
           ]),
           const SizedBox(height: 14),
           if (data.stories.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: 24),
               child: Column(children: [
                 EmptyBadge(icon: Icons.auto_stories_outlined, size: 88),
                 SizedBox(height: 14),
-                Text('Hakuna simulizi bado.'),
+                Text(trs('no_stories_yet')),
               ]),
             )
           else

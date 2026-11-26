@@ -152,7 +152,7 @@ class _PlayListContainerWidgetState extends State<PlayListContainerWidget> {
                           child: Text(
                             valueOrDefault<String>(
                               widget.story?.title,
-                              'Bila jina',
+                              trs('no_name'),
                             ),
                             maxLines: 1,
                             style: FlutterFlowTheme.of(context)

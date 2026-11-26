@@ -9,7 +9,7 @@ import 'app_toast.dart';
 bool get isLoggedIn => FFAppState().isLogin;
 
 /// Tells the guest why they're being sent to login, then sends them there.
-void promptLogin(BuildContext context, [String message = 'Tafadhali ingia kwanza ili kuendelea.']) {
-  AppToast.info(context, message);
+void promptLogin(BuildContext context, [String? message]) {
+  AppToast.info(context, message ?? trs('login_first'));
   context.pushNamed(LoginPageWidget.routeName);
 }

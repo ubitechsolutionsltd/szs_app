@@ -2,7 +2,7 @@
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/custom_code/ui/app_palette.dart';
-import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
@@ -28,11 +28,21 @@ class MiniPlayerBar extends StatelessWidget {
   final double? height;
   final Future Function()? onTap;
 
+  /// Id of the episode whose bar was just swiped away / closed. The bar disappears at once, before the player has
+  /// finished stopping (a Dismissible must leave the tree in the same frame it is dismissed).
+  static final ValueNotifier<int?> _hiddenId = ValueNotifier<int?>(null);
+
+  void _close(PlayerService service, int id) {
+    _hiddenId.value = id;
+    service.stopAndClear();
+  }
+
   void _openFullPlayer(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      showDragHandle: false,
       backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
       builder: (_) => const FullPlayer(),
@@ -45,91 +55,145 @@ class MiniPlayerBar extends StatelessWidget {
     final theme = FlutterFlowTheme.of(context);
     final pal = AppPalette.of(context);
 
-    return ValueListenableBuilder<PlayerSnapshot>(
+    return ValueListenableBuilder<int?>(
+      valueListenable: _hiddenId,
+      builder: (context, hiddenId, _) => ValueListenableBuilder<PlayerSnapshot>(
       valueListenable: service.snapshot,
       builder: (context, snap, _) {
         final item = snap.item;
-        if (item == null) return const SizedBox.shrink();
+        if (item == null) {
+          // Nothing is loaded any more: forget the dismissal so the next episode shows its bar again.
+          if (hiddenId != null) Future.microtask(() => _hiddenId.value = null);
+          return const SizedBox.shrink();
+        }
+        if (item.id == hiddenId) return const SizedBox.shrink();
 
-        return Glass(
-          radius: 18,
-          strong: true,
-          child: Material(
-          color: Colors.transparent,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () => onTap != null ? onTap!() : _openFullPlayer(context),
-            child: SizedBox(
-              width: width,
-              height: height ?? 68,
-              child: Column(
-                children: [
-                  StreamBuilder<PlaybackPosition>(
-                    stream: service.positionStream,
-                    builder: (context, snapshot) {
-                      final total = snapshot.data?.duration.inMilliseconds ?? 0;
-                      final value = total <= 0
-                          ? 0.0
-                          : ((snapshot.data?.position.inMilliseconds ?? 0) / total).clamp(0.0, 1.0);
-                      return LinearProgressIndicator(
-                        value: value,
-                        minHeight: 2,
-                        backgroundColor: pal.outline,
-                        color: pal.accent,
-                      );
-                    },
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          PlayerArtwork(url: item.artUrl, size: 44, radius: 10),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.bodyLarge.copyWith(
-                                        color: pal.text, fontWeight: FontWeight.w600)),
-                                Text(
-                                  PlayerStrings.errorText(snap.error) ??
-                                      (item.subtitle.isEmpty ? PlayerStrings.nowPlaying : item.subtitle),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.bodySmall.copyWith(
-                                      color: snap.error == PlayerErrorCode.none ? pal.muted : pal.error),
+        final hasError = snap.error != PlayerErrorCode.none;
+        final bar = Semantics(
+          container: true,
+          label: trs('sem_now_playing', args: {'title': item.title}),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xFF0B2C57), AppTokens.brandDeep, AppTokens.brandPrimary],
+              ),
+              boxShadow: [BoxShadow(color: AppTokens.brandPrimary.withValues(alpha: 0.35), blurRadius: 20, offset: const Offset(0, 8))],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              clipBehavior: Clip.antiAlias,
+              borderRadius: BorderRadius.circular(22),
+              child: InkWell(
+                onTap: () => onTap != null ? onTap!() : _openFullPlayer(context),
+                child: SizedBox(
+                  width: width,
+                  height: height ?? 68,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 4, 0),
+                          child: Row(
+                            children: [
+                              PlayerArtwork(url: item.artUrl, size: 46, radius: 12),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontFamily: AppTokens.fontFamily,
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w800)),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      PlayerStrings.errorText(snap.error) ??
+                                          (item.subtitle.isEmpty ? PlayerStrings.nowPlaying : item.subtitle),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontFamily: AppTokens.fontFamily,
+                                          color: hasError ? const Color(0xFFFFC2C2) : Colors.white70,
+                                          fontSize: 12.5),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              if (snap.loading && !snap.playing)
+                                const SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(padding: EdgeInsets.all(13), child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white)))
+                              else
+                                IconButton(
+                                  tooltip: snap.playing ? 'Simamisha' : trs('play'),
+                                  constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                                  icon: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                    child: Icon(snap.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                                        color: AppTokens.brandDeep, size: 26),
+                                  ),
+                                  onPressed: service.toggle,
+                                ),
+                              IconButton(
+                                tooltip: trs('next'),
+                                constraints: const BoxConstraints(minWidth: 44, minHeight: 48),
+                                icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 28),
+                                onPressed: service.next,
+                              ),
+                              IconButton(
+                                tooltip: trs('dismiss_player'),
+                                constraints: const BoxConstraints(minWidth: 40, minHeight: 48),
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.close_rounded, color: Colors.white.withValues(alpha: 0.75), size: 22),
+                                onPressed: () => _close(service, item.id),
+                              ),
+                            ],
                           ),
-                          if (snap.loading && !snap.playing)
-                            const SizedBox(
-                                width: 40, height: 40, child: Padding(padding: EdgeInsets.all(10), child: CircularProgressIndicator(strokeWidth: 2.5)))
-                          else
-                            IconButton(
-                              icon: Icon(snap.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                                  color: pal.text, size: 30),
-                              onPressed: service.toggle,
-                            ),
-                          IconButton(
-                            icon: Icon(Icons.skip_next_rounded, color: pal.text, size: 28),
-                            onPressed: service.next,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      StreamBuilder<PlaybackPosition>(
+                        stream: service.positionStream,
+                        builder: (context, snapshot) {
+                          final total = snapshot.data?.duration.inMilliseconds ?? 0;
+                          final value = total <= 0
+                              ? 0.0
+                              : ((snapshot.data?.position.inMilliseconds ?? 0) / total).clamp(0.0, 1.0);
+                          return LinearProgressIndicator(
+                            value: value,
+                            minHeight: 3,
+                            backgroundColor: Colors.white24,
+                            color: Colors.white,
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ));
+        );
+        return Dismissible(
+          key: ValueKey('mini_player_${item.id}'),
+          direction: DismissDirection.horizontal,
+          dismissThresholds: const {DismissDirection.startToEnd: 0.35, DismissDirection.endToStart: 0.35},
+          onDismissed: (_) => _close(service, item.id),
+          child: bar,
+        );
       },
+    ),
     );
   }
 }
+

@@ -1,10 +1,11 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-import 'app_palette.dart';
+import 'app_tokens.dart';
 
-/// Soft blue "aurora" behind every screen. Static (no animation) so it costs almost nothing.
+/// Plain brand background behind every screen (pale blue in light mode, navy in dark mode).
+///
+/// Kept under its old name so existing call sites keep working; the blurred "aurora" glows were removed for the
+/// flatter blue-and-white look.
 class AuroraBackground extends StatelessWidget {
   const AuroraBackground({super.key, required this.child});
 
@@ -13,65 +14,43 @@ class AuroraBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final palette = AppPalette.of(context);
-    final blue = palette.accent;
-    const cyan = Color(0xFF38BDF8);
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        RepaintBoundary(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: dark
-                    ? const [Color(0xFF0A1630), Color(0xFF08101F)]
-                    : const [Color(0xFFEAF3FC), Color(0xFFF6F9FD)],
-              ),
-            ),
-            child: Stack(children: [
-              Positioned(
-                top: -120,
-                left: -90,
-                child: _glow(blue.withValues(alpha: dark ? 0.32 : 0.22), 340),
-              ),
-              Positioned(
-                top: 220,
-                right: -140,
-                child: _glow(cyan.withValues(alpha: dark ? 0.16 : 0.18), 320),
-              ),
-              Positioned(
-                bottom: -140,
-                left: -60,
-                child: _glow(blue.withValues(alpha: dark ? 0.22 : 0.14), 360),
-              ),
-            ]),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: dark
+              ? const [Color(0xFF0E1D38), AppTokens.darkBackground]
+              : const [Color(0xFFDDEEFF), Color(0xFFEFF7FF), Color(0xFFF8FBFF)],
+          stops: dark ? null : const [0.0, 0.38, 1.0],
+        ),
+      ),
+      child: DecoratedBox(
+        // Soft light bloom in the top-right corner (cheap radial gradient, no blur filter).
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: const Alignment(0.95, -0.95),
+            radius: 0.9,
+            colors: [
+              (dark ? AppTokens.darkAccent : AppTokens.brandPrimary).withValues(alpha: dark ? 0.22 : 0.13),
+              Colors.transparent,
+            ],
           ),
         ),
-        child,
-      ],
+        child: child,
+      ),
     );
   }
-
-  static Widget _glow(Color color, double size) => ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-        ),
-      );
 }
 
-/// Frosted glass: blurred backdrop, translucent tint, bright hairline edge and a soft shadow.
+/// Card surface used by the bars and sheets. Despite the legacy name it is no longer blurred: a solid surface
+/// with a hairline border and a soft blue-tinted shadow, which is cheaper to render and matches the new design.
 class Glass extends StatelessWidget {
   const Glass({
     super.key,
     required this.child,
-    this.radius = 20,
-    this.blur = 22,
+    this.radius = AppTokens.radiusCard,
+    this.blur = 0,
     this.padding,
     this.borderRadius,
     this.strong = false,
@@ -80,11 +59,13 @@ class Glass extends StatelessWidget {
 
   final Widget child;
   final double radius;
+
+  /// Ignored (kept so existing call sites compile).
   final double blur;
   final EdgeInsetsGeometry? padding;
   final BorderRadius? borderRadius;
 
-  /// A more opaque tint, for surfaces that carry a lot of text.
+  /// Ignored (kept so existing call sites compile).
   final bool strong;
   final bool shadow;
 
@@ -93,43 +74,15 @@ class Glass extends StatelessWidget {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final shape = borderRadius ?? BorderRadius.circular(radius);
 
-    final fill = dark
-        ? Colors.white.withValues(alpha: strong ? 0.12 : 0.07)
-        : Colors.white.withValues(alpha: strong ? 0.78 : 0.55);
-    final edge = dark ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.85);
-
-    return DecoratedBox(
+    return Container(
+      padding: padding,
       decoration: BoxDecoration(
+        color: dark ? AppTokens.darkSurface : AppTokens.surface,
         borderRadius: shape,
-        boxShadow: shadow
-            ? [
-                BoxShadow(
-                  color: (dark ? Colors.black : const Color(0xFF0B3A66)).withValues(alpha: dark ? 0.35 : 0.10),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
-                ),
-              ]
-            : null,
+        border: Border.all(color: dark ? AppTokens.darkBorder : AppTokens.border, width: 1),
+        boxShadow: shadow ? AppTokens.cardShadow(dark) : null,
       ),
-      child: ClipRRect(
-        borderRadius: shape,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: shape,
-              border: Border.all(color: edge, width: 1),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [fill, fill.withValues(alpha: fill.a * 0.65)],
-              ),
-            ),
-            child: child,
-          ),
-        ),
-      ),
+      child: ClipRRect(borderRadius: shape, child: child),
     );
   }
 }

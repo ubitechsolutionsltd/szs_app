@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/package_lists_component_widget.dart';
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/episode_unlock.dart';
 import '/custom_code/ui/auth_gate.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -70,16 +71,16 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
       trailing = Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
         decoration: BoxDecoration(
-          color: palette.warning.withValues(alpha: 0.16),
+          color: palette.accent.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.lock_rounded, color: palette.warning, size: 14.0),
+          Icon(Icons.lock_rounded, color: palette.accent, size: 14.0),
           SizedBox(width: 4.0),
           Text('$price',
               style: theme.bodySmall.override(
                 fontFamily: 'SF Pro Display',
-                color: palette.warning,
+                color: palette.accent,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,
@@ -174,154 +175,10 @@ class _EpisodeListItemWidgetState extends State<EpisodeListItemWidget> {
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () async {
-          var _shouldSetState = false;
-          if (((functions.jsonValueToInteger(getJsonField(
-                            widget.episode,
-                            r'''$["is_buy"]''',
-                          )) ==
-                          1
-                      ? true
-                      : false) ==
-                  true) ||
-              (functions.jsonValueToInteger(getJsonField(
-                    widget.episode,
-                    r'''$["is_audio_coin"]''',
-                  )) <=
-                  0)) {
-            FFAppState().nowPlaying = widget.episode!;
-            _model.updatePage(() {});
-            FFAppState().playercommand = 'play';
-            FFAppState().update(() {});
-            FFAppState().playerisplaying = true;
-            FFAppState().update(() {});
-            if (_shouldSetState) safeSetState(() {});
-            return;
-          } else {
-            if (!isLoggedIn) {
-              promptLogin(context, 'Tafadhali ingia kwanza ili kununua kipindi hiki.');
-              return;
-            }
-            if (FFAppState().walletcoin >=
-                valueOrDefault<int>(
-                  functions.jsonValueToInteger(getJsonField(
-                    widget.episode,
-                    r'''$["is_audio_coin"]''',
-                  )),
-                  0,
-                )) {
-              FFAppState().isLoading = true;
-              FFAppState().update(() {});
-              _model.buyEpisodeResp = await GeneralGroup.buyEpisodeCall.call(
-                userId: FFAppState().userid,
-                contentType: getJsonField(
-                  widget.episode,
-                  r'''$["audio_type"]''',
-                ).toString(),
-                audiobookType: getJsonField(
-                  widget.episode,
-                  r'''$["audio_type"]''',
-                ).toString(),
-                contentId: getJsonField(
-                  widget.episode,
-                  r'''$["content_id"]''',
-                ).toString(),
-                contentEpisodeId: getJsonField(
-                  widget.episode,
-                  r'''$.id''',
-                ).toString(),
-                coin: getJsonField(
-                  widget.episode,
-                  r'''$["is_audio_coin"]''',
-                ).toString(),
-              );
-
-              _shouldSetState = true;
-              FFAppState().isLoading = false;
-              FFAppState().update(() {});
-              if ((_model.buyEpisodeResp?.succeeded ?? true)) {
-                if (GeneralGroup.buyEpisodeCall.responseCode(
-                      (_model.buyEpisodeResp?.jsonBody ?? ''),
-                    ) ==
-                    200) {
-                  FFAppState().nowPlaying = widget.episode!;
-                  _model.updatePage(() {});
-                  FFAppState().playercommand = 'play';
-                  FFAppState().update(() {});
-                  FFAppState().playerisplaying = true;
-                  FFAppState().update(() {});
-                  FFAppState().walletcoin = functions.newWalletBalance(
-                      FFAppState().walletcoin,
-                      functions.jsonValueToInteger(getJsonField(
-                        widget.episode,
-                        r'''$["is_audio_coin"]''',
-                      )));
-                  FFAppState().update(() {});
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        GeneralGroup.buyEpisodeCall.message(
-                          (_model.buyEpisodeResp?.jsonBody ?? ''),
-                        )!,
-                        style: TextStyle(
-                          fontFamily: 'SF Pro Display',
-                          color: Colors.white,
-                        ),
-                      ),
-                      duration: Duration(milliseconds: 4000),
-                      backgroundColor: FlutterFlowTheme.of(context).error,
-                    ),
-                  );
-                  if (_shouldSetState) safeSetState(() {});
-                  return;
-                }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Imeshindwa kununua. Jaribu tena baadae.',
-                      style: TextStyle(
-                        fontFamily: 'SF Pro Display',
-                        color: Colors.white,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FlutterFlowTheme.of(context).error,
-                  ),
-                );
-                if (_shouldSetState) safeSetState(() {});
-                return;
-              }
-            } else {
-              await showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                useSafeArea: true,
-                context: context,
-                builder: (context) {
-                  return WebViewAware(
-                    child: Padding(
-                      padding: MediaQuery.viewInsetsOf(context),
-                      child: Container(
-                        height: MediaQuery.sizeOf(context).height * 0.75,
-                        child: PackageListsComponentWidget(
-                          episode: widget.episode,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ).then((value) => safeSetState(() {}));
-
-              if (_shouldSetState) safeSetState(() {});
-              return;
-            }
-
-            if (_shouldSetState) safeSetState(() {});
-            return;
-          }
-
-          if (_shouldSetState) safeSetState(() {});
+          // Free / owned episodes just play; locked ones go through the shared unlock flow (login prompt,
+          // automatic purchase when the balance allows, or the top-up sheet).
+          await EpisodeUnlock.run(context, episode: widget.episode);
+          if (mounted) _model.updatePage(() {});
         },
         child: _buildRow(context),
       ),

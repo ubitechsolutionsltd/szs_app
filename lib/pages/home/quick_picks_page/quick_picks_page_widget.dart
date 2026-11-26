@@ -71,7 +71,7 @@ class _QuickPicksPageWidgetState extends State<QuickPicksPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Stack(
             children: [
               Column(
@@ -82,7 +82,7 @@ class _QuickPicksPageWidgetState extends State<QuickPicksPageWidget>
                     model: _model.customCenterAppBarModel,
                     updateCallback: () => safeSetState(() {}),
                     child: CustomCenterAppBarWidget(
-                      title: 'Zinazobamba',
+                      title: trs('awke62tg'),
                       backIcon: false,
                       addIcon: false,
                       onTapAdd: () async {},

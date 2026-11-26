@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1067128048333-53t0f3kto2lubpmlut7mv4jbb356prcn.apps.googleusercontent.com</string>
+	<string>1067128048333-a5gcm82cjl8rfhnrd9uielokoq7jbvnm.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1067128048333-53t0f3kto2lubpmlut7mv4jbb356prcn</string>
+	<string>com.googleusercontent.apps.1067128048333-a5gcm82cjl8rfhnrd9uielokoq7jbvnm</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>1067128048333-0f1dtvs78ghp11spvplpob9o1vd5122j.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.simulizi.ruhundwa</string>
+	<string>com.simulizi.ruhundwa.ios</string>
 	<key>PROJECT_ID</key>
 	<string>simuliziza-sauti-i264or</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1067128048333:ios:aa122b5bea21c737637784</string>
+	<string>1:1067128048333:ios:f8328d7aa6d009d6637784</string>
 </dict>
 </plist>

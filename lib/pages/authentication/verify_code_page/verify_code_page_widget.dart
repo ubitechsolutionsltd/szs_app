@@ -1,8 +1,6 @@
-import '/custom_code/ui/app_widgets.dart';
-import '/components/custom_center_app_bar_widget.dart';
+import '/custom_code/ui/app_components.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -63,30 +61,10 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              wrapWithModel(
-                model: _model.customCenterAppBarModel,
-                updateCallback: () => safeSetState(() {}),
-                child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Verify code';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'कोड सत्यापित करें';
-                      } else {
-                        return 'التحقق من كود';
-                      }
-                    }(),
-                    'Verify code',
-                  ),
-                  backIcon: false,
-                  addIcon: false,
-                  onTapAdd: () async {},
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 4.0),
-                child: Center(child: EmptyBadge(icon: Icons.mark_email_read_outlined, size: 88.0)),
+              AuthHeader(
+                title: trs('verify_title'),
+                subtitle: null,
+                onBack: () => context.safePop(),
               ),
               Expanded(
                 child: ListView(
@@ -245,8 +223,11 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
+                      child: AppButton(
+ label: trs('viv75x51'),
+ icon: Icons.arrow_forward_rounded,
+ trailingIcon: true,
+ onPressed: () async {
                           if (_model.formKey.currentState == null ||
                               !_model.formKey.currentState!.validate()) {
                             return;
@@ -254,36 +235,7 @@ class _VerifyCodePageWidgetState extends State<VerifyCodePageWidget> {
 
                           context.pushNamed(ResetPassPageWidget.routeName);
                         },
-                        text: FFLocalizations.of(context).getText(
-                          '0hus5k3h' /* Continue */,
-                        ),
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 54.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'SF Pro Display',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w700,
-                                    lineHeight: 1.2,
-                                  ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        showLoadingIndicator: false,
-                      ),
+ ),
                     ),
                   ],
                 ),

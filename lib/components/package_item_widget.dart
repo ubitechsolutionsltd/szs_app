@@ -1,4 +1,5 @@
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -75,10 +76,10 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [palette.warning, Color.lerp(palette.warning, Colors.deepOrange, 0.55)!],
+                  colors: AppTokens.coinGradient,
                 ),
                 boxShadow: [
-                  BoxShadow(color: palette.warning.withValues(alpha: 0.4), blurRadius: 12.0, offset: Offset(0.0, 5.0)),
+                  BoxShadow(color: AppTokens.brandPrimary.withValues(alpha: 0.4), blurRadius: 12.0, offset: Offset(0.0, 5.0)),
                 ],
               ),
               child: Icon(Icons.toll_rounded, color: Colors.white, size: 30.0),
@@ -89,7 +90,7 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    valueOrDefault<String>(package?.name, 'Kifurushi'),
+                    valueOrDefault<String>(package?.name, trs('package_word')),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.bodyLarge.override(
@@ -102,10 +103,10 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    '$coins sarafu',
+                    trs('coins_n', args: {'n': '$coins'}),
                     style: theme.bodyMedium.override(
                       fontFamily: 'SF Pro Display',
-                      color: palette.warning,
+                      color: palette.accent,
                       fontSize: 15.0,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.0,
@@ -113,7 +114,7 @@ class _PackageItemWidgetState extends State<PackageItemWidget> {
                   ),
                   if (perCoin > 0)
                     Text(
-                      'TZS ${perCoin.toStringAsFixed(perCoin >= 100 ? 0 : 1)} kwa sarafu',
+                      trs('per_coin', args: {'price': perCoin.toStringAsFixed(perCoin >= 100 ? 0 : 1)}),
                       style: theme.bodySmall.override(
                         fontFamily: 'SF Pro Display',
                         color: palette.muted,

@@ -31,25 +31,18 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
     super.initState();
     _model = createModel(context, () => EditProfilePageModel());
 
-    _model.textController1 ??= TextEditingController(
-        text: valueOrDefault<String>(
-      FFAppState().userInfo.fName,
-      'John',
-    ));
+    // The real account data (not the template placeholder in userInfo).
+    final names = FFAppState().fullname.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final firstName = names.isEmpty ? '' : names.first;
+    final lastName = names.length > 1 ? names.sublist(1).join(' ') : '';
+
+    _model.textController1 ??= TextEditingController(text: firstName);
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController(
-        text: valueOrDefault<String>(
-      FFAppState().userInfo.lName,
-      'Abram',
-    ));
+    _model.textController2 ??= TextEditingController(text: lastName);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    _model.textController3 ??= TextEditingController(
-        text: valueOrDefault<String>(
-      FFAppState().userInfo.email,
-      'johnabram@gmail.com',
-    ));
+    _model.textController3 ??= TextEditingController(text: FFAppState().email);
     _model.textFieldFocusNode3 ??= FocusNode();
   }
 
@@ -73,7 +66,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -81,18 +74,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Edit profile';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'प्रोफ़ाइल संपादित करें';
-                      } else {
-                        return 'تعديل الملف الشخصي';
-                      }
-                    }(),
-                    'Edit profile',
-                  ),
+                  title: trs('edit_profile'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},
@@ -245,13 +227,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            '${valueOrDefault<String>(
-                                              FFAppState().userInfo.fName,
-                                              'John',
-                                            )} ${valueOrDefault<String>(
-                                              FFAppState().userInfo.lName,
-                                              'abram',
-                                            )}',
+                                            FFAppState().fullname.trim().isEmpty ? FFAppState().username : FFAppState().fullname.trim(),
                                             textAlign: TextAlign.start,
                                             maxLines: 1,
                                             style: FlutterFlowTheme.of(context)
@@ -275,10 +251,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            valueOrDefault<String>(
-                                              FFAppState().userInfo.email,
-                                              'johnabram@gmail.com',
-                                            ),
+                                            FFAppState().email,
                                             textAlign: TextAlign.start,
                                             maxLines: 1,
                                             style: FlutterFlowTheme.of(context)
@@ -628,12 +601,15 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                         !_model.formKey.currentState!.validate()) {
                       return;
                     }
+                    final first = _model.textController1.text.trim();
+                    final last = _model.textController2.text.trim();
                     FFAppState().updateUserInfoStruct(
                       (e) => e
-                        ..fName = _model.textController1.text
-                        ..lName = _model.textController2.text
-                        ..email = _model.textController3.text,
+                        ..fName = first
+                        ..lName = last
+                        ..email = FFAppState().email,
                     );
+                    FFAppState().fullname = [first, last].where((p) => p.isNotEmpty).join(' ');
                     FFAppState().update(() {});
 
                     context.goNamed(SettingPageWidget.routeName);

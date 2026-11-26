@@ -80,7 +80,7 @@ class WalletCard extends StatelessWidget {
             const Icon(Icons.toll_rounded, color: Colors.white70, size: 20),
             const SizedBox(width: 8),
             Expanded(
-              child: Text('Salio lako',
+              child: Text(trs('balance_label'),
                   style: theme.bodyMedium.override(
                       fontFamily: 'SF Pro Display',
                       color: Colors.white70,
@@ -89,7 +89,7 @@ class WalletCard extends StatelessWidget {
                       letterSpacing: 0)),
             ),
             IconButton(
-              tooltip: 'Onyesha upya',
+              tooltip: trs('refresh'),
               visualDensity: VisualDensity.compact,
               icon: const Icon(Icons.refresh_rounded, color: onGradient),
               onPressed: _refresh,
@@ -103,7 +103,7 @@ class WalletCard extends StatelessWidget {
                   fontSize: 44,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -1)),
-          Text('sarafu',
+          Text(trs('wallet_coins'),
               style: theme.bodyMedium
                   .override(fontFamily: 'SF Pro Display', color: Colors.white70, fontSize: 14, letterSpacing: 0)),
           const SizedBox(height: 16),
@@ -117,7 +117,7 @@ class WalletCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               icon: const Icon(Icons.add_circle_outline_rounded),
-              label: const Text('Jaza kibubu',
+              label: Text(trs('top_up'),
                   style: TextStyle(fontFamily: 'SF Pro Display', fontWeight: FontWeight.w800)),
               onPressed: () => _topUp(context),
             ),

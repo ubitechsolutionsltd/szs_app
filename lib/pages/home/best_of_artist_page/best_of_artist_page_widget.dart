@@ -47,7 +47,7 @@ class _BestOfArtistPageWidgetState extends State<BestOfArtistPageWidget> {
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -55,18 +55,7 @@ class _BestOfArtistPageWidgetState extends State<BestOfArtistPageWidget> {
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Best of artists';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'सर्वश्रेष्ठ कलाकार';
-                      } else {
-                        return 'أفضل الفنانين';
-                      }
-                    }(),
-                    'Best of artists',
-                  ),
+                  title: trs('best_of_author'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

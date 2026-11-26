@@ -1,10 +1,9 @@
-import '/custom_code/ui/app_logo.dart';
+import '/custom_code/ui/app_components.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/social_auth_component_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,7 @@ class SignupPageWidget extends StatefulWidget {
 class _SignupPageWidgetState extends State<SignupPageWidget>
     with TickerProviderStateMixin {
   late SignupPageModel _model;
+  bool _loading = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -104,441 +104,74 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                     ),
                     scrollDirection: Axis.vertical,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 8.0, 20.0, 20.0),
-                        child: Align(
-                          alignment: AlignmentDirectional(-1.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(18.0),
-                            child: AppLogo(size: 64.0, radius: 18.0),
-                          ),
-                        ),
+                      AuthHeader(
+                        title: FFLocalizations.of(context).getText('ulmedo12' /* Jisajili */),
+                        subtitle: trs('signup_sub'),
+                        onBack: () => context.safePop(),
                       ),
+                      const SizedBox(height: 16.0),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: Text(
-                          FFLocalizations.of(context).getText(
-                            'ulmedo12' /* Jisajili */,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 34.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
-                                lineHeight: 1.5,
-                              ),
-                        ).animateOnPageLoad(
-                            animationsMap['textOnPageLoadAnimation']!),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: Text(
-                          'Fungua akaunti yako ili usikilize simulizi za Kiswahili.',
-                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).gray,
-                                fontSize: 16.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.4,
-                              ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 40.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController1,
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController1!,
                           focusNode: _model.textFieldFocusNode1,
-                          autofocus: false,
+                          hint: FFLocalizations.of(context).getText('qtk3q5ro' /* Jina kamili */),
+                          icon: Icons.person_outline_rounded,
                           textInputAction: TextInputAction.next,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              '0t4ljk6m' /* Jina kamili */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              'qtk3q5ro' /* Jina kamili */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController1Validator
-                              .asValidator(context),
-                          inputFormatters: [_model.textFieldMask1],
+                          validator: _model.textController1Validator.asValidator(context),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 16.0, 20.0, 16.0),
-                        child: TextFormField(
-                          controller: _model.textController2,
+
+                                            Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController2!,
                           focusNode: _model.textFieldFocusNode2,
-                          autofocus: false,
-                          textInputAction: TextInputAction.next,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'cwp6g6mz' /* Nambari ya simu */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              'o7brnlux' /* Nambari ya simu */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
+                          hint: FFLocalizations.of(context).getText('o7brnlux' /* Nambari ya simu */),
+                          icon: Icons.phone_outlined,
                           keyboardType: TextInputType.phone,
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController2Validator
-                              .asValidator(context),
-                          inputFormatters: [_model.textFieldMask2],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController3,
-                          focusNode: _model.textFieldFocusNode3,
-                          autofocus: false,
                           textInputAction: TextInputAction.next,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              's4ttj8pu' /* Barua pepe */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              '59uyb1a3' /* Barua pepe */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
+                          validator: _model.textController2Validator.asValidator(context),
+                        ),
+                      ),
+
+                                            Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController3!,
+                          focusNode: _model.textFieldFocusNode3,
+                          hint: FFLocalizations.of(context).getText('59uyb1a3' /* Barua pepe */),
+                          icon: Icons.mail_outline_rounded,
                           keyboardType: TextInputType.emailAddress,
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController3Validator
-                              .asValidator(context),
+                          textInputAction: TextInputAction.next,
+                          validator: _model.textController3Validator.asValidator(context),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 16.0, 20.0, 0.0),
-                        child: TextFormField(
-                          controller: _model.textController4,
+
+                                            Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
+                        child: AppTextField(
+                          controller: _model.textController4!,
                           focusNode: _model.textFieldFocusNode4,
-                          autofocus: false,
-                          textInputAction: TextInputAction.done,
-                          obscureText: !_model.passwordVisibility,
-                          decoration: InputDecoration(
-                            labelText: FFLocalizations.of(context).getText(
-                              'pooqs8qv' /* Nywila */,
-                            ),
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).tertiary,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            hintText: FFLocalizations.of(context).getText(
-                              'zkpe8jnx' /* Nywila */,
-                            ),
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).gray,
-                                  fontSize: 17.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.5,
-                                ),
-                            errorStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context).error,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  lineHeight: 1.2,
-                                ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).borderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).primary,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(14.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context).secondary,
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 16.0),
-                            hoverColor: Colors.transparent,
-                            suffixIcon: InkWell(
-                              onTap: () async {
-                                safeSetState(() => _model.passwordVisibility =
-                                    !_model.passwordVisibility);
-                              },
-                              focusNode:
-                                  _model.textFieldPasswordVisibilityFocusNode4
-                                    ..skipTraversal = !(false),
-                              child: Icon(
-                                _model.passwordVisibility
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: FlutterFlowTheme.of(context).gray,
-                                size: 20.0,
-                              ),
-                            ),
-                          ),
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'SF Pro Display',
-                                color: FlutterFlowTheme.of(context).tertiary,
-                                fontSize: 17.0,
-                                letterSpacing: 0.0,
-                                lineHeight: 1.5,
-                              ),
+                          hint: FFLocalizations.of(context).getText('zkpe8jnx' /* Nywila */),
+                          icon: Icons.lock_outline_rounded,
+                          obscure: true,
                           keyboardType: TextInputType.visiblePassword,
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          validator: _model.textController4Validator
-                              .asValidator(context),
+                          textInputAction: TextInputAction.done,
+                          validator: _model.textController4Validator.asValidator(context),
                         ),
                       ),
+
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 48.0, 20.0, 0.0),
-                        child: FFButtonWidget(
+                        child: AppButton(
+                          loading: _loading,
+                          label: FFLocalizations.of(context).getText('x4pwu6ka' /* Jisajili */),
                           onPressed: () async {
+                            if (_loading) return;
+                            safeSetState(() => _loading = true);
+                            try {
                             var _shouldSetState = false;
                             if (_model.formKey.currentState == null ||
                                 !_model.formKey.currentState!.validate()) {
@@ -650,83 +283,13 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                             }
 
                             if (_shouldSetState) safeSetState(() {});
+                          } finally {
+                              if (mounted) safeSetState(() => _loading = false);
+                            }
                           },
-                          text: FFLocalizations.of(context).getText(
-                            'x4pwu6ka' /* Jisajili */,
-                          ),
-                          options: FFButtonOptions(
-                            width: double.infinity,
-                            height: 54.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  fontSize: 16.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w700,
-                                  lineHeight: 1.2,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(14.0),
-                          ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 24.0, 0.0, 24.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 1.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).gray,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                '6yippc7s' /* Au */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'SF Pro Display',
-                                    color:
-                                        FlutterFlowTheme.of(context).tertiary,
-                                    fontSize: 17.0,
-                                    letterSpacing: 0.0,
-                                    lineHeight: 1.5,
-                                  ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 1.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).gray,
-                                ),
-                              ),
-                            ),
-                          ]
-                              .divide(SizedBox(width: 8.0))
-                              .addToStart(SizedBox(width: 20.0))
-                              .addToEnd(SizedBox(width: 20.0)),
-                        ),
-                      ),
+                      LabeledDivider(label: FFLocalizations.of(context).getText('6yippc7s' /* Au */)),
                       wrapWithModel(
                         model: _model.socialAuthComponentModel,
                         updateCallback: () => safeSetState(() {}),
@@ -755,11 +318,12 @@ class _SignupPageWidgetState extends State<SignupPageWidget>
                             ),
                       ),
                       TextSpan(
-                        text: FFLocalizations.of(context).getText(
+                        text: ' ' + FFLocalizations.of(context).getText(
                           '19gzc2d1' /* Ingia. */,
                         ),
                         style: FlutterFlowTheme.of(context).labelLarge.override(
                               fontFamily: 'SF Pro Display',
+                              fontWeight: FontWeight.w800,
                               color: FlutterFlowTheme.of(context).primary,
                               fontSize: 17.0,
                               letterSpacing: 0.0,

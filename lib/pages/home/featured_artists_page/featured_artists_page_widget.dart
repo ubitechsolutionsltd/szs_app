@@ -71,7 +71,7 @@ class _FeaturedArtistsPageWidgetState extends State<FeaturedArtistsPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -79,7 +79,7 @@ class _FeaturedArtistsPageWidgetState extends State<FeaturedArtistsPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: 'Waandishi',
+                  title: trs('kwqsy6cx'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

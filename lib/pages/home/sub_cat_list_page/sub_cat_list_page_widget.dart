@@ -83,7 +83,7 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Stack(
             children: [
               Column(
@@ -102,10 +102,6 @@ class _SubCatListPageWidgetState extends State<SubCatListPageWidget>
                       onTapAdd: () async {},
                     ),
                   ),
-              custom_widgets.CategoryHero(
-                title: widget.title,
-                categoryId: widget.index,
-              ),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.zero,

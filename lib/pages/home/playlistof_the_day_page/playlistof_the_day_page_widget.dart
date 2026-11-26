@@ -69,7 +69,7 @@ class _PlaylistofTheDayPageWidgetState extends State<PlaylistofTheDayPageWidget>
         key: scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          top: true,
+          top: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -77,18 +77,7 @@ class _PlaylistofTheDayPageWidgetState extends State<PlaylistofTheDayPageWidget>
                 model: _model.customCenterAppBarModel,
                 updateCallback: () => safeSetState(() {}),
                 child: CustomCenterAppBarWidget(
-                  title: valueOrDefault<String>(
-                    () {
-                      if (FFAppState().langIndex == 0) {
-                        return 'Playlists for your day';
-                      } else if (FFAppState().langIndex == 1) {
-                        return 'आपके दिन के लिए प्लेलिस्ट';
-                      } else {
-                        return 'قوائم التشغيل ليومك';
-                      }
-                    }(),
-                    'Playlists for your day',
-                  ),
+                  title: trs('playlist_of_day'),
                   backIcon: false,
                   addIcon: false,
                   onTapAdd: () async {},

@@ -1,7 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show Ticker;
 
 import '/flutter_flow/flutter_flow_theme.dart';
+import 'api_cache.dart';
 import 'app_palette.dart';
+import 'offline_art.dart';
+import '/flutter_flow/internationalization.dart' show trs;
 
 /// Section title with an optional "see more" action.
 class SectionHeader extends StatelessWidget {
@@ -59,7 +65,44 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-/// A softly pulsing placeholder block, used while content loads.
+/// One clock shared by every skeleton on screen, so a whole group of placeholders sweeps in sync and the cost
+/// stays at a single ticker no matter how many boxes there are.
+class _ShimmerClock extends ChangeNotifier {
+  _ShimmerClock._();
+  static final _ShimmerClock instance = _ShimmerClock._();
+
+  Ticker? _ticker;
+  int _listeners = 0;
+  double value = 0;
+
+  void attach() {
+    if (_listeners++ == 0) {
+      _ticker = Ticker((elapsed) {
+        value = (elapsed.inMilliseconds % 1500) / 1500.0;
+        notifyListeners();
+      })..start();
+    }
+  }
+
+  void detach() {
+    if (--_listeners <= 0) {
+      _listeners = 0;
+      _ticker?.dispose();
+      _ticker = null;
+    }
+  }
+}
+
+class _SlideGradient extends GradientTransform {
+  const _SlideGradient(this.percent);
+
+  final double percent;
+
+  @override
+  Matrix4? transform(Rect bounds, {TextDirection? textDirection}) => Matrix4.translationValues(bounds.width * percent, 0, 0);
+}
+
+/// Placeholder block with a soft light sweep ("shimmer"), shown while content loads for the first time.
 class SkeletonBox extends StatefulWidget {
   const SkeletonBox({super.key, this.width, this.height, this.radius = 12, this.circle = false});
 
@@ -72,42 +115,58 @@ class SkeletonBox extends StatefulWidget {
   State<SkeletonBox> createState() => _SkeletonBoxState();
 }
 
-class _SkeletonBoxState extends State<SkeletonBox> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 1100))..repeat(reverse: true);
+class _SkeletonBoxState extends State<SkeletonBox> {
+  @override
+  void initState() {
+    super.initState();
+    _ShimmerClock.instance.attach();
+  }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _ShimmerClock.instance.detach();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final palette = AppPalette.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final base = dark ? const Color(0xFF16253F) : const Color(0xFFE2EEFA);
+    final glow = dark ? const Color(0xFF2A4068) : const Color(0xFFF7FBFF);
+
     return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Color.lerp(palette.surface, palette.surfaceHigh, _controller.value),
-          shape: widget.circle ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius: widget.circle ? null : BorderRadius.circular(widget.radius),
-        ),
-      ),
+      animation: _ShimmerClock.instance,
+      builder: (context, _) {
+        final t = _ShimmerClock.instance.value;
+        return Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            shape: widget.circle ? BoxShape.circle : BoxShape.rectangle,
+            borderRadius: widget.circle ? null : BorderRadius.circular(widget.radius),
+            gradient: LinearGradient(
+              begin: const Alignment(-1.0, -0.3),
+              end: const Alignment(1.0, 0.3),
+              colors: [base, glow, base],
+              stops: const [0.30, 0.5, 0.70],
+              transform: _SlideGradient(-1.0 + t * 2.0),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 /// Friendly empty / error message with an optional retry button.
 class StateMessage extends StatelessWidget {
-  const StateMessage({super.key, required this.icon, required this.message, this.onRetry, this.retryLabel = 'Jaribu tena'});
+  const StateMessage({super.key, required this.icon, required this.message, this.onRetry, this.retryLabel});
 
   final IconData icon;
   final String message;
   final VoidCallback? onRetry;
-  final String retryLabel;
+  /// Defaults to the translated "try again".
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +193,7 @@ class StateMessage extends StatelessWidget {
           if (onRetry != null)
             TextButton(
               onPressed: onRetry,
-              child: Text(retryLabel, style: TextStyle(color: palette.accent, fontWeight: FontWeight.w700)),
+              child: Text(retryLabel ?? trs('retry'), style: TextStyle(color: palette.accent, fontWeight: FontWeight.w700)),
             ),
         ]),
       ),
@@ -142,45 +201,91 @@ class StateMessage extends StatelessWidget {
   }
 }
 
-/// Loads a list, then shows a skeleton while waiting, an error with retry on failure, nothing when empty,
-/// and [builder] when there are items.
+/// Loads a list and shows: a shimmering skeleton the first time, an animated offline illustration with retry on
+/// failure, nothing (or [empty]) when there are no items, and [builder] when there are.
+///
+/// With a [cacheKey] the list is also kept on the device: cached data is painted on the very first frame (no
+/// loading flash), is refreshed from the server only when older than [ApiCache.freshFor], and keeps being shown if
+/// the refresh fails (for example with no network).
 class AsyncSection extends StatefulWidget {
   const AsyncSection({
     super.key,
     required this.load,
     required this.builder,
     required this.loading,
-    this.errorMessage = 'Imeshindikana kupakia. Angalia mtandao wako.',
+    this.empty,
+    this.errorMessage,
+    this.cacheKey,
   });
 
   final Future<List<dynamic>> Function() load;
   final Widget Function(BuildContext context, List<dynamic> items) builder;
   final Widget loading;
-  final String errorMessage;
+
+  /// Shown when the request succeeds but returns nothing (nothing is shown if null).
+  final Widget? empty;
+
+  /// Defaults to the translated "offline" text.
+  final String? errorMessage;
+  final String? cacheKey;
 
   @override
   State<AsyncSection> createState() => _AsyncSectionState();
 }
 
 class _AsyncSectionState extends State<AsyncSection> {
-  late Future<List<dynamic>> _future = widget.load();
+  List<dynamic>? _items;
+  Object? _error;
+  bool _refreshing = false;
 
-  void _retry() => setState(() => _future = widget.load());
+  @override
+  void initState() {
+    super.initState();
+    final key = widget.cacheKey;
+    final cached = key == null ? null : ApiCache.read(key);
+    if (cached != null) {
+      _items = cached.items;
+      if (cached.age < ApiCache.freshFor) return; // fresh enough: no request at all
+    }
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    if (_refreshing) return;
+    _refreshing = true;
+    if (mounted && _items == null) setState(() => _error = null);
+    try {
+      final items = await widget.load();
+      if (widget.cacheKey != null && items.isNotEmpty) unawaited(ApiCache.write(widget.cacheKey!, items));
+      if (mounted) setState(() {
+        _items = items;
+        _error = null;
+      });
+    } catch (e) {
+      // Keep showing cached data when the refresh fails.
+      if (mounted && _items == null) setState(() => _error = e);
+    } finally {
+      _refreshing = false;
+    }
+  }
+
+  void _retry() {
+    setState(() => _error = null);
+    _fetch();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) return widget.loading;
-        if (snapshot.hasError) {
-          return StateMessage(icon: Icons.wifi_off_rounded, message: widget.errorMessage, onRetry: _retry);
-        }
-        final items = snapshot.data ?? const [];
-        if (items.isEmpty) return const SizedBox.shrink();
-        return widget.builder(context, items);
-      },
-    );
+    final items = _items;
+    Widget child;
+    if (items != null) {
+      child = items.isEmpty ? (widget.empty ?? const SizedBox.shrink()) : widget.builder(context, items);
+    } else if (_error != null) {
+      child = OfflineArt(compact: true, message: widget.errorMessage, onRetry: _retry);
+    } else {
+      child = widget.loading;
+    }
+    return AnimatedSwitcher(duration: const Duration(milliseconds: 320), child: KeyedSubtree(key: ValueKey(items != null ? 'data' : (_error != null ? 'error' : 'loading')), child: child));
   }
 }
 

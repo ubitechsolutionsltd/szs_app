@@ -8,10 +8,10 @@ import 'package:flutter/material.dart' hide RepeatMode;
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'package:cached_network_image/cached_network_image.dart';
-
 import '/backend/api_requests/api_calls.dart';
 import '/components/song_container_widget.dart';
+import '/custom_code/ui/adaptive.dart';
+import '/custom_code/ui/app_components.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_widgets.dart';
 import '/custom_code/ui/home_data.dart';
@@ -38,71 +38,55 @@ class SearchSuggestions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Vinjari kwa Kundi'),
-        const SizedBox(height: 12),
+        SectionHeader(title: trs('popular_cats')),
+        const SizedBox(height: 14),
         AsyncSection(
+          cacheKey: 'categories',
           load: _categories,
-          loading: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SkeletonBox(height: 44, radius: 22),
-          ),
-          builder: (context, categories) => Padding(
+          loading: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                for (final category in categories)
-                  Material(
-                    color: palette.surface,
-                    shape: StadiumBorder(side: BorderSide(color: palette.outline, width: 0.6)),
-                    child: InkWell(
-                      customBorder: const StadiumBorder(),
-                      onTap: () => context.pushNamed(
-                        SubCatListPageWidget.routeName,
-                        queryParameters: {
-                          'title': serializeParam(getJsonField(category, r'''$.name''')?.toString() ?? '', ParamType.String),
-                          'catId': serializeParam(getJsonField(category, r'''$.id''').toString(), ParamType.String),
-                          'index': serializeParam(getJsonField(category, r'''$.id'''), ParamType.int),
-                        }.withoutNulls,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 6, 16, 6),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: getJsonField(category, r'''$.image''')?.toString() ?? '',
-                              width: 30,
-                              height: 30,
-                              fit: BoxFit.cover,
-                              errorWidget: (_, __, ___) => Container(
-                                width: 30,
-                                height: 30,
-                                color: palette.surfaceHigh,
-                                child: Icon(Icons.category_rounded, size: 15, color: palette.muted),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(getJsonField(category, r'''$.name''')?.toString() ?? '',
-                              style: theme.bodyMedium.override(
-                                  fontFamily: 'SF Pro Display',
-                                  color: palette.text,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0)),
-                        ]),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Adaptive.tileColumns(context), mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
+            itemCount: 4,
+            itemBuilder: (_, __) => const SkeletonBox(radius: 22),
           ),
+          builder: (context, categories) {
+            final visible = categories.take(6).toList();
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: Adaptive.tileColumns(context), mainAxisSpacing: 14, crossAxisSpacing: 14, mainAxisExtent: 84),
+              itemCount: visible.length,
+              itemBuilder: (context, index) {
+                final category = visible[index];
+                final name = getJsonField(category, r'''$.name''')?.toString() ?? '';
+                return CategoryTile(
+                  label: name,
+                  icon: categoryIconFor(name),
+                imageUrl: getJsonField(category, r'''$.image''')?.toString(),
+                  index: index + 4,
+                  onTap: () => context.pushNamed(
+                    SubCatListPageWidget.routeName,
+                    queryParameters: {
+                      'title': serializeParam(name, ParamType.String),
+                      'catId': serializeParam(getJsonField(category, r'''$.id''').toString(), ParamType.String),
+                      'index': serializeParam(getJsonField(category, r'''$.id'''), ParamType.int),
+                    }.withoutNulls,
+                  ),
+                );
+              },
+            );
+          },
         ),
         const SizedBox(height: 28),
-        const SectionHeader(title: 'Zinazopendwa'),
-        const SizedBox(height: 12),
+        SectionHeader(title: trs('popular')),
+        const SizedBox(height: 14),
         AsyncSection(
+          cacheKey: 'trending',
           load: HomeData.trending,
           loading: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),

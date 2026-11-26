@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,9 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'download_manager.dart';
 import 'media_access.dart';
+import 'audio_handler.dart';
+import 'notification_permission.dart';
 import 'player_core.dart';
 
-enum PlayerErrorCode { none, locked, nextLocked, offline, failed }
+enum PlayerErrorCode { none, locked, nextLocked, offline, failed, loginRequired }
 
 class PlaybackPosition {
   const PlaybackPosition(this.position, this.buffered, this.duration);
@@ -62,10 +65,16 @@ class PlayerService {
   PlayerService._();
   static final PlayerService instance = PlayerService._();
 
+  /// Tries to buy a locked episode with no dialog (set once at startup to [EpisodeUnlock.silentUnlock]).
+  /// Used when advancing playback lands on a locked episode: if the balance already covers it, it is bought
+  /// automatically and playback continues; otherwise nothing changes and the usual locked state is shown.
+  static Future<bool> Function(dynamic rawEpisode)? autoUnlock;
+
   static const _sessionKey = 'szs.player.session';
   static const _resumePrefix = 'szs.resume.';
 
-  final AudioPlayer player = AudioPlayer();
+  final AudioPlayer player = AudioPlayer(handleInterruptions: false);
+  bool _resumeAfterInterruption = false;
   final PlayQueue _queue = PlayQueue();
   final ValueNotifier<PlayerSnapshot> snapshot = ValueNotifier(const PlayerSnapshot());
   final StreamController<PlayableItem> _completions = StreamController.broadcast();
@@ -93,7 +102,7 @@ class PlayerService {
         (position, buffered, duration) => PlaybackPosition(
           position,
           buffered,
-          duration ?? Duration(seconds: _queue.current?.durationSeconds ?? 0),
+          _plausible(duration) ?? Duration(seconds: _queue.current?.durationSeconds ?? 0),
         ),
       );
 
@@ -106,6 +115,7 @@ class PlayerService {
     _queue.isPlayable =
         (item) => item.hasRemoteUrl || DownloadManager.instance.isDownloaded(item.id);
 
+    await _setupAudioSession();
     player.playerStateStream.listen(_onPlayerState);
     player.playbackEventStream.listen((_) {}, onError: (Object e, StackTrace s) {
       debugPrint('Playback error: $e');
@@ -117,10 +127,70 @@ class PlayerService {
     _publish();
   }
 
+  /// Configures the system audio session for spoken audio and reacts to interruptions (another app's sound, a
+  /// call, an alarm): pause when interrupted and resume by itself when the interruption is over. Short sounds
+  /// (notifications) lower the volume instead of stopping the story. Headphones unplugged pauses.
+  Future<void> _setupAudioSession() async {
+    try {
+      final session = await AudioSession.instance;
+      // Spoken audio that does NOT mix with other apps: only then does iOS show the app on the lock screen and
+      // in Control Center, and other apps' audio interrupts it (we resume afterwards, see below).
+      await session.configure(const AudioSessionConfiguration(
+        avAudioSessionCategory: AVAudioSessionCategory.playback,
+        avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.none,
+        avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+        avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+        avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+        androidAudioAttributes: AndroidAudioAttributes(
+          contentType: AndroidAudioContentType.speech,
+          usage: AndroidAudioUsage.media,
+        ),
+        androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+        androidWillPauseWhenDucked: true,
+      ));
+
+      session.interruptionEventStream.listen((event) {
+        if (event.begin) {
+          switch (event.type) {
+            case AudioInterruptionType.duck:
+              unawaited(player.setVolume(0.35));
+            case AudioInterruptionType.pause:
+            case AudioInterruptionType.unknown:
+              if (player.playing) {
+                _resumeAfterInterruption = true;
+                unawaited(pause());
+              }
+          }
+        } else {
+          switch (event.type) {
+            case AudioInterruptionType.duck:
+              unawaited(player.setVolume(1.0));
+            case AudioInterruptionType.pause:
+            case AudioInterruptionType.unknown:
+              unawaited(player.setVolume(1.0));
+              if (_resumeAfterInterruption) {
+                _resumeAfterInterruption = false;
+                unawaited(play());
+              }
+          }
+        }
+      });
+
+      session.becomingNoisyEventStream.listen((_) {
+        _resumeAfterInterruption = false;
+        if (player.playing) unawaited(pause());
+      });
+    } catch (e) {
+      debugPrint('Audio session setup failed: $e');
+    }
+  }
+
   // ---- starting playback ----------------------------------------------------------------------------------
 
   Future<void> playQueue(List<PlayableItem> items, {int startIndex = 0}) async {
     await init();
+    unawaited(NotificationPermission.ensure());
+    if (!BackgroundAudio.isActive) unawaited(BackgroundAudio.start(this));
     _queue.setItems(items, startIndex: startIndex);
     await _loadCurrent();
   }
@@ -158,6 +228,7 @@ class PlayerService {
   // ---- transport ------------------------------------------------------------------------------------------
 
   Future<void> play() async {
+    _resumeAfterInterruption = false; // the user (or the resume itself) is in control again
     await init();
     final current = _queue.current;
     if (current == null) return;
@@ -196,8 +267,12 @@ class PlayerService {
 
   Future<void> seek(Duration position) => player.seek(position);
 
+  /// Some streams report a nonsense length (hundreds of hours) because the server does not send the real size.
+  /// No story episode is that long, so such a value is treated as "unknown".
+  static Duration? _plausible(Duration? d) => (d == null || d > const Duration(hours: 10)) ? null : d;
+
   Future<void> seekRelative(Duration delta) async {
-    final duration = player.duration ?? Duration(seconds: _queue.current?.durationSeconds ?? 0);
+    final duration = _plausible(player.duration) ?? Duration(seconds: _queue.current?.durationSeconds ?? 0);
     var target = player.position + delta;
     if (target < Duration.zero) target = Duration.zero;
     if (duration > Duration.zero && target > duration) target = duration;
@@ -383,9 +458,20 @@ class PlayerService {
 
     if (MediaUrlPolicy.isGateUrl(url)) {
       // Ask the server every time: it answers "locked" reliably and hands back a fresh signed link.
-      final access = await MediaAccess.instance.refresh(url);
+      var access = await MediaAccess.instance.refresh(url);
+      if (access.locked) {
+        // The balance might already cover it: buy it with no dialog and ask the server again before giving up.
+        final buy = autoUnlock;
+        if (buy != null && item.raw != null && await buy(item.raw)) {
+          access = await MediaAccess.instance.refresh(url);
+        }
+      }
       if (access.locked) {
         _error = PlayerErrorCode.locked;
+        return null;
+      }
+      if (access.loginRequired) {
+        _error = PlayerErrorCode.loginRequired;
         return null;
       }
       if (access.url != null) {

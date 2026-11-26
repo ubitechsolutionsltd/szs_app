@@ -57,12 +57,14 @@ class _HomeHeroState extends State<HomeHero> {
     return SizedBox(
       width: widget.width,
       child: AsyncSection(
+        cacheKey: 'trending',
         load: HomeData.trending,
         loading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SkeletonBox(height: height, radius: AppSpace.radiusLg),
         ),
-        errorMessage: 'Imeshindikana kupakia simulizi. Angalia mtandao wako.',
+        empty: StateMessage(icon: Icons.headphones_rounded, message: trs('hero_empty')),
+        errorMessage: trs('hero_load_fail'),
         builder: (context, stories) {
           final featured = stories.take(5).toList();
           _count = featured.length;

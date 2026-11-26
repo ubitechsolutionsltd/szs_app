@@ -103,7 +103,7 @@ class _CatContainerThreeWidgetState extends State<CatContainerThreeWidget> {
                   child: Text(
                     valueOrDefault<String>(
                       widget.title,
-                      'Bila jina',
+                      trs('no_name'),
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,

@@ -1,4 +1,5 @@
 import '/custom_code/ui/app_palette.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_widgets.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/components/custom_loading_indicator_widget.dart';
@@ -189,66 +190,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   custom_widgets.HomeHeader(),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 12.0),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        context.pushNamed(HomeSearchPageWidget.routeName);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondary,
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(
-                            color: AppPalette.of(context).outline,
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              13.0, 13.0, 16.0, 13.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.search,
-                                color: FlutterFlowTheme.of(context).gray,
-                                size: 24.0,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    FFLocalizations.of(context).getText(
-                                      'lgb4aznq' /* Tafuta */,
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'SF Pro Display',
-                                          color:
-                                              FlutterFlowTheme.of(context).gray,
-                                          fontSize: 17.0,
-                                          letterSpacing: 0.0,
-                                          lineHeight: 1.5,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation2']!),
-                  ),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.fromLTRB(

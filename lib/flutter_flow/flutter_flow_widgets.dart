@@ -1,5 +1,6 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import '/custom_code/ui/app_tokens.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class FFButtonOptions {
@@ -257,17 +258,40 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
       );
     }
 
-    return SizedBox(
+    final button = SizedBox(
       height: widget.options.height,
       width: widget.options.width,
       child: ElevatedButton(
         onPressed: onPressed,
-        style: style,
+        style: isBrandButton
+            ? style.copyWith(
+                backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                shadowColor: WidgetStateProperty.all(Colors.transparent),
+                elevation: WidgetStateProperty.all(0),
+              )
+            : style,
         focusNode: _focusNode,
         child: textWidget,
       ),
     );
+    if (!isBrandButton || onPressed == null) return button;
+
+    // Primary (brand colour) buttons get the app's blue gradient and soft glow.
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final grad = dark
+        ? const [Color(0xFF4DA8F5), Color(0xFF2B84D6)]
+        : const [Color(0xFF1189DA), AppTokens.brandPrimary, AppTokens.brandDeep];
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: widget.options.borderRadius ?? BorderRadius.circular(8),
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: grad),
+        boxShadow: [BoxShadow(color: grad[grad.length > 2 ? 1 : 0].withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 7))],
+      ),
+      child: button,
+    );
   }
+
+  bool get isBrandButton => widget.options.color == AppTokens.brandPrimary || widget.options.color == AppTokens.darkAccent;
 }
 
 extension _WithoutColorExtension on TextStyle {

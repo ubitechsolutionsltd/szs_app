@@ -3,6 +3,7 @@ import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/downloads.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/auth_gate.dart';
+import '/custom_code/ui/episode_unlock.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -65,26 +66,34 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
 
   Future<void> _download() async {
     if (kIsWeb) {
-      _toast('Kupakua hakupatikani kwenye kivinjari. Tumia programu ya simu.');
+      _toast(trs('dl_web'));
       Navigator.pop(context);
       return;
     }
     final list = widget.episodes;
-    final queued = <dynamic>[];
+    final candidates = <dynamic>[];
     if (list is List) {
       for (final ep in list) {
-        if (ep is Map) queued.add(ep);
+        if (ep is Map) candidates.add(ep);
       }
     }
-    if (queued.isEmpty) {
-      _toast('Hakuna cha kupakua kwa sasa.');
+    if (candidates.isEmpty) {
+      _toast(trs('nothing_to_download'));
       Navigator.pop(context);
       return;
     }
-    for (final ep in queued) {
-      await downloadEpisode(ep);
+    if (!isLoggedIn && candidates.any((e) => EpisodeUnlock.isLocked(e))) {
+      Navigator.pop(context);
+      promptLogin(context, trs('login_to_buy'));
+      return;
     }
-    _toast(queued.length == 1 ? 'Kupakua kumeanza.' : 'Kupakua kwa vipindi ${queued.length} kumeanza.');
+    final result = await downloadEpisodes(candidates, subtitle: widget.story?.title ?? '');
+    if (result.queued == 0) {
+      _toast(trs('dl_locked_skip', args: {'n': '${result.skipped}'}));
+    } else {
+      final started = result.queued == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${result.queued}'});
+      _toast(result.skipped > 0 ? '$started ${trs('dl_locked_skip', args: {'n': '${result.skipped}'})}' : started);
+    }
     if (mounted) Navigator.pop(context);
   }
 
@@ -96,7 +105,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
     }
     if (!isLoggedIn) {
       Navigator.pop(context);
-      promptLogin(context, 'Tafadhali ingia kwanza ili kuhifadhi kwenye Pendwa.');
+      promptLogin(context, trs('login_to_save'));
       return;
     }
     final wasBookmarked = story.isBookmark == 1;
@@ -110,10 +119,10 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
     setState(() => _working = false);
     if (response.succeeded) {
       story.isBookmark = wasBookmarked ? 0 : 1;
-      _toast(wasBookmarked ? 'Imeondolewa kwenye Pendwa.' : 'Imeongezwa kwenye Pendwa.');
+      _toast(wasBookmarked ? 'Imeondolewa kwenye Pendwa.' : trs('added_fav'));
       Navigator.pop(context);
     } else {
-      _toast('Imeshindikana. Jaribu tena.');
+      _toast(trs('failed_retry'));
     }
   }
 
@@ -125,7 +134,7 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
   void _moreLikeThis() {
     final story = widget.story;
     if (story == null || story.artistId == 0) {
-      _toast('Haipatikani kwa sasa.');
+      _toast(trs('unavailable_now'));
       Navigator.pop(context);
       return;
     }
@@ -143,8 +152,8 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
   Future<void> _share() async {
     final story = widget.story;
     final text = story == null
-        ? 'Sikiliza simulizi na hadithi za kusisimua kwa Kiswahili kwenye Simulizi za Sauti: https://szs.co.tz'
-        : '${story.title} na ${story.artistName}\nSikiliza kwenye Simulizi za Sauti: https://szs.co.tz';
+        ? '${trs('share_generic')}https://szs.co.tz'
+        : '${trs('share_story', args: {'title': story.title, 'artist': story.artistName})}https://szs.co.tz';
     Navigator.pop(context);
     await Share.share(text, sharePositionOrigin: getWidgetBoundingBox(context));
   }

@@ -1,5 +1,6 @@
 import '/backend/schema/structs/index.dart';
-import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/app_components.dart';
+import '/custom_code/ui/app_tokens.dart';
 import '/custom_code/ui/app_logo.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/app_toast.dart';
@@ -61,14 +62,14 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
               GeneralGroup.loginCall.message(
                     (_model.autologinresponse?.jsonBody ?? ''),
                   ) ??
-                  'Imeshindikana kuingia.',
+                  trs('login_failed'),
             );
             return;
           }
         } else {
           AppToast.error(
             context,
-            'Imeshindikana kuunganisha. Angalia mtandao wako na ujaribu tena.',
+            trs('connect_failed'),
           );
         }
 
@@ -97,61 +98,67 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
     context.goNamed(HomePageWidget.routeName);
   }
 
-  /// One onboarding slide: artwork on a glass card (a branded fallback when the image cannot load), then text.
-  Widget _slide(BuildContext context, OnboardMStruct item) {
-    final palette = AppPalette.of(context);
-    final theme = FlutterFlowTheme.of(context);
+  /// Onboarding text comes from the translation table (so it follows the app language); the values
+  /// stored with the slide are the fallback for slides the table does not know.
+  String _t(OnboardMStruct item, String part) {
+    final key = 'onboard_${item.id}_$part';
+    final text = trs(key);
+    if (text.isNotEmpty) return text;
+    return part == 'title' ? item.title : item.subTitle;
+  }
 
-    // When the slide's picture cannot load, show the brand logo instead of an empty card.
-    Widget fallback = Center(child: AppLogo(size: 220.0, radius: 44.0));
+  /// One onboarding slide: artwork on a soft blue shape (the brand logo when the picture cannot load), then text.
+  Widget _slide(BuildContext context, OnboardMStruct item, int index) {
+    final palette = AppPalette.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+
+    Widget fallback = Center(child: AppLogo(size: 180.0, radius: 40.0));
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 8.0, AppTokens.screenPadding + 4, 0.0),
       child: Column(
         children: [
           Expanded(
-            child: Glass(
-              radius: 32.0,
-              strong: true,
-              padding: EdgeInsets.all(10.0),
+            // The bundled artwork carries its own soft blue shapes, so it fills the whole area.
+            child: SizedBox.expand(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24.0),
-                child: SizedBox.expand(
-                  child: item.img.isEmpty
+                borderRadius: BorderRadius.circular(36.0),
+                child: Image.asset(
+                  'assets/images/onboarding_${index + 1}.png',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (_, __, ___) => item.img.isEmpty
                       ? fallback
-                      : Image.network(
-                          item.img,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => fallback,
-                        ),
+                      : Image.network(item.img, fit: BoxFit.contain, errorBuilder: (_, __, ___) => fallback),
                 ),
               ),
             ),
           ),
-          SizedBox(height: 28.0),
+          const SizedBox(height: 28.0),
           Text(
-            item.title,
+            _t(item, 'title'),
             textAlign: TextAlign.center,
-            style: theme.bodyMedium.override(
-              fontFamily: 'SF Pro Display',
-              color: palette.text,
+            style: TextStyle(
+              fontFamily: AppTokens.fontFamily,
+              color: dark ? AppTokens.darkText : AppTokens.brandNavy,
               fontSize: 30.0,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.6,
-              lineHeight: 1.15,
+              height: 1.15,
             ),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text(
-            item.subTitle,
+            _t(item, 'sub'),
             textAlign: TextAlign.center,
-            maxLines: 3,
-            style: theme.bodyMedium.override(
-              fontFamily: 'SF Pro Display',
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: AppTokens.fontFamily,
               color: palette.muted,
-              fontSize: 16.0,
-              letterSpacing: 0.0,
-              lineHeight: 1.45,
+              fontSize: AppTokens.fsBody + 1,
+              height: 1.5,
             ),
           ),
         ],
@@ -210,7 +217,7 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
               safeSetState(() {});
             },
             itemCount: introList.length,
-            itemBuilder: (context, index) => _slide(context, introList[index]),
+            itemBuilder: (context, index) => _slide(context, introList[index], index),
           ),
         ),
         SizedBox(height: 18.0),
@@ -230,41 +237,27 @@ class _OnboardingPageWidgetState extends State<OnboardingPageWidget> {
             radius: 8.0,
             dotWidth: 8.0,
             dotHeight: 8.0,
-            expansionFactor: 3.5,
+            expansionFactor: 3.0,
             dotColor: palette.outline,
             activeDotColor: palette.accent,
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(24.0, 22.0, 24.0, 24.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56.0,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: palette.accent,
-                foregroundColor: palette.onAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-              ),
-              onPressed: () async {
-                if (!isLast) {
-                  await _model.pageViewController?.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                  );
-                } else {
-                  _finishIntro();
-                }
-              },
-              child: Text(
-                isLast ? 'Anza' : 'Endelea',
-                style: TextStyle(
-                  fontFamily: 'SF Pro Display',
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
+          padding: const EdgeInsets.fromLTRB(AppTokens.screenPadding + 4, 22.0, AppTokens.screenPadding + 4, 24.0),
+          child: AppButton(
+            label: isLast ? trs('start') : trs('viv75x51'),
+            icon: isLast ? Icons.check_rounded : Icons.arrow_forward_rounded,
+            trailingIcon: true,
+            onPressed: () async {
+              if (!isLast) {
+                await _model.pageViewController?.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+              } else {
+                _finishIntro();
+              }
+            },
           ),
         ),
       ],
