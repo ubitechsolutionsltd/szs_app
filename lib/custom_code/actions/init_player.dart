@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'dart:async' show unawaited;
+
+import '/custom_code/actions/downloads.dart' show resumeAllDownloads;
 import '/custom_code/player/audio_handler.dart';
 import '/custom_code/player/player_service.dart';
 import '/custom_code/player/playlist_store.dart';
@@ -19,6 +22,9 @@ Future initPlayer() async {
     await PlayerService.instance.init();
     await PlaylistStore.instance.init();
     await BackgroundAudio.start(PlayerService.instance);
+    // Anything still waiting, in progress or failed when the app was last closed: pick it back up now, buying
+    // any that are locked when the balance already covers them.
+    unawaited(resumeAllDownloads());
   } catch (e) {
     debugPrint('initPlayer failed: $e');
   }

@@ -65,6 +65,11 @@ class PlayerService {
   PlayerService._();
   static final PlayerService instance = PlayerService._();
 
+  /// Tries to buy a locked episode with no dialog (set once at startup to [EpisodeUnlock.silentUnlock]).
+  /// Used when advancing playback lands on a locked episode: if the balance already covers it, it is bought
+  /// automatically and playback continues; otherwise nothing changes and the usual locked state is shown.
+  static Future<bool> Function(dynamic rawEpisode)? autoUnlock;
+
   static const _sessionKey = 'szs.player.session';
   static const _resumePrefix = 'szs.resume.';
 
@@ -453,7 +458,14 @@ class PlayerService {
 
     if (MediaUrlPolicy.isGateUrl(url)) {
       // Ask the server every time: it answers "locked" reliably and hands back a fresh signed link.
-      final access = await MediaAccess.instance.refresh(url);
+      var access = await MediaAccess.instance.refresh(url);
+      if (access.locked) {
+        // The balance might already cover it: buy it with no dialog and ask the server again before giving up.
+        final buy = autoUnlock;
+        if (buy != null && item.raw != null && await buy(item.raw)) {
+          access = await MediaAccess.instance.refresh(url);
+        }
+      }
       if (access.locked) {
         _error = PlayerErrorCode.locked;
         return null;

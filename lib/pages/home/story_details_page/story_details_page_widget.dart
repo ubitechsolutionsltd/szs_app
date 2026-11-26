@@ -171,22 +171,38 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
     }
   }
 
+  bool _downloadingAll = false;
+
   Future<void> _downloadAll() async {
     if (kIsWeb) {
       AppToast.info(context, trs('dl_web'));
       return;
     }
     final list = widget.episodes;
-    final queued = <dynamic>[if (list is List) ...list.whereType<Map>()];
-    if (queued.isEmpty) {
+    final candidates = <dynamic>[if (list is List) ...list.whereType<Map>()];
+    if (candidates.isEmpty) {
       AppToast.info(context, trs('nothing_to_download'));
       return;
     }
-    for (final ep in queued) {
-      await actions.downloadEpisode(ep);
+    if (!isLoggedIn && candidates.any((e) => EpisodeUnlock.isLocked(e))) {
+      promptLogin(context, trs('login_to_buy'));
+      return;
     }
+    if (_downloadingAll) return;
+    setState(() => _downloadingAll = true);
+    final result = await actions.downloadEpisodes(candidates, subtitle: widget.story?.title ?? '');
     if (!mounted) return;
-    AppToast.success(context, queued.length == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${queued.length}'}));
+    setState(() => _downloadingAll = false);
+    if (result.queued == 0) {
+      AppToast.error(context, trs('dl_locked_skip', args: {'n': '${result.skipped}'}));
+      return;
+    }
+    final started = result.queued == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${result.queued}'});
+    if (result.skipped > 0) {
+      AppToast.info(context, '$started ${trs('dl_locked_skip', args: {'n': '${result.skipped}'})}');
+    } else {
+      AppToast.success(context, started);
+    }
   }
 
   /// The episode "Listen now" should play: the selected one if it is playable, otherwise the first playable one,
@@ -381,6 +397,7 @@ class _StoryDetailsPageWidgetState extends State<StoryDetailsPageWidget>
                 label: trs('odgxauyg'),
                 icon: Icons.download_rounded,
                 kind: AppButtonKind.secondary,
+                loading: _downloadingAll,
                 onPressed: _downloadAll,
               ),
             ),

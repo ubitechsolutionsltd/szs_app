@@ -16,6 +16,7 @@ class PlayableItem {
     this.remoteUrl = '',
     this.contentId = 0,
     this.durationSeconds = 0,
+    this.raw,
   });
 
   final int id;
@@ -27,6 +28,11 @@ class PlayableItem {
   /// Link returned by the API (a gate link, usually signed). Empty when the episode is locked.
   final String remoteUrl;
   final int durationSeconds;
+
+  /// The episode map this item was built from, kept so a locked episode can be bought automatically (when
+  /// advancing playback, or resuming a failed download) without a second network round trip to re-fetch it.
+  /// Transient: never persisted (not in [toJson]/[fromJson]), so a restored session simply has no auto-buy.
+  final dynamic raw;
 
   bool get hasRemoteUrl => remoteUrl.isNotEmpty;
 
@@ -46,6 +52,7 @@ class PlayableItem {
       artUrl: asString(episode['image']),
       remoteUrl: asString(episode['audio']),
       durationSeconds: asInt(pick('audio_duration', 'audioDuration')),
+      raw: episode,
     );
   }
 
@@ -57,6 +64,7 @@ class PlayableItem {
         remoteUrl: remoteUrl ?? this.remoteUrl,
         contentId: contentId,
         durationSeconds: durationSeconds,
+        raw: raw,
       );
 
   Map<String, dynamic> toJson() => {

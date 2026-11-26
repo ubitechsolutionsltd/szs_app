@@ -115,6 +115,7 @@ class DownloadManager {
   Future<void> init() async {
     if (_ready || !supported) return;
     _ready = true;
+    final restoredAsFailed = <int>[];
     try {
       final base = await getApplicationSupportDirectory();
       _directory = Directory('${base.path}/downloads');
@@ -134,10 +135,43 @@ class DownloadManager {
           }
         }
       }
+
+      // Downloads that were waiting, in progress or failed when the app last closed: brought back as "failed"
+      // (shown with a retry button, and picked up by resumeAllDownloads) so nothing silently disappears.
+      final pendingFile = File('${_directory!.path}/pending.json');
+      if (await pendingFile.exists()) {
+        final raw = jsonDecode(await pendingFile.readAsString());
+        if (raw is List) {
+          for (final entry in raw) {
+            if (entry is! Map) continue;
+            final itemJson = entry['item'];
+            if (itemJson is! Map) continue;
+            final base = PlayableItem.fromJson(itemJson);
+            if (_index.containsKey(base.id)) continue; // finished by some other path already
+            // PlayableItem.fromJson never carries `raw` (it is never persisted inside 'item'); it is stored
+            // alongside it in this file instead, so a locked one can still be bought automatically on resume.
+            final item = PlayableItem(
+              id: base.id,
+              title: base.title,
+              subtitle: base.subtitle,
+              artUrl: base.artUrl,
+              remoteUrl: base.remoteUrl,
+              contentId: base.contentId,
+              durationSeconds: base.durationSeconds,
+              raw: entry['raw'],
+            );
+            _known[item.id] = item;
+            restoredAsFailed.add(item.id);
+          }
+        }
+      }
     } catch (e) {
       debugPrint('DownloadManager.init: $e');
     }
-    _emit({for (final id in _index.keys) id: const DownloadState(DownloadStatus.completed)});
+    _emit({
+      for (final id in _index.keys) id: const DownloadState(DownloadStatus.completed),
+      for (final id in restoredAsFailed) id: const DownloadState(DownloadStatus.failed),
+    });
   }
 
   /// The downloaded file for an episode, or null.
@@ -319,6 +353,25 @@ class DownloadManager {
     }
   }
 
+  /// Everything still waiting, downloading or failed, so it can be brought back (as "failed", ready to resume)
+  /// if the app is closed before it finishes. Written only on a status change, not on every progress tick.
+  Future<void> _savePending() async {
+    final directory = _directory;
+    if (directory == null) return;
+    try {
+      final list = [
+        for (final entry in states.value.entries)
+          if (entry.value.status == DownloadStatus.waiting ||
+              entry.value.status == DownloadStatus.downloading ||
+              entry.value.status == DownloadStatus.failed)
+            if (_known[entry.key] case final item?) {'item': item.toJson(), 'raw': item.raw}
+      ];
+      await File('${directory.path}/pending.json').writeAsString(jsonEncode(list));
+    } catch (e) {
+      debugPrint('DownloadManager._savePending: $e');
+    }
+  }
+
   void _reportProgress(int id, int received, int total) {
     final now = DateTime.now();
     if (now.difference(_lastProgressUpdate) < const Duration(milliseconds: 300)) return;
@@ -326,8 +379,11 @@ class DownloadManager {
     _setState(id, DownloadState(DownloadStatus.downloading, receivedBytes: received, totalBytes: total));
   }
 
-  void _setState(int id, DownloadState state) =>
-      _emit({...states.value, id: state});
+  void _setState(int id, DownloadState state) {
+    final changed = states.value[id]?.status != state.status;
+    _emit({...states.value, id: state});
+    if (changed) unawaited(_savePending());
+  }
 
   void _emit(Map<int, DownloadState> next) => states.value = next;
 }

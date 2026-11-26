@@ -3,6 +3,7 @@ import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/downloads.dart';
 import '/custom_code/ui/app_palette.dart';
 import '/custom_code/ui/auth_gate.dart';
+import '/custom_code/ui/episode_unlock.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -70,21 +71,29 @@ class _WhenEverBottomWidgetState extends State<WhenEverBottomWidget> {
       return;
     }
     final list = widget.episodes;
-    final queued = <dynamic>[];
+    final candidates = <dynamic>[];
     if (list is List) {
       for (final ep in list) {
-        if (ep is Map) queued.add(ep);
+        if (ep is Map) candidates.add(ep);
       }
     }
-    if (queued.isEmpty) {
+    if (candidates.isEmpty) {
       _toast(trs('nothing_to_download'));
       Navigator.pop(context);
       return;
     }
-    for (final ep in queued) {
-      await downloadEpisode(ep);
+    if (!isLoggedIn && candidates.any((e) => EpisodeUnlock.isLocked(e))) {
+      Navigator.pop(context);
+      promptLogin(context, trs('login_to_buy'));
+      return;
     }
-    _toast(queued.length == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${queued.length}'}));
+    final result = await downloadEpisodes(candidates, subtitle: widget.story?.title ?? '');
+    if (result.queued == 0) {
+      _toast(trs('dl_locked_skip', args: {'n': '${result.skipped}'}));
+    } else {
+      final started = result.queued == 1 ? trs('dl_started') : trs('dl_started_n', args: {'n': '${result.queued}'});
+      _toast(result.skipped > 0 ? '$started ${trs('dl_locked_skip', args: {'n': '${result.skipped}'})}' : started);
+    }
     if (mounted) Navigator.pop(context);
   }
 

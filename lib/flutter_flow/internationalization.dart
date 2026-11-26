@@ -360,6 +360,11 @@ final kTranslationsMap = <String, Map<String, String>>{
   'dl_hint': {'sw': 'Gusa “Pakua” kwenye simulizi ili kusikiliza bila mtandao.', 'en': 'Tap “Download” on a story to listen offline.'},
   'dl_started': {'sw': 'Kupakua kumeanza.', 'en': 'Download started.'},
   'dl_started_n': {'sw': 'Kupakua kwa vipindi {n} kumeanza.', 'en': 'Downloading {n} episodes has started.'},
+  'dl_locked_skip': {
+    'sw': 'Vipindi {n} vimerukwa (sarafu hazitoshi).',
+    'en': '{n} episodes were skipped (not enough coins).'
+  },
+  'resume_all_downloads': {'sw': 'Jaribu tena zote', 'en': 'Resume all'},
   'dl_unavail': {'sw': 'Kupakua hakupatikani', 'en': 'Downloads unavailable'},
   'dl_web': {'sw': 'Kupakua hakupatikani kwenye kivinjari. Tumia programu ya simu.', 'en': 'Downloads aren’t available in the browser. Use the mobile app.'},
   'dl_web2': {'sw': 'Kupakua simulizi hakupatikani kwenye wavuti. Tumia app ya simu.', 'en': 'Downloading stories isn’t available on the web. Use the mobile app.'},

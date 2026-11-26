@@ -75,6 +75,25 @@ class EpisodeUnlock {
     return false;
   }
 
+  /// Buys the episode with no dialog and no confirmation, for places that cannot show one: advancing playback
+  /// to a locked next episode, or resuming/bulk-downloading locked episodes. Only acts when the episode is
+  /// locked, the user is logged in and the balance already covers it; otherwise it changes nothing and returns
+  /// whether the episode is playable right now (so "already unlocked" also reports true).
+  static Future<bool> silentUnlock(dynamic episode) async {
+    if (episode == null) return false;
+    if (!isLocked(episode)) return true;
+    if (!isLoggedIn) return false;
+    final cost = price(episode);
+    if (FFAppState().walletcoin < cost) return false;
+    if (_busy) return false; // an interactive unlock is already in flight for some other episode
+    _busy = true;
+    try {
+      return await _buy(episode, cost);
+    } finally {
+      _busy = false;
+    }
+  }
+
   static void _play(dynamic episode) {
     final state = FFAppState();
     state.nowPlaying = episode;

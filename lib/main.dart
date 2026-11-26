@@ -13,7 +13,9 @@ import '/custom_code/ui/adaptive.dart';
 import '/custom_code/ui/api_cache.dart';
 import '/custom_code/ui/app_theme.dart';
 import '/custom_code/ui/glass.dart';
+import '/custom_code/ui/episode_unlock.dart';
 import '/custom_code/ui/theme_mode_store.dart';
+import '/custom_code/player/player_service.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -35,6 +37,9 @@ void main() async {
   await ApiCache.init();
 
   await actions.initPlayer();
+  // When playback advances to a locked episode and the balance already covers it, buy it with no dialog so
+  // listening never stops to ask; otherwise the usual locked card/prompt is shown, unchanged.
+  PlayerService.autoUnlock = EpisodeUnlock.silentUnlock;
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
